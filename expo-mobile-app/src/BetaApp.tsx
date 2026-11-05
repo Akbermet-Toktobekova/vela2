@@ -39,6 +39,7 @@ import {
 } from "./components/SoftGlass";
 import { DateField } from "./components/DateField";
 import { TodayScreen } from "./screens/TodayScreen";
+import type { BetaPdfMapping, BetaPdfReview } from "../../shared/contracts/betaPdf";
 import {
   api,
   readSession,
@@ -235,6 +236,88 @@ function Select({
   );
 }
 
+function PdfImportReview({
+  preview, accounts, busy, addAccount, saveMapping, confirm,
+}: {
+  preview: {pdf: BetaPdfReview; status: string; transactions: unknown[]};
+  accounts: {id: string; name: string; currency: string}[];
+  busy: boolean;
+  addAccount: (currency: string) => void;
+  saveMapping: (mapping: Omit<BetaPdfMapping, "expectedVersion">) => void;
+  confirm: () => void;
+}) {
+  const [selected, setSelected] = useState<Record<string, string>>({});
+  const [excluded, setExcluded] = useState<string[]>(preview.pdf.excludedRows ?? []);
+  const [edits, setEdits] = useState<Record<string, {date: string; description: string; amount: string}>>(
+    () => Object.fromEntries(Object.entries(preview.pdf.corrections ?? {}).map(([id, value]) =>
+      [id, {...value, amount: String(value.amount)}])),
+  );
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [editingMapping, setEditingMapping] = useState(false);
+  useEffect(() => setEditingMapping(false), [preview]);
+  const {groups, issues} = preview.pdf;
+  const mapped = preview.status === "parsed_successfully" && !editingMapping;
+  const corrections = Object.fromEntries(Object.entries(edits)
+    .filter(([id, value]) => !excluded.includes(id) && /^\d{4}-\d{2}-\d{2}$/.test(value.date) && value.description.trim() && value.amount.trim() && Number.isFinite(Number(value.amount.replace(",", "."))))
+    .map(([id, value]) => [id, {...value, amount: Number(value.amount.replace(",", "."))}]));
+  const currencies = [...new Set<string>([
+    ...groups.map(group => group.currency),
+    ...issues.filter(issue => corrections[issue.id]).map(issue => issue.currency),
+  ])];
+  const mapping = Object.fromEntries(currencies.map(currency => {
+    const options = accounts.filter(account => account.currency === currency);
+    const saved = groups.find(group => group.currency === currency)?.accountId;
+    const preferred = selected[currency] || saved || (options.length === 1 ? options[0].id : "");
+    return [currency, options.some(account => account.id === preferred) ? preferred : ""];
+  }));
+  return <>
+    {!currencies.length && !issues.length && <Text>No completed operations in this PDF.</Text>}
+    {Object.entries(preview.pdf.excluded).map(([currency, counts]) => {
+      const {pending, summary} = counts;
+      return <Text key={currency} style={s.muted}>{currency} · {pending} pending · {summary} summary rows skipped</Text>;
+    })}
+    {currencies.map(currency => {
+      const group = groups.find(item => item.currency === currency);
+      const options = accounts.filter(account => account.currency === currency);
+      return <View key={currency} style={s.record}>
+        <Text style={s.h2}>{currency} · {group?.operations.length ?? 0} operations</Text>
+        {mapped ? <Text>{options.find(account => account.id === group?.accountId)?.name} · {group?.duplicates ?? 0} duplicates</Text> : <>
+          <Select label={`${currency} account`} value={mapping[currency]} values={options}
+            onChange={id => setSelected(old => ({...old,[currency]:id}))} />
+          <Button secondary title={`Add ${currency} account`} disabled={busy} onPress={() => addAccount(currency)} />
+        </>}
+        {Boolean(group?.operations.length) && <Button secondary title={expanded === currency ? "Hide operations" : "Review operations"}
+          onPress={() => setExpanded(expanded === currency ? null : currency)} />}
+        {expanded === currency && group?.operations.map(row => <Text key={`${row.page}:${row.line}`}>
+          {row.date} · {row.description} · {money(row.amount, currency)} · p. {row.page}, line {row.line}
+        </Text>)}
+      </View>;
+    })}
+    {mapped ? <>
+      <Text>{preview.transactions.length} new operations ready to save</Text>
+      <Button title="Confirm import" disabled={busy} onPress={confirm} />
+      <Button secondary title="Change mapping" disabled={busy} onPress={() => setEditingMapping(true)} />
+    </> : <>
+      {issues.map(issue => {
+        const value = edits[issue.id];
+        const skipped = excluded.includes(issue.id);
+        return <View key={issue.id} style={s.record}>
+          <Text style={s.error}>Page {issue.page}, line {issue.line} · {issue.reason}</Text>
+          <Text>{issue.text}</Text>
+          <Button secondary title={skipped ? "Include row" : "Exclude row"} onPress={() => setExcluded(old => skipped ? old.filter(id => id !== issue.id) : [...old, issue.id])} />
+          {!skipped && <Button secondary title="Correct row" onPress={() => setEdits(old => ({...old, [issue.id]: value ?? {date:"",description:"",amount:""}}))} />}
+          {!skipped && value && (["date","description","amount"] as const).map(field =>
+            <Input key={field} label={field === "date" ? "Date (YYYY-MM-DD)" : field === "amount" ? "Signed amount" : "Description"}
+              value={value[field]} onChange={input => setEdits(old => ({...old,[issue.id]:{...value,[field]:input}}))} />)}
+        </View>;
+      })}
+      <Button title="Check accounts and duplicates" disabled={busy || !currencies.length || currencies.some(currency => !mapping[currency]) ||
+        issues.some(issue => !excluded.includes(issue.id) && !corrections[issue.id])}
+        onPress={() => saveMapping({accounts:mapping, excludedRows:excluded, corrections})} />
+    </>}
+  </>;
+}
+
 export default function App() {
   const [base, setBase] = useState(process.env.EXPO_PUBLIC_API_URL || "");
   const [baseDraft, setBaseDraft] = useState(base);
@@ -313,14 +396,16 @@ export default function App() {
     setUser(me.user);
     setEnv(await api<StateEnvelope>(address, "/state", session));
     setDraft(await drafts.get(me.user.id));
-    setImportHistory(
-      (await api<any>(address, "/imports", session)).imports || [],
-    );
+    const history = (await api<any>(address, "/imports", session)).imports || [];
+    setImportHistory(history);
     const pending = await readImportJob(me.user.id);
     if (pending) {
       const job = await api<any>(address, "/jobs/" + pending, session);
       setImportJob(job);
-      if (job.status === "completed") setPreview(job.result);
+      if (job.status === "completed") {
+        const saved = history.find((item: any) => item.id === job.result?.id);
+        if (saved && !saved.confirmed) setPreview(saved);
+      }
     }
   }
 
@@ -564,11 +649,11 @@ export default function App() {
     setPassword("");
   }
 
-  function open(collection: string, item?: any) {
+  function open(collection: string, item?: any, currency?: string) {
     if (!state) return;
     let defaults: Record<string, string> = {
       name: "",
-      currency: state.profile.baseCurrency,
+      currency: currency ?? state.profile.baseCurrency,
       balanceDate: today(),
       fundsOwnership: "personal",
       purpose: "daily_spending",
@@ -902,6 +987,15 @@ export default function App() {
     </View>
   );
 
+  const confirmImport = () => void run(async () => {
+    await request(`/imports/${preview.id}/confirm`, "POST", {expectedVersion: env?.version});
+    setEnv(await request("/state"));
+    setPreview(null);
+    setNotice("Import confirmed.");
+  });
+  const sourceImport = (statementId: string) => importHistory.find(
+    item => item.statement?.id === statementId || item.statements?.some((statement: any) => statement.id === statementId),
+  );
   const imports = () => (
     <View style={s.card}>
       <Text style={s.h2}>Statements</Text>
@@ -928,8 +1022,16 @@ export default function App() {
       {preview && (
         <>
           <Text style={s.h2}>
-            {preview.statement?.fileName || "Import preview"}
+            {preview.statement?.fileName || preview.fileName || "Import preview"}
           </Text>
+          {preview.pdf ? preview.confirmed ? <Text>This PDF was already confirmed.</Text> :
+            <PdfImportReview key={preview.id} preview={preview} accounts={state?.accounts ?? []} busy={busy}
+              addAccount={currency => open("accounts", undefined, currency)}
+              saveMapping={mapping => void run(async () => setPreview(await request(`/imports/${preview.id}/accounts`, "PUT", {
+                ...mapping, expectedVersion: env?.version,
+              })))}
+              confirm={confirmImport} />
+          : <>
           <Text>{preview.status || preview.statement?.status}</Text>
           {!importSource &&
             ["needs_mapping", "needs_sheet_selection"].includes(
@@ -1029,17 +1131,9 @@ export default function App() {
           <Button
             title="Confirm import"
             disabled={busy || !preview.transactions?.length}
-            onPress={() =>
-              void run(async () => {
-                await request(`/imports/${preview.id}/confirm`, "POST", {
-                  expectedVersion: env?.version,
-                });
-                setEnv(await request("/state"));
-                setPreview(null);
-                setNotice("Import confirmed.");
-              })
-            }
+            onPress={confirmImport}
           />
+          </>}
           <Button
             secondary
             title="Dismiss preview"
@@ -1053,15 +1147,15 @@ export default function App() {
           <Text style={s.muted}>
             {st.transactionCount} operations · {st.status.replaceAll("_", " ")}
           </Text>
-          {importHistory.find((i) => i.statement?.id === st.id) && (
+          {sourceImport(st.id) && (
             <Button
               secondary
-              title="Delete statement and its operations"
+              title="Delete source file and its operations"
               disabled={busy}
               onPress={() =>
                 Alert.alert(
                   "Delete statement?",
-                  "This removes its operations and statement balance. Other data will be kept and analysis refreshed.",
+                  "This removes the source file and all operations and balances imported from it, across its currencies.",
                   [
                     { text: "Cancel", style: "cancel" },
                     {
@@ -1069,9 +1163,7 @@ export default function App() {
                       style: "destructive",
                       onPress: () =>
                         void run(async () => {
-                          const item = importHistory.find(
-                            (i) => i.statement?.id === st.id,
-                          );
+                          const item = sourceImport(st.id);
                           await request(`/imports/${item.id}`, "DELETE", {
                             expectedVersion: env?.version,
                           });

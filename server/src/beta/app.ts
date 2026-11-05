@@ -14,6 +14,7 @@ import {
   BetaCredentialsSchema,
   BetaChatSchema,
   BetaImportSchema,
+  BetaPdfMappingSchema,
 } from "../../../shared/contracts/beta";
 export function createBetaApp(
   options: {
@@ -322,6 +323,9 @@ export function createBetaApp(
     const result = imports.get(q.user.id, q.params.id);
     if (!result) throw new BetaError("NOT_FOUND", "Import not found", 404);
     r.json(result);
+  });
+  route("put", "/imports/:id/accounts", (q, r) => {
+    r.json(imports.mapPdf(q.user, q.params.id, BetaPdfMappingSchema.parse(q.body)));
   });
   route("post", "/imports/:id/confirm", (q, r) => {
     const result = imports.confirm(

@@ -230,3 +230,13 @@ export const BetaImportSchema = z.object({
   fileName: z.string().min(1).max(255),
   contentBase64: z.string().min(1),
 });
+export const BetaPdfMappingSchema = z.object({
+  expectedVersion: z.number().int().nonnegative(),
+  accounts: z.record(z.string().regex(/^[A-Z]{3}$/), id),
+  excludedRows: z.array(id).default([]),
+  corrections: z.record(id, z.object({
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).date(),
+    description: z.string().trim().min(1).max(2000),
+    amount: z.number().finite(),
+  })).default({}),
+});

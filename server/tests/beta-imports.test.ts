@@ -20,3 +20,81 @@ describe('Beta real-file imports',()=>{
  it('deletes original, preview and confirmed imported records while preserving manual balances',async()=>{const {imports,financial,store}=setup();const p=await imports.preview(user,input('delete.csv',csv));const confirmed=imports.confirm(user,p.id,0);store.put(user.id,'analysis',{old:true});expect(()=>imports.deleteImport(user,p.id,0)).toThrow();const deleted=imports.deleteImport(user,p.id,confirmed.version);expect(deleted.state.transactions).toHaveLength(0);expect(deleted.state.classifications).toHaveLength(0);expect(deleted.state.statements).toHaveLength(0);expect(deleted.state.balances.map(b=>b.id)).toEqual(['newer']);expect(imports.get(user.id,p.id)).toBeNull();expect(store.get(user.id,'analysis')).toBeNull();expect(financial.get(user).version).toBe(2);}); it('does not recreate a deleted account state when PDF parsing completes late',async()=>{const {imports,store}=setup();const pending=imports.preview(user,input('late.pdf',pdf('Private statement')));store.deleteUser(user.id);await expect(pending).rejects.toMatchObject({code:'SUPERSEDED'});expect(store.get(user.id,'state')).toBeNull();expect(store.database.prepare('SELECT * FROM beta_documents WHERE user_id=?').all(user.id)).toHaveLength(0);});});
 
 
+
+function revolutFixture() {
+  const cells = (y: number, ...items: [number, string][]) => items.map(([x, value]) =>
+    `BT /F1 9 Tf ${x} ${y} Td (${value.replace(/[\\()]/g, '\\$&')}) Tj ET`).join('\n');
+  const headers = (y: number) => cells(y,[40,'Date'],[125,'Description'],[335,'Money out'],[417,'Money in'],[526,'Balance']);
+  const pages = [
+    [cells(750,[40,'Revolut Bank UAB']),cells(732,[40,'HUF Statement']),
+      cells(712,[40,'Product'],[253,'Opening balance'],[335,'Money out'],[417,'Money in']),
+      cells(696,[40,'Current account'],[253,'900.00 HUF'],[335,'50.00 HUF'],[417,'0.00 HUF']),
+      headers(668),cells(648,[40,'Nov 1, 2026'],[125,'Test Shop'],[335,'50.00 HUF'],[520,'850.00 HUF']),
+      cells(636,[125,'Continuation']),headers(610),
+      cells(590,[40,'Nov 2, 2026'],[125,'Repeated'],[335,'50.00 HUF'],[520,'800.00 HUF']),
+      cells(570,[40,'Nov 2, 2026'],[125,'Repeated'],[335,'50.00 HUF'],[520,'750.00 HUF']),
+      cells(550,[40,'Nov 3, 2026'],[125,'Ambiguous'],[335,'20.00 HUF'],[417,'10.00 HUF']),
+      cells(510,[40,'Pending from November']),headers(490),
+      cells(470,[40,'Nov 4, 2026'],[125,'Pending card'],[335,'99.00 HUF'])].join('\n'),
+    [cells(732,[40,'USD Statement']),headers(668),
+      cells(648,[40,'Nov 2, 2026'],[125,'Test income'],[417,'1,250.00 USD'],[520,'1,250.00 USD'])].join('\n'),
+  ];
+  const objects = ['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [4 0 R 6 0 R] /Count 2 >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'];
+  for(const stream of pages) {
+    objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents ${objects.length+2} 0 R >>`,
+      `<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream`);
+  }
+  let doc='%PDF-1.4\n';
+  const offsets=objects.map((obj,index)=>{
+    const offset=Buffer.byteLength(doc);
+    doc+=`${index+1} 0 obj\n${obj}\nendobj\n`;
+    return offset;
+  });
+  const xref=Buffer.byteLength(doc);
+  doc+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`+offsets.map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+
+    `trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return Buffer.from(doc);
+}
+
+describe('Revolut PDF grouped imports',()=>{
+ it('maps currencies, resolves flagged rows, preserves repeated operations and confirms atomically',async()=>{
+  const {imports,financial,store}=setup();
+  const initial=financial.get(user);
+  for (const currency of ['HUF','USD']) initial.state.accounts.push({...initial.state.accounts[0],id:currency,name:currency,currency});
+  store.put(user.id,'state',initial);
+  const payload=input('synthetic-revolut.pdf',revolutFixture());
+  const p=await imports.preview(user,payload);
+  expect(p.status).toBe('needs_accounts');
+  expect(p.pdf?.groups.map(g=>[g.currency,g.operations.length])).toEqual([['HUF',3],['USD',1]]);
+  expect(p.pdf?.groups[0].operations[0].description).toBe('Test Shop Continuation');
+  expect(p.pdf?.excluded.HUF).toEqual({pending:1,summary:1});
+  const issue=p.pdf!.issues[0];
+  expect(issue.reason).toContain('exactly one');
+  const options={expectedVersion:0,accounts:{HUF:'HUF',USD:'USD'},excludedRows:[],corrections:{}};
+  expect(()=>imports.mapPdf(user,p.id,options)).toThrow(/explicitly exclude/);
+  const mapped=imports.mapPdf(user,p.id,{...options,corrections:{[issue.id]:{date:'2026-11-03',description:'Reviewed',amount:-10}}});
+  expect(mapped.transactions).toHaveLength(5);
+  const changed=structuredClone(initial);
+  changed.version=1;
+  changed.state.accounts=changed.state.accounts.filter(a=>a.id!=='USD');
+  store.put(user.id,'state',changed);
+  expect(()=>imports.confirm(user,p.id,1)).toThrow(/Check accounts/);
+  expect(()=>imports.mapPdf(user,p.id,{...options,expectedVersion:1,excludedRows:[issue.id]})).toThrow(/USD accounts/);
+  expect(financial.get(user).state.transactions).toHaveLength(0);
+  store.put(user.id,'state',{...initial,version:2});
+  imports.mapPdf(user,p.id,{...options,expectedVersion:2,excludedRows:[issue.id]});
+  const saved=imports.confirm(user,p.id,2);
+  expect(saved.state.transactions.map(row=>row.amount)).toEqual([-50,-50,-50,1250]);
+  expect(saved.state.transactions.at(-1)?.rawRow.__source_page).toBe('2');
+  expect(saved.state.statements).toHaveLength(2);
+  expect(imports.confirm(user,p.id,2).version).toBe(3);
+  const again=await imports.preview(user,payload);
+  const duplicates=imports.mapPdf(user,again.id,{...options,expectedVersion:3,excludedRows:[again.pdf!.issues[0].id]});
+  expect(duplicates.pdf?.groups.map(g=>g.duplicates)).toEqual([3,1]);
+  expect(imports.confirm(user,again.id,3).version).toBe(3);
+  const deleted=imports.deleteImport(user,p.id,3);
+  expect(deleted.state.transactions).toHaveLength(0);
+  expect(deleted.state.statements).toHaveLength(0);
+ });
+});

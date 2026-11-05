@@ -294,6 +294,7 @@ export function parseStatementCSVContent(params: {
   content: string;
   existingStatements: StatementImport[];
   existingTransactions: TransactionRecord[];
+  preserveRepeatedRows?: boolean;
 }): ParsedStatementOutcome {
   const {
     userId,
@@ -303,6 +304,7 @@ export function parseStatementCSVContent(params: {
     content,
     existingStatements,
     existingTransactions,
+    preserveRepeatedRows = false,
   } = params;
 
   const now = new Date().toISOString();
@@ -508,7 +510,7 @@ export function parseStatementCSVContent(params: {
     }
 
     // Check if duplicate transaction already exists on this account
-    const isDup = existingAcctTxns.some(
+    const duplicateIndex = existingAcctTxns.findIndex(
       (existing) =>
         existing.date === dateVal &&
         existing.currency.toUpperCase() === currency &&
@@ -517,7 +519,8 @@ export function parseStatementCSVContent(params: {
         (reference ? existing.reference === reference : true)
     );
 
-    if (isDup) {
+    if (duplicateIndex >= 0) {
+      if (preserveRepeatedRows) existingAcctTxns.splice(duplicateIndex, 1);
       duplicateCountSkipped++;
       continue;
     }
@@ -545,7 +548,7 @@ export function parseStatementCSVContent(params: {
     const cls = autoClassifyTransaction(txn, allAccounts);
     parsedTransactions.push(txn);
     // Also compare subsequent rows against transactions accepted from this upload.
-    existingAcctTxns.push(txn);
+    if (!preserveRepeatedRows) existingAcctTxns.push(txn);
     parsedClassifications.push(cls);
   }
 
