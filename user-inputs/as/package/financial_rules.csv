@@ -1,0 +1,19 @@
+﻿rule_id,name,rule_text,supporting_claim_ids,supporting_formula_ids,jurisdiction,approval_status,safety_review_required,provenance
+R001,Preserve mandatory payments,Reject discretionary transfers that cause known mandatory payments to be missed.,"C013,C017","F003,F004,F019",US + general engineering,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R002,Ensure cash availability,Require positive projected available cash and a policy-defined liquidity floor before optional action.,"C002,C004,C005","F003,F004",General engineering,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R003,Save affordable amount,Offer emergency savings only where affordability is demonstrated using date-based outflows.,"C001,C002,C005","F001,F003,F004",General guidance,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R004,Consider automation safely,"Recurring saving only if deposit timing, account fee and overdraft checks pass.","C005,C008","F003,F004",US evidence/general engineering,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R005,Pay card minimum,Prioritize imminent card minimum due dates when they are legally and contractually required.,C013,"F004,F019",US card rules,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R006,Pay extra debt affordably,Offer extra payment only once minimums and essentials are reserved.,"C014,C015","F003,F008",US card guidance/general engineering,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R007,Compare avalanche and adherence,Compare cost-minimizing extra-payment allocation against behavior-oriented approaches; do not claim universal superiority.,"C014,C024","F008,F010",US research,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R008,Escalate hardship,"If required payment not feasible, suggest issuer contact and resources instead of unaffordable payments.","C017,C018",F019,US card guidance,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R009,Analyze income variability,Forecast within-month liquidity using transaction dates; flag uncertain receipts.,"C009,C010",F004,US survey and engineering,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R010,Review recurring charges,Present potential savings only when cancellation cost and user need are assessed.,C004,"F011,F020",Engineering extrapolation,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R011,Individualize savings target,"Treat reserve coverage as diagnostic, not a universal mandatory threshold.",C002,"F001,F002",US official guidance,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R012,Goal funding feasibility,Calculate required contribution versus confirmed capacity; reject impossible deadline promises.,C006,"F003,F012,F013",Engineering extrapolation,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R013,Investing education only,"Provide generic allocation/diversification education, not security-specific personal recommendations without legal clearance.","C025,C026,C027",F003,US education + legal gate,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R014,UK DPC jurisdiction gate,Attach UK DPC rules only for in-scope relevant agreements and effective dates.,"C030,C031",F019,UK,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R015,Financial data minimisation gate,Limit ingestion and retention to approved purposes; EU law must be rechecked for jurisdiction.,C032,,EU (pending full verify),PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R016,Score is not evidence,Never equate a high aggregate score with proof of action benefit.,"C028,C029","F014,F015,F016,F017,F018",Methodological,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R017,Promo offer deadline,Check deferred-interest offer expiry and product terms before proposing payment changes.,C020,"F004,F008",US,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY
+R018,Separate facts and experiments,"Financial education evidence does not validate FinAgent-specific prompts, ranking, or outcomes.","C022,C023",F017,International,PENDING_REVIEW,YES,FINAGENT_PROPOSED_POLICY

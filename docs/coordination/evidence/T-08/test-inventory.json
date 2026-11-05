@@ -1,0 +1,218 @@
+[
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 52,
+    "name": "Scenario 1: Imminent mandatory bill shortfall blocks optional saving/debt actions and selects a CRITICAL protective action",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 120,
+    "name": "Scenario 2: High-APR credit card debt (24% APR) with insufficient liquid cash to pay minimum selects A005 (Hardship contact) over A002",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 198,
+    "name": "Scenario 3: Debt with unknown APR / minimum payment triggers NEEDS_DATA on A002 and selects VERIFICATION_ACTION A004 without fake R/F/G scores",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 275,
+    "name": "Scenario 4: Internal transfer between equally liquid accessible personal accounts yields Delta R = 0 (v_R = 0)",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 319,
+    "name": "Scenario 5: User with 0 active financial goals does not select goal_advancement, rejects A012 (R012), and keeps v_G = 0",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 385,
+    "name": "Scenario 6: Suggestion Generator omits Critical Action during risky auto-transfer deficit — Critical Coverage independently recovers A011",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 433,
+    "name": "Scenario 7: AI Evaluation Call returns invalid or UNKNOWN T/S/D/O scores — ComplexityEvaluator falls back deterministically to catalog baseline (F016)",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 497,
+    "name": "Scenario 8: VERIFICATION_ACTION A014 unlocks FINANCIAL_ACTION A015 (Subscription cancellation) in the subsequent evaluation cycle",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 599,
+    "name": "Scenario 9: Multiple simultaneous Critical Actions (A011, A001, A020) — Step 5A ranks direct problem resolution (A011, A001) strictly above diagnostic A020",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 671,
+    "name": "Scenario 10: PI snapshot version advances mid-evaluation — Stale Snapshot Publication Guard blocks overwriting Today, and unchanged repeat run is DUPLICATE_SUPPRESSED",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 742,
+    "name": "Scenario 11: User Feedback Loop — Accept (no premature balance deduction), Adjust re-validated by Checker (unsafe €950 rejected, safe €60 accepted), and Decline suppresses repeat",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 830,
+    "name": "Scenario 12: Robustness F018 close-decision tie-breaker (Delta S < 0.03) & Liquidity Hysteresis (M=1.15)",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 951,
+    "name": "Scenario 13: Multi-currency account with unsupported KGS & stale HUF FX rates flags FX_WARNING and never invents a 1:1 rate",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/finagent-14-scenarios.test.ts",
+    "line": 1015,
+    "name": "Scenario 14: Security — Cross-user data access throws 403 Forbidden, SQLite encrypts PI at rest (AES-256-GCM), and minimizePIForLLM strips PII/notes before LLM calls",
+    "evidenceClass": "Synthetic real modules; orchestrator AI mocked; no browser"
+  },
+  {
+    "file": "server/tests/e2e/http-workflow-and-security.test.ts",
+    "line": 191,
+    "name": "1. Enforces 401 UNAUTHENTICATED when x-user-id is missing and 403 FORBIDDEN on cross-user access",
+    "evidenceClass": "Actual HTTP with mock AI"
+  },
+  {
+    "file": "server/tests/e2e/http-workflow-and-security.test.ts",
+    "line": 223,
+    "name": "2. Executes full HTTP workflow: PUT /api/pi -> GET /api/today -> GET /api/decisions/trace -> POST /api/feedback (accept, adjust, decline, complete) -> SQLite restart persistence",
+    "evidenceClass": "Actual HTTP with mock AI"
+  },
+  {
+    "file": "server/tests/e2e/http-workflow-and-security.test.ts",
+    "line": 431,
+    "name": "3. Scrubs PII across nickname, concernNotes, account names, obligations, debts, goals, and transactions in minimizePIForLLM",
+    "evidenceClass": "Direct helper"
+  },
+  {
+    "file": "server/tests/e2e/live-ai-integration.test.ts",
+    "line": 18,
+    "name": "Executes real live Gemini API calls (gemini-3.1-flash-lite / gemini-3.5-flash-lite) for BehaviorAgent, SuggestionGenerator, and single batch AIEvaluationService while keeping R/F/G 100% deterministic",
+    "evidenceClass": "Real Gemini, direct services; conditional on key"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 36,
+    "name": "loads prototype-policy.json and validates against PrototypePolicyBundleSchema",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 46,
+    "name": "confirms allowArbitraryKFMinFallback === false and all policy sub-bundles are PROTOTYPE_ONLY",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 59,
+    "name": "verifies each weight profile sums to 1.0 and hysteresis bounds are consistent",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 76,
+    "name": "loads all 24 sources (S001-S024), 33 claims (31 VERIFIED, 2 PENDING_ORIGINAL_REOPEN), 18 rules, 20 formulas, 26 actions, and 60 agent mappings",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 109,
+    "name": "preserves canonical status === PENDING_REVIEW and approved_for_production === NO on all 26 actions",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 118,
+    "name": "separates FINANCIAL_ACTION, VERIFICATION_ACTION, and EDUCATIONAL_ACTION and ensures AK051-AK060 does not exclude A005 or A013 from Today",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 185,
+    "name": "F001 & F002: computes liquid funds and emergency months coverage, and internal transfer between equally liquid checking accounts yields Delta R = 0",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 231,
+    "name": "F003, F004 & F019: preserves negative projected cash balances in F004 without being masked by F003 max(0, ...) and computes F019 shortfall before due date",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 258,
+    "name": "F005-F010: computes daily periodic APR, daily interest, loan annuity, payoff horizon, and counterfactual 90d vs 12m debt interest avoided without counting principal as interest saving",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 312,
+    "name": "F011 & F020: computes recurring expense saving over 90-day billing occurrences vs 12-month annual saving, plus 90-day fee delta",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 329,
+    "name": "F012 & F013: computes savings goal progress and monthly required saving",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 339,
+    "name": "Multi-currency conversion: handles valid rate (OK), stale rate (STALE), and unsupported currency KGS (UNAVAILABLE without inventing 1:1)",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 386,
+    "name": "rejects non-catalog actions and blocks PENDING_REVIEW actions when runtimeMode.mode === PRODUCTION_MODE",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 430,
+    "name": "blocks EDUCATIONAL_ACTION (A021-A023) from Today with TODAY_DISABLED_EDUCATIONAL_ACTION",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 451,
+    "name": "returns NEEDS_DATA when APR or due date is missing for A002, and automatically proposes VERIFICATION_ACTION A004 to unlock it",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 487,
+    "name": "returns NEEDS_DATA when subscription usage/exit terms are unconfirmed for A015, and proposes VERIFICATION_ACTION A014",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 521,
+    "name": "rejects goal actions (A012, A013) when user has 0 active goals (R012)",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  },
+  {
+    "file": "server/tests/phase1-foundation.test.ts",
+    "line": 537,
+    "name": "independently discovers Critical Actions (A011, A001, A005, A020) when AI omits them, and marks A020 with resolvesCriticalProblemDirectly === false ranked below direct mitigation",
+    "evidenceClass": "Real unit/contract/numerical modules; no HTTP/AI/browser"
+  }
+]

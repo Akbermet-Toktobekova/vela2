@@ -1,0 +1,5 @@
+action,synthetic_win_frequency,samples,weight_sampling
+Extra debt payment,0.25815,20000,"Dirichlet(1,1,1) for R/F/G, lambda_C Uniform(0,0.6); uncalibrated"
+Build cash buffer,0.4641,20000,"Dirichlet(1,1,1) for R/F/G, lambda_C Uniform(0,0.6); uncalibrated"
+Fund nearer-term goal,0.27775,20000,"Dirichlet(1,1,1) for R/F/G, lambda_C Uniform(0,0.6); uncalibrated"
+Review subscription,0.0,20000,"Dirichlet(1,1,1) for R/F/G, lambda_C Uniform(0,0.6); uncalibrated"

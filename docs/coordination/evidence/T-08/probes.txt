@@ -1,0 +1,5 @@
+(node:10796) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"probe":"authentication","missingHeader":401,"selfAssertedVictimHeader":200,"unsignedBearerUserId":200}
+{"probe":"repeated-complete","actionId":"A007","amount":50,"firstHttpStatus":200,"firstStatus":"COMPLETED","secondHttpStatus":200,"secondStatus":"COMPLETED","beforeAllocations":1,"afterFirstAllocations":2,"afterSecondAllocations":3,"beforeDebt":500,"afterFirstDebt":500,"afterSecondDebt":500}
+{"probe":"today-after-complete","httpStatus":200,"currentPIVersion":"3.0","traceSnapshotVersion":"1.0","recommendationStatus":"completed"}

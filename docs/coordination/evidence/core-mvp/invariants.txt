@@ -1,0 +1,5 @@
+12 captured publishable decisions matched exact VALID Checker candidates.
+All computed counterfactual terminal dates match.
+Canonical SHA256 remains 7CE385E40EA872FD49927458F3A787CCCB1E9E1CB02707C80CCDCD6419E8B6B9.
+All26 canonical actions retain PENDING_REVIEW and approved_for_production NO.
+Additional synthetic JSON/CSV profiles: none (README.md only).

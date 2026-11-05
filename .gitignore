@@ -1,0 +1,24 @@
+node_modules/
+dist/
+.env
+*.env.local
+user-inputs/secrets/.env
+server/data/*.sqlite*
+
+# Reproducible build and tool caches
+.vite/
+.vite-temp/
+.cache/
+coverage/
+__pycache__/
+*.pyc
+*.tsbuildinfo
+
+# Local operating-system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+server/.env.beta.local
+server/data/*.key*
+server/data/*.dpapi*

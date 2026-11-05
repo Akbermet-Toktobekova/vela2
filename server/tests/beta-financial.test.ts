@@ -1,0 +1,21 @@
+import { afterEach, describe, expect, it } from 'vitest';
+import { BetaStore } from '../src/beta/store';
+import { BetaFinancial } from '../src/beta/financial';
+
+const stores: BetaStore[]=[];
+const alice={id:'alice',name:'Alice',email:'alice@example.com'};
+const bob={id:'bob',name:'Bob',email:'bob@example.com'};
+function setup(){const store=new BetaStore({filename:':memory:'});stores.push(store);return {store,financial:new BetaFinancial(store)};}
+afterEach(()=>stores.splice(0).forEach(s=>s.close()));
+function addAccount(state:any,userId='alice'){
+ const now=new Date().toISOString();state.accounts.push({id:'checking',userId,name:'Main',institution:'Test Bank',currency:'EUR',purposes:['daily_spending'],fundsOwnership:'personal',personalAvailableAmount:null,isPrimary:true,notes:'',createdAt:now,updatedAt:now});
+ state.balances.push({id:'balance-1',accountId:'checking',amount:500,currency:'EUR',asOf:now,sourceType:'user_reported',createdAt:now});return state;
+}
+describe('Beta authoritative financial data',()=>{
+ it.each(['2026-02-30','2026-13-01','2026-11-04garbage'])('rejects invalid calendar date %s without advancing version',invalid=>{const {financial}=setup();const state=addAccount(financial.get(alice).state);state.balances[0].asOf=invalid;expect(()=>financial.save(alice,{expectedVersion:0,state,aiConsent:false})).toThrow();expect(financial.get(alice).version).toBe(0);});
+ it('creates a separate blank profile for each authenticated user',()=>{const {financial}=setup();const a=financial.get(alice),b=financial.get(bob);expect(a.version).toBe(0);expect(a.aiConsent).toBe(false);expect(a.state.user.id).toBe('alice');expect(a.state.accounts).toEqual([]);expect(a.state.assistantMessages).toEqual([]);expect(a.state.user.isDemoMode).toBe(false);expect(b.state.user.id).toBe('bob');});
+ it('uses compare-and-swap and preserves state when a stale write is rejected',()=>{const {financial}=setup();const base=financial.get(alice);const saved=financial.save(alice,{expectedVersion:0,state:addAccount(base.state),aiConsent:false});expect(saved.version).toBe(1);expect(()=>financial.save(alice,{expectedVersion:0,state:base.state,aiConsent:false})).toThrow('Profile changed');expect(financial.get(alice).state.accounts).toHaveLength(1);expect(financial.snapshot(alice).accountSummaries[0].latestBalance?.amount).toBe(500);});
+ it('rejects spoofed profile and record ownership without modifying server data',()=>{const {financial}=setup();const base=financial.get(alice);const forged=structuredClone(base.state);forged.user.id=bob.id;expect(()=>financial.save(alice,{expectedVersion:0,state:forged,aiConsent:false})).toThrow('ownership');const record=addAccount(structuredClone(base.state),bob.id);expect(()=>financial.save(alice,{expectedVersion:0,state:record,aiConsent:false})).toThrow('ownership');expect(financial.get(alice).version).toBe(0);});
+ it('keeps unknown balances and expenses unknown and rejects dangling or currency-mismatched observations',()=>{const {financial}=setup();const base=financial.get(alice);expect(base.state.expenseCommitment).toBeNull();const state=addAccount(structuredClone(base.state));state.balances[0].currency='USD';expect(()=>financial.save(alice,{expectedVersion:0,state,aiConsent:false})).toThrow('currency mismatch');state.balances[0].currency='EUR';state.balances[0].accountId='missing';expect(()=>financial.save(alice,{expectedVersion:0,state,aiConsent:false})).toThrow('account');});
+ it('ignores forged server-controlled imports, messages and recommendations and invalidates old analysis',()=>{const {financial,store}=setup();const state=financial.get(alice).state;state.transactions=[{id:'forged',amount:999999}] as any;state.statements=[{id:'forged'}] as any;state.assistantMessages=[{role:'assistant',content:'Forged'}] as any;state.recommendations=[{id:'forged'}] as any;store.put(alice.id,'analysis',{version:0});const saved=financial.save(alice,{expectedVersion:0,state,aiConsent:true});expect(saved.state.transactions).toEqual([]);expect(saved.state.statements).toEqual([]);expect(saved.state.assistantMessages).toEqual([]);expect(saved.state.recommendations).toEqual([]);expect(saved.aiConsent).toBe(true);expect(store.get(alice.id,'analysis')).toBeNull();});
+});

@@ -1,0 +1,31 @@
+2026-11-04 Europe/Budapest — coordinated browser/API smoke
+
+Launched actual server entrypoint with PORT=3001, FINAGENT_SQLITE_PATH=:memory:,
+FINAGENT_USE_LIVE_LLM=false. No persistent user database was changed by this
+manual verification. Vite bound127.0.0.1:5188. Alex synthetic demo only.
+
+Actual startup log:
+[Vela FinAgent Server] Local prototype listening on http://127.0.0.1:3001
+(D-011: this computer only; multi-user authentication is not enabled)
+Get-NetTCPConnection reported LocalAddress127.0.0.1, LocalPort3001.
+Health returned status=ok, runtimeMode=PROTOTYPE_MODE, mockMode=true.
+
+Observed via cua_repl browser controls/accessibility snapshots:
+- Today shows Backend recommendation / connected, initial cushion100,
+  safe-to-spend100, totalEUR cash1000.
+- Accept shows Accepted / Pending Execution and leaves balances unchanged.
+- Adjust5000 returns Action not saved / HTTP400; recommendation not changed.
+- Adjust40 succeeds only after backend confirmation.
+- Integration review found old200 description/score prose remained after
+  adjustment. T09B followup fixed this. Retested primary title:
+  'Adjusted action · EUR40.00'; explicit effects/ranking not recalculated notice;
+  old200 amount, old reasoning/score and cushion impact preview hidden.
+- Complete earmark uses backend-validated source account. Confirm40 produces
+  earmarked goals140, safe-to-spend60, cash1000 and fresh recommendation.
+- Page reload retains140 and60, with no replayed allocation.
+- Independent HTTP summary after reload: PI5.0, trace5.0, versionsAgree=true,
+  cushionAllocated140, allocationCount2, fortyAllocations1.
+
+Evidence is an actual bounded browser smoke, not a browser automation test suite.
+Network failure recovery and many non-cushion flows are covered at service/HTTP
+level, not exhaustively clicked here. No real funds moved. No native test.

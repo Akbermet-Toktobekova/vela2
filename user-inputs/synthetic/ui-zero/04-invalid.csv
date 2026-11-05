@@ -1,0 +1,4 @@
+Date;Description;Amount;Currency;Reference
+2026-11-04;Test valid groceries;-12,50;EUR;VALID-1
+2026-02-30;Test invalid date;-10,00;EUR;BAD-DATE
+2026-11-04;Test invalid amount;12oops;EUR;BAD-AMOUNT

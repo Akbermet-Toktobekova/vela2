@@ -1,0 +1,13 @@
+
+> vela-react-web@1.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 57 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.48 kB │ gzip:   0.31 kB
+dist/assets/index-CZwjShiQ.css   40.23 kB │ gzip:   8.15 kB
+dist/assets/index-CTPWPDQ7.js   478.96 kB │ gzip: 133.23 kB
+✓ built in 10.50s

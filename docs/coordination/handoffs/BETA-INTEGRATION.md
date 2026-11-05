@@ -1,0 +1,11 @@
+# Beta integration checkpoint — 2026-11-05
+
+Implemented files: shared/contracts/beta.ts; server/src/beta/*; server/tests/beta-*.test.ts; native App.tsx/src; package manifests; README and coordination docs. D-013 authorizes free email/password registration without code, no AI spending caps, Windows-hosted authenticated beta. Canonical AS and financial formulas/policies not changed.
+
+Verification: server `npm run typecheck` passed. Full deterministic `npm test -- --exclude tests/e2e/live-ai-integration.test.ts`: 21 suites, 249 tests passed, including all mandatory14 scenarios. Actual output evidence/beta/tests.txt. Native `npm run typecheck` passed; `npx expo export --platform all --max-workers 2` passed: web217/Android641/iOS643 modules (mobile handoffs). DPAPI real Windows restore tests passed. HTTPS API health returned authenticated-beta ok. SMTP transport supports TLS but is unconfigured and actual delivery unverified.
+
+Critical fixes: session-based user identity, encrypted original files, user/version checks after async parse, deletion purges original-bearing jobs, cleared stale analysis, jobs dedup/recovery, schema validation, server-only import records, historical balance preservation. B08 chat is model-selected deterministic factual summaries, not unconstrained conversational recommendations. No unapproved real-data financial action published.
+
+Not complete: physical Android/iPhone UI walkthrough; local-browser computer use disabled in Work settings; email sender; sustained load/security/parser process isolation; scheduled backups and retention; real-data financial action release approval. All these must remain visible rather than marking overall plan complete. Earlier 192-test prototype results do not count as device acceptance.
+
+Live launch checkpoint: HTTPS health and Android Expo manifest both HTTP200. Current Expo link exp://c-dizbalanser-4xqnru-mw2xp7luhqghprqt.on.expo.app; API https://annotation-completion-double-lincoln.trycloudflare.com/api/beta. Final focused post-change verification (server cwd): npx vitest run tests/beta-http.test.ts tests/beta-financial.test.ts — 2 files,15 tests passed. Failed earlier invocation from repository root was corrected to server cwd; no product failure. Guide docs/testing/BETA-TEST-RU.md. QR evidence/beta/expo-qr.png.

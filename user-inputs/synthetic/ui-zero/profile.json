@@ -1,0 +1,25 @@
+{
+  "fixtureOnly": true,
+  "asOf": "2026-11-04",
+  "identity": {"nickname":"Mira Test","email":"mira@example.com","demoCode":"8492"},
+  "concern": "specific_goal",
+  "goal": {"name":"Test Safety Cushion","amount":1000,"currency":"EUR","targetDate":"2027-05-04"},
+  "accounts": [
+    {"name":"Test Main","institution":"Test Bank","currency":"EUR","balance":1800,"balanceDate":"2026-11-04","ownership":"personal","primary":true},
+    {"name":"Test Savings","institution":"Test Savings Bank","currency":"EUR","balance":700,"balanceDate":"2026-11-04","ownership":"personal","primary":false}
+  ],
+  "income": {"name":"Test Salary","pattern":"regular","amount":2400,"currency":"EUR","frequency":"monthly","type":"salary","nextDate":"2026-11-05","account":"Test Main"},
+  "essentialMonthlyExpenses":1200,
+  "bills":[
+    {"name":"Test Rent","amount":800,"dueDate":"2026-11-06","recurrence":"monthly","category":"rent"},
+    {"name":"Test Energy","amount":120,"dueDate":"2026-11-08","recurrence":"monthly","category":"energy"},
+    {"name":"Test Internet","amount":30,"dueDate":"2026-11-09","recurrence":"monthly","category":"internet"}
+  ],
+  "debt":{"name":"Test Card","type":"credit_card","balance":600,"aprPercent":19.9,"minimumPayment":35,"dueDate":"2026-11-10","currency":"EUR"},
+  "variants": {
+    "empty":{"instruction":"Skip to App before entering any financial data; do not load demo"},
+    "unknownDebt":{"instruction":"Leave APR and minimum payment blank; do not enter 0 as unknown"},
+    "shortfall":{"instruction":"In a separate fresh run enter only Test Main with balance 20; keep bills and debt; no confirmed future income"},
+    "mixedFunds":{"instruction":"Add Test Work HUF with reported 100000 HUF, ownership mixed, personal share blank; do not treat entire balance as personal EUR"}
+  }
+}

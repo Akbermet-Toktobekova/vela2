@@ -1,0 +1,345 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Manrope:Bold';
+  src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Manrope:Medium';
+  src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Manrope:Regular';
+  src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Manrope:SemiBold';
+  src: url('https://static.figma.com/font/Manrope_wght__1') format('woff2');
+  font-style: normal;
+  font-weight: 600;
+}
+
+@layer base {
+  :root {
+    font-family: 'Manrope:Regular', Manrope, sans-serif;
+    color: #272e23;
+    background: #e3e5df;
+    font-synthesis: none;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100dvh;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:focus-visible {
+    outline: 2px solid rgba(39, 46, 35, 0.72);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .app-shell {
+    position: relative;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.94) 0, transparent 27rem),
+      radial-gradient(circle at 88% 52%, rgba(255, 255, 255, 0.7) 0, transparent 32rem),
+      linear-gradient(145deg, #f2f2ef 0%, #e3e5df 48%, #f8f7f2 100%);
+  }
+
+  .app-shell::before,
+  .app-shell::after {
+    content: '';
+    position: fixed;
+    z-index: 0;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  .app-shell::before {
+    width: 19rem;
+    height: 19rem;
+    left: -8rem;
+    top: 20%;
+    background: rgba(190, 199, 178, 0.2);
+  }
+
+  .app-shell::after {
+    width: 24rem;
+    height: 24rem;
+    right: -12rem;
+    bottom: 5%;
+    background: rgba(221, 205, 179, 0.18);
+  }
+
+  .app-shell > * {
+    position: relative;
+  }
+
+  .top-bar {
+    background: rgba(255, 255, 255, 0.34);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.47);
+    border: 1px solid rgba(255, 255, 255, 0.86);
+    box-shadow: 0 8px 30px rgba(53, 59, 40, 0.063);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .recommendation-card {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .icon-tile,
+  .confirmation,
+  .available-row,
+  .priority-badge {
+    background: rgba(255, 255, 255, 0.52);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+  }
+
+  .eyebrow {
+    font-family: 'Manrope:SemiBold', Manrope, sans-serif;
+    color: #74766d;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    letter-spacing: 0.55px;
+    text-transform: uppercase;
+  }
+
+  .text-secondary {
+    color: #74766d;
+  }
+
+  .glass-icon {
+    display: block;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(15%) sepia(13%) saturate(699%) hue-rotate(59deg)
+      brightness(94%) contrast(92%);
+  }
+
+  .glass-icon-muted {
+    opacity: 0.62;
+  }
+
+  .primary-action {
+    color: #272e23;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.043);
+  }
+
+  .secondary-action {
+    color: #272e23;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+  }
+
+  .quiet-action {
+    color: #74766d;
+    background: transparent;
+  }
+
+  .action-card,
+  .icon-button,
+  .primary-action,
+  .secondary-action,
+  .quiet-action {
+    transition:
+      transform 190ms ease,
+      background-color 190ms ease,
+      box-shadow 190ms ease;
+  }
+
+  .action-card:active,
+  .icon-button:active,
+  .primary-action:active,
+  .secondary-action:active,
+  .quiet-action:active {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .glass-nav {
+    width: min(calc(100% - 32px), 390px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 30px rgba(53, 59, 40, 0.063);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  .nav-item {
+    display: flex;
+    min-width: 0;
+    min-height: 56px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 23px;
+    padding: 7px 10px;
+    color: #74766d;
+    font-family: 'Manrope:SemiBold', Manrope, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.44px;
+    transition:
+      color 190ms ease,
+      background-color 190ms ease,
+      box-shadow 190ms ease,
+      transform 190ms ease;
+  }
+
+  .nav-item-active {
+    color: #272e23;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.043);
+  }
+
+  .nav-item:active {
+    transform: scale(0.97);
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(39, 46, 35, 0.34);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 12px;
+    animation: fadeInBackdrop 180ms ease-out;
+  }
+
+  .modal-sheet-container {
+    width: 100%;
+    max-width: 410px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    background: rgba(245, 246, 242, 0.94);
+    box-shadow: 0 18px 48px rgba(30, 36, 25, 0.22);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 20px;
+    max-height: 88vh;
+    overflow-y: auto;
+    animation: slideUpSheet 210ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sheet-handle-bar {
+    width: 38px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(39, 46, 35, 0.18);
+    margin: 0 auto 14px auto;
+  }
+
+  .vela-input {
+    width: 100%;
+    min-height: 40px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #272e23;
+    transition: border-color 150ms ease, background-color 150ms ease;
+  }
+
+  .vela-input:focus {
+    outline: none;
+    border-color: #386641;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpSheet {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@layer utilities {
+  .font-normal {
+    font-family: 'Manrope:Regular', Manrope, sans-serif;
+  }
+
+  .font-medium {
+    font-family: 'Manrope:Medium', Manrope, sans-serif;
+  }
+
+  .font-semibold {
+    font-family: 'Manrope:SemiBold', Manrope, sans-serif;
+  }
+
+  .font-bold {
+    font-family: 'Manrope:Bold', Manrope, sans-serif;
+  }
+}
+
+@media (max-width: 390px) {
+  .nav-item {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .recommendation-card h1 {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

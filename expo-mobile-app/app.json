@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Vela Finance",
+    "slug": "vela-finance",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.vela.finance"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f2f2ef"
+      },
+      "package": "com.vela.finance",
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "backgroundColor": "#f2f2ef",
+    "plugins": [
+      "expo-secure-store",
+      "@react-native-community/datetimepicker"
+    ]
+  }
+}

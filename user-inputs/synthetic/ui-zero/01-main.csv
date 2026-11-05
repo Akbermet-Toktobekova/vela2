@@ -1,0 +1,9 @@
+Date,Description,Counterparty,Amount,Currency,Reference,Balance
+2026-10-05,Test Salary,Test Employer,2400.00,EUR,SAL-1005,3400.00
+2026-10-06,Test Rent,Test Landlord,-800.00,EUR,RENT-1006,2600.00
+2026-10-08,Test Energy,Test Utility,-120.00,EUR,ENERGY-1008,2480.00
+2026-10-09,Test Internet,Test ISP,-30.00,EUR,NET-1009,2450.00
+2026-10-12,Test Groceries,Test Store,-250.00,EUR,FOOD-1012,2200.00
+2026-10-15,Transfer to Test Savings,Test Savings Bank,-300.00,EUR,OWN-1015,1900.00
+2026-10-20,Test Subscription,Test Cloud,-20.00,EUR,SUB-1020,1880.00
+2026-10-25,Test Transit,Test Transit,-80.00,EUR,TRANSIT-1025,1800.00

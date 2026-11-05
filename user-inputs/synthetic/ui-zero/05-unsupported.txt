@@ -1,0 +1,1 @@
+This is deliberately not a bank statement. Expected: unsupported_format or failed, no imported transactions.

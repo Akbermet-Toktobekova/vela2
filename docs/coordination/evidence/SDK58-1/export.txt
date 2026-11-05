@@ -1,0 +1,26 @@
+Starting Metro Bundler
+
+| (node:12344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:12344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:12344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Web Bundled 58273ms node_modules\expo\AppEntry.js (154 modules)
+Android Bundled 68177ms node_modules\expo\AppEntry.js (628 modules)
+iOS Bundled 75502ms node_modules\expo\AppEntry.js (630 modules)
+
+› web bundles (1):
+_expo/static/js/web/AppEntry-ebccbad593a8c13aad53dfbe10dd8dba.js (403KB)
+
+› android bundles (1):
+_expo/static/js/android/AppEntry-471dedd27e1a949a55b66aca92958f33.hbc (1.6MB)
+
+› ios bundles (1):
+_expo/static/js/ios/AppEntry-b7020017ff8aed8129ad1b74f2590f05.hbc (1.6MB)
+
+› Files (2):
+index.html (1.2KB)
+metadata.json (250B)
+
+Exported: dist

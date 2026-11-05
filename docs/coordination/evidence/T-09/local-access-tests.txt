@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela1/server
+
+(node:11848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/local-access.test.ts (12 tests) 4840ms
+   ✓ D-011 local-only transport boundary > mounts the boundary on the actual API before any public diagnostics route  4537ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  07:37:59
+   Duration  7.81s (transform 2.55s, setup 0ms, collect 795ms, tests 4.84s, environment 0ms, prepare 447ms)
+

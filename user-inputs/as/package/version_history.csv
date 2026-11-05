@@ -1,0 +1,3 @@
+﻿version_id,date,change,breaking_change,prior_data_accessible,assurance
+V001,2026-11-01,New independently reconstructed corpus from report + original web sources; prior original ZIP not available,YES,NO,No claim of preservation of inaccessible prior stable IDs
+V002,2026-11-01,Candidate action/rule/formula expansions and illustrative sensitivity charts,NO,NO,No production action approval; no empirically calibrated MCDA parameters
