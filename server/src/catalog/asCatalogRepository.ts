@@ -1,21 +1,21 @@
+import {
+ActionType,
+ASClaim,
+ASClaimSchema,
+ASFormula,
+ASFormulaSchema,
+ASRule,
+ASRuleSchema,
+ASSource,
+ASSourceSchema,
+CanonicalActionCandidateSchema,
+CatalogActionEntry,
+CatalogActionEntrySchema,
+} from '@shared/contracts';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadPrototypePolicy } from '../config/policyLoader';
-import {
-  ActionType,
-  ASClaim,
-  ASClaimSchema,
-  ASFormula,
-  ASFormulaSchema,
-  ASRule,
-  ASRuleSchema,
-  ASSource,
-  ASSourceSchema,
-  CanonicalActionCandidateSchema,
-  CatalogActionEntry,
-  CatalogActionEntrySchema,
-} from '@shared/contracts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,9 +1,9 @@
 import {
-  PrototypePolicyBundle,
-  RobustnessResult,
-  RobustnessResultSchema,
-  ScoredCandidate,
-  WeightSelectionResult,
+PrototypePolicyBundle,
+RobustnessResult,
+RobustnessResultSchema,
+ScoredCandidate,
+WeightSelectionResult,
 } from '@shared/contracts';
 import { ScoringEngine } from './scoringEngine';
 
@@ -283,5 +283,3 @@ export class RobustnessEngine {
     });
   }
 }
-
-export const RobustnessChecker = RobustnessEngine;

@@ -1,17 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import {
-  GlassCard,
-  GlassButton,
-  Field,
-  Icon,
-  IconName,
-  colors,
-} from "../components/SoftGlass";
+import { useState } from "react";
+import { StyleSheet,Text,TouchableOpacity,View } from "react-native";
+import type { Finding,FindingResponse,FindingsPacket } from "../../../shared/contracts/findingsTypes";
 import type {
-  FinancialSnapshot,
-  RecommendationRecord,
-} from "../../../react-app/src/types/pi";
+FinancialSnapshot,
+RecommendationRecord
+} from "../../../shared/pi/types";
+import { FindingsReview } from "../components/FindingsReview";
+import {
+Field,
+GlassButton,
+GlassCard,
+Icon,
+IconName,
+colors,
+} from "../components/SoftGlass";
+import { deriveObservedPlan } from "./planMath";
 
 export function formatMoney(
   value: number | null | undefined,
@@ -23,6 +26,9 @@ export function formatMoney(
   );
 }
 type Props = {
+  manualReviewMessage?: string;
+  findings?: FindingsPacket;
+  onFindingResponse: (finding: Finding, body: Omit<FindingResponse,"expectedVersion"|"evidenceVersion">) => Promise<void>;
   snapshot?: FinancialSnapshot;
   recommendation?: RecommendationRecord | null;
   analysis?: any;
@@ -35,6 +41,7 @@ type Props = {
   onOpen: (collection: string, record?: any) => void;
   onUpload: () => void;
   onManage: () => void;
+  onReviewTransactions: () => void;
 };
 export function TodayScreen(props: Props) {
   const { snapshot, recommendation, busy } = props;
@@ -43,6 +50,7 @@ export function TodayScreen(props: Props) {
   const [showReason, setShowReason] = useState(false);
   const summary = snapshot?.primaryCurrencySummary;
   const currency = snapshot?.baseCurrency || "EUR";
+  const observed = snapshot ? deriveObservedPlan(snapshot, currency) : null;
   const active =
     recommendation &&
     props.experimental &&
@@ -51,7 +59,7 @@ export function TodayScreen(props: Props) {
   const processing = ["queued", "running"].includes(props.job?.status);
   const hasError =
     props.job?.status === "failed" ||
-    props.analysis?.status === "PROVIDER_UNAVAILABLE";
+    (!!props.job && props.analysis?.status === "PROVIDER_UNAVAILABLE");
   const title = active
     ? recommendation.title
     : processing
@@ -92,9 +100,16 @@ export function TodayScreen(props: Props) {
             : props.onOpen("accounts"),
       },
       { title: "Upload statement", icon: "statement", action: props.onUpload },
+      { title: "Review transactions", icon: "plan", action: props.onReviewTransactions },
     ];
   return (
     <>
+      <View style={styles.topRow}>
+        <Text style={styles.note}>Your financial picture</Text>
+        <TouchableOpacity accessibilityRole="button" onPress={props.onReviewTransactions}>
+          <Text style={styles.link}>{snapshot?.readinessState === "state_a_action_ready" ? "Ready" : "Needs review"} · {snapshot?.unresolvedConfirmations.length || 0} checks</Text>
+        </TouchableOpacity>
+      </View>
       <GlassCard>
         <View style={styles.topRow}>
           <Text style={styles.eyebrow}>✧ RECOMMENDED NEXT STEP</Text>
@@ -209,12 +224,15 @@ export function TodayScreen(props: Props) {
             )}
           </>
         ) : (
-          <GlassButton
+          <><GlassButton
             title={processing ? "Review in progress…" : "Review my finances"}
             disabled={busy || processing}
             onPress={props.onReview}
           />
+          </>
         )}
+        {active&&<GlassButton secondary title={processing?"Review in progress…":"Review my finances"} disabled={busy||processing} onPress={props.onReview}/>}
+        {!!props.manualReviewMessage&&<Text accessibilityLiveRegion="polite" style={styles.note}>{props.manualReviewMessage}</Text>}
         {props.job?.error && (
           <Text style={styles.error}>
             {typeof props.job.error === "string"
@@ -223,6 +241,21 @@ export function TodayScreen(props: Props) {
           </Text>
         )}
       </GlassCard>
+
+      <GlassCard>
+        <Text style={styles.eyebrow}>YOUR FINANCIAL PICTURE</Text>
+        <Text style={styles.actionTitle}>Here's what Vela found</Text>
+        <ValueRow label={`Observed spending · ${currency}`} value={formatMoney(observed?.grossSpending, currency)} />
+        <ValueRow label="Subscriptions" value={formatMoney(observed?.categories.subscriptions ?? (observed ? 0 : null), currency)} />
+        <ValueRow label="Transfer movements (excluded)" value={formatMoney(observed?.transfers, currency)} />
+        {snapshot?.dataQuality.multiCurrencyDetected && <Text style={styles.note}>Showing {currency} only. Other currencies remain separate in My Plan; no currency conversion is assumed.</Text>}
+        {!!observed?.unknownCount && <Text style={styles.note}>{observed.unknownCount} transactions in this currency still need review and are excluded from classified totals.</Text>}
+        <Text style={styles.note}>Coverage: {snapshot?.dataQuality.accountsWithStatements || 0} of {snapshot?.dataQuality.totalAccounts || 0} accounts have statements. These are observed history figures, not guaranteed monthly averages.</Text>
+        <View style={styles.line} />
+        <GlassButton secondary title={`Inspect all ${snapshot?.transactions.length || 0} transactions`} disabled={busy} onPress={props.onReviewTransactions} />
+      </GlassCard>
+
+      <FindingsReview packet={props.findings} busy={busy} transactions={snapshot?.transactions || []} respond={props.onFindingResponse} />
 
       <GlassCard>
         <View style={styles.topRow}>
@@ -261,6 +294,17 @@ export function TodayScreen(props: Props) {
             separate.
           </Text>
         )}
+        <View style={styles.line} />
+        <Text style={styles.eyebrow}>YOUR ACCOUNTS</Text>
+        {snapshot?.accountSummaries.map(account => (
+          <TouchableOpacity key={account.account.id} accessibilityRole="button" disabled={busy} onPress={() => props.onOpen("accounts", account.account)} style={{paddingVertical: 10, gap: 4}}>
+            <Text style={styles.link}>{account.account.institution} · {account.account.name}{account.account.isPrimary ? " · Primary" : ""}</Text>
+            <Text style={styles.spendAmount}>{formatMoney(account.latestBalance?.amount, account.account.currency)}</Text>
+            <Text style={styles.note}>{account.account.fundsOwnership.replaceAll("_", " ")} · {account.isStale ? "Balance needs updating" : account.latestBalance ? `As of ${account.latestBalance.asOf.slice(0,10)}` : "No balance date"}</Text>
+            <Text style={styles.note}>{account.transactionCount} transactions · {account.statementCount} statements{account.account.fundsOwnership !== "personal" ? ` · Personal share ${formatMoney(account.personalAccessibleBalance, account.account.currency)}` : ""}</Text>
+          </TouchableOpacity>
+        ))}
+        {snapshot?.currencySummaries.filter(c => c.currency !== currency).map(c => <Text key={c.currency} style={styles.note}>Kept separate · {c.currency}: {c.hasMissingBalances ? "Needs balance data" : formatMoney(c.personalAccessibleCash, c.currency)} personal funds</Text>)}
         <TouchableOpacity accessibilityRole="button" onPress={props.onManage}>
           <Text style={styles.link}>View your accounts →</Text>
         </TouchableOpacity>
@@ -376,13 +420,13 @@ const styles = StyleSheet.create({
   actionTitle: {
     color: colors.ink,
     fontWeight: "600",
-    fontSize: 27,
-    lineHeight: 34,
+    fontSize: 23,
+    lineHeight: 29,
     letterSpacing: -0.7,
   },
-  description: { color: colors.muted, fontSize: 15, lineHeight: 24 },
+  description: { color: colors.muted, fontSize: 13, lineHeight: 21 },
   beta: { color: "#747b68", letterSpacing: 0.6, fontSize: 8, lineHeight: 14 },
-  actions: { flexDirection: "row", gap: 10, alignItems: "center" },
+  actions: { flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center" },
   outlineAction: {
     paddingVertical: 13,
     paddingHorizontal: 18,
@@ -408,7 +452,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   balance: {
-    fontSize: 37,
+    fontSize: 32,
     letterSpacing: -1.4,
     fontWeight: "600",
     color: colors.ink,

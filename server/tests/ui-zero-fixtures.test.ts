@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { createBlankUserSeedData } from '../../react-app/src/database/seed';
-import { parseStatementCSVContent } from '../../react-app/src/services/statementParser';
-import type { FinancialAccount } from '../../react-app/src/types/pi';
-const dir=path.resolve('../user-inputs/synthetic/ui-zero');
+import { describe,expect,it } from 'vitest';
+import type { FinancialAccount } from '../../shared/pi/types';
+import { parseStatementCSVContent } from '../../shared/processing/statementParser';
+import { createBlankUserSeedData } from './fixtures/profile';
+const dir=path.resolve('tests/fixtures/synthetic/ui-zero');
 const account: FinancialAccount={id:'ui_zero',userId:'ui_zero',name:'Test Main',institution:'Test Bank',currency:'EUR',purposes:['daily_spending'],fundsOwnership:'personal',personalAvailableAmount:null,isPrimary:true,notes:'',createdAt:'',updatedAt:''};
 function parse(fileName:string, prior?:ReturnType<typeof parseStatementCSVContent>) {
  return parseStatementCSVContent({userId:account.userId,account,allAccounts:[account],fileName,content:fs.readFileSync(path.join(dir,fileName),'utf8'),existingStatements:prior?[prior.statement]:[],existingTransactions:prior?.transactions||[]});

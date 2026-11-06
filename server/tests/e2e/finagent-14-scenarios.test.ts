@@ -1,29 +1,29 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadPrototypePolicy } from '../../src/config/policyLoader';
+import { afterAll,beforeAll,describe,expect,it,vi } from 'vitest';
+import { AssistantAgent } from '../../src/ai/assistantAgent';
+import { LLMClient } from '../../src/ai/llmClient';
 import { ASCatalogRepository } from '../../src/catalog/asCatalogRepository';
 import { ActionChecker } from '../../src/checker/actionChecker';
-import { WeightCalculator } from '../../src/decision/weightCalculator';
-import { ImpactCalculator } from '../../src/decision/impactCalculator';
+import { loadPrototypePolicy } from '../../src/config/policyLoader';
 import { ComplexityEvaluator } from '../../src/decision/complexityEvaluator';
-import { ScoringEngine } from '../../src/decision/scoringEngine';
-import { RobustnessEngine } from '../../src/decision/robustnessChecker';
 import { DecisionEngine } from '../../src/decision/decisionEngine';
-import { SecurityError, SecurityService } from '../../src/security/securityService';
+import { ImpactCalculator } from '../../src/decision/impactCalculator';
+import { RobustnessEngine } from '../../src/decision/robustnessChecker';
+import { ScoringEngine } from '../../src/decision/scoringEngine';
+import { WeightCalculator } from '../../src/decision/weightCalculator';
 import { FrankfurterFXService } from '../../src/fx/frankfurterService';
-import { SQLiteStore } from '../../src/db/sqliteStore';
 import { ReviewOrchestrator } from '../../src/orchestrator/reviewWorkflow';
-import { LLMClient } from '../../src/ai/llmClient';
-import { AssistantAgent } from '../../src/ai/assistantAgent';
+import { SecurityError,SecurityService } from '../../src/security/securityService';
+import { SQLiteStore } from '../helpers/engineStore';
 import {
-  createBaselineSolventFixture,
-  createCandidateActionFixture,
-  createImminentBillShortfallFixture,
-  createMultiCurrencyFixture,
-  createRiskyAutoTransferFixture,
-  createUnknownDebtTermsFixture,
-  createZeroGoalsFixture,
+createBaselineSolventFixture,
+createCandidateActionFixture,
+createImminentBillShortfallFixture,
+createMultiCurrencyFixture,
+createRiskyAutoTransferFixture,
+createUnknownDebtTermsFixture,
+createZeroGoalsFixture,
 } from '../helpers/testFixtures';
 
 export interface ScenarioAuditEntry {

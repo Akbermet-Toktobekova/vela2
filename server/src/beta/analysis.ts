@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import {BetaEngineRepository} from './engineRepository';
-import {loadPrototypePolicy} from '../config/policyLoader';
-import {ReviewOrchestrator} from '../orchestrator/reviewWorkflow';
-import {LLMClient,wrapUntrustedData} from '../ai/llmClient';
-import {BetaError,BetaFinancial} from './financial';
-import type {BetaStore} from './store';
+import { LLMClient,wrapUntrustedData } from '../ai/llmClient';
+import { loadPrototypePolicy } from '../config/policyLoader';
+import { ReviewOrchestrator } from '../orchestrator/reviewWorkflow';
+import { BetaEngineRepository } from './engineRepository';
+import { BetaError,BetaFinancial } from './financial';
+import type { BetaStore } from './store';
 type User={id:string;name:string;email:string};
 type Provider=Pick<LLMClient,'generateStructured'|'generateText'>;
 type Provenance={provider:string;modelUsed:string;liveCallUsed:boolean};
@@ -18,7 +18,7 @@ export class BetaAnalysis {
  private current(user:User,version?:number){const state=this.financial.get(user);if(!state.aiConsent)throw new BetaError('AI_CONSENT_REQUIRED','Enable AI processing before using AI features.',403);if(version!==undefined&&state.version!==version)throw new BetaError('SUPERSEDED','Profile changed; retry with the current data.',409);return state;}
  private assertCurrent(user:User,version:number){const latest=this.store.get(user.id,'state') as any;if(!latest||!latest.aiConsent||latest.version!==version)throw new BetaError('SUPERSEDED','Profile or privacy settings changed; retry.',409);}
  private sanitize(user:User,text:string):string {
-  const envelope=this.store.get(user.id,'state') as any;if(!envelope)throw new BetaError('SUPERSEDED','Profile no longer exists.',409);const state=envelope.state as import('../../../react-app/src/database/seed').PIDatabaseSeed;
+  const envelope=this.store.get(user.id,'state') as any;if(!envelope)throw new BetaError('SUPERSEDED','Profile no longer exists.',409);const state=envelope.state as import('../../../shared/profile/seed').PIDatabaseSeed;
   const forbidden=[user.email,user.name,...state.statements.map(s=>s.fileName),...state.accounts.flatMap(a=>[a.name,a.institution,a.notes]),...state.incomes.map(i=>i.notes),...state.statements.flatMap(s=>[s.errorMessage||'',s.overlapWarning||'']),...state.confirmations.flatMap(c=>[c.questionText,c.impactReason]),state.preferences.concernNotes].filter(s=>s&&s.length>2);
   let clean=text;for(const value of forbidden)clean=clean.split(value).join('[REDACTED]');
   return clean.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,'[EMAIL]').replace(/\b[A-Z]{2}\d{2}[A-Z0-9]{10,30}\b/g,'[ACCOUNT]').replace(/\b(?:\d[ -]*?){9,19}\b/g,'[NUMBER]');
@@ -111,12 +111,12 @@ export class BetaAnalysis {
   try{return await pending;}finally{this.inflight.delete(inflightKey);}
  }
  async chat(user:User,message:string,requestId:string){const current=this.current(user);if(!message.trim()||message.length>12000||!requestId||requestId.length>200)throw new BetaError('INVALID_INPUT','Provide a message and a valid request identifier.');
-  const key='chat-request:'+requestId;const digest=createHash('sha256').update(message).digest('hex');const previous=this.store.get(user.id,key) as any;
+  const generation=Number(this.store.get(user.id,'chat-generation')||0);const key='chat-request:'+(generation?generation+':':'')+requestId;const digest=createHash('sha256').update(message).digest('hex');const previous=this.store.get(user.id,key) as any;
   if(previous){if(previous.requestHash!==digest)throw new BetaError('REQUEST_ID_REUSED','Request identifier was already used for different content.',409);return previous;}
-  const inflightKey=user.id+':'+requestId;const active=this.inflight.get(inflightKey);if(active){const result=await active;if(result.requestHash!==digest)throw new BetaError('REQUEST_ID_REUSED','Request identifier was already used for different content.',409);return result;}
-  const run=this.chatOnce(user,message,requestId,current.version,digest);this.inflight.set(inflightKey,run);try{return await run;}finally{this.inflight.delete(inflightKey);}
+  const inflightKey=user.id+':'+generation+':'+requestId;const active=this.inflight.get(inflightKey);if(active){const result=await active;if(result.requestHash!==digest)throw new BetaError('REQUEST_ID_REUSED','Request identifier was already used for different content.',409);return result;}
+  const run=this.chatOnce(user,message,requestId,current.version,digest,generation,key);this.inflight.set(inflightKey,run);try{return await run;}finally{this.inflight.delete(inflightKey);}
  }
- private async chatOnce(user:User,message:string,requestId:string,version:number,requestHash:string){
+ private async chatOnce(user:User,message:string,requestId:string,version:number,requestHash:string,generation:number,cacheKey:string){
   const snapshot=this.financial.snapshot(user);const facts:Record<string,string>={accounts:`You have ${snapshot.accountSummaries.length} saved accounts.`,transactions:`There are ${snapshot.transactions.length} imported transactions.`,documents:`There are ${snapshot.statements.length} imported statements.`,goals:`You have ${snapshot.goals.length} saved financial goals.`,debts:`You have ${snapshot.debts.length} saved debt records.`};
   snapshot.accountSummaries.forEach((a,index)=>{facts['balance_'+index]=a.latestBalance?`Account ${index+1}: reported balance ${a.latestBalance.amount} ${a.latestBalance.currency}, as of ${a.latestBalance.asOf}.`:`Account ${index+1}: balance is unknown.`;});
   for(const [currency,amount] of Object.entries(snapshot.declaredMonthlyIncomeByCurrency))facts['declared_income_'+currency]=`Declared estimated monthly income: ${amount} ${currency}. This is a user estimate, not an observed statement total.`;
@@ -152,10 +152,11 @@ export class BetaAnalysis {
   }
   else if(parsed.data.intent==='financial_action'){reply=analysis?.experimentalRecommendations?(facts.recommendation?facts.recommendation+'\n'+facts.reason:'There is no current checked recommendation. Refresh Today to evaluate available actions.'):gate;status=analysis?.experimentalRecommendations?'COMPLETED':'POLICY_GATED';}
   else {const selected=[...new Set(parsed.data.factIds)].filter(id=>Object.hasOwn(facts,id));reply=selected.length?selected.map(id=>facts[id]).join('\n'):'I can summarize saved accounts, statement transactions and missing data. Please ask about those records.';status='COMPLETED';}
+  if(Number(this.store.get(user.id,'chat-generation')||0)!==generation)throw new BetaError('CHAT_CLEARED','Chat was cleared while this reply was processing. Send a new message.',409);
   // No model-generated text or amounts can bypass the real-data release gate.
   const now=new Date().toISOString();const messages=(this.store.get(user.id,'chat') as any[]||[]);messages.push({id:requestId,role:'user',content:message,createdAt:now},{id:requestId+'-reply',role:'assistant',content:reply,createdAt:now});
   const response={messages,reply,status,requestHash,releaseGate:analysis?.experimentalRecommendations?null:gate,traceId:analysis?.traceId||null,provenance:{provider:result.provider,modelUsed:result.modelUsed,liveCallUsed:result.liveCallUsed}};
-  this.store.put(user.id,'chat',messages);this.store.put(user.id,'chat-request:'+requestId,response);return response;
+  this.store.put(user.id,'chat',messages);this.store.put(user.id,cacheKey,response);return response;
  }
 }
 

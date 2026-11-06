@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach,describe,expect,it,vi } from "vitest";
+import { BetaFinancial } from "../src/beta/financial";
 import { BetaReviewScheduler } from "../src/beta/reviewScheduler";
 import { BetaStore } from "../src/beta/store";
-import { BetaFinancial } from "../src/beta/financial";
 
 const user = {
   id: "scheduler-user",
@@ -34,7 +34,6 @@ function setup(consent = true) {
   const jobs = { enqueue: vi.fn(() => ({ id: "review-job" })) };
   const scheduler = new BetaReviewScheduler(
     store,
-    financial,
     analysis as any,
     jobs as any,
   );

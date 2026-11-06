@@ -1,0 +1,12 @@
+{
+  "version": "merchant_directory_v1_synthetic",
+  "scope": "Exact aliases reviewed against synthetic acceptance fixtures; not universal merchant coverage.",
+  "entries": [
+    {"id":"netflix","canonicalName":"Netflix","aliases":["netflix","netflix.com"],"matchingMethod":"exact_normalized","possibleCategories":["subscriptions"],"kind":"subscription_service","provenance":"Synthetic findings fixtures: Netflix monthly/annual/weekly charges; descriptor identity is not proof of a subscription contract.","confidence":"medium"},
+    {"id":"spotify","canonicalName":"Spotify","aliases":["spotify","spotify premium"],"matchingMethod":"exact_normalized","possibleCategories":["subscriptions"],"kind":"subscription_service","provenance":"Synthetic findings fixture: Spotify recurrence; descriptor identity requires user review.","confidence":"medium"},
+    {"id":"test_energy","canonicalName":"Test Energy","aliases":["test energy","test energy bill"],"matchingMethod":"exact_normalized","possibleCategories":["utilities_energy"],"kind":"variable_bill","provenance":"Fictional utility in synthetic variable-bill acceptance fixture.","confidence":"medium"},
+    {"id":"test_grocery","canonicalName":"Test Grocery","aliases":["test grocery","test grocery shop"],"matchingMethod":"exact_normalized","possibleCategories":["groceries_food"],"kind":"ordinary_purchase","provenance":"Fictional supermarket in repeated ordinary purchase acceptance fixture.","confidence":"medium"},
+    {"id":"paypal","canonicalName":"PayPal","aliases":["paypal"],"matchingMethod":"exact_normalized","possibleCategories":["other"],"kind":"processor","provenance":"Synthetic processor ambiguity fixture; PayPal does not identify an underlying purchase.","confidence":"low"},
+    {"id":"amazon","canonicalName":"Amazon","aliases":["amazon","amazon marketplace"],"matchingMethod":"exact_normalized","possibleCategories":["other"],"kind":"marketplace","provenance":"Synthetic marketplace ambiguity fixture; no underlying purchase category inferred.","confidence":"low"}
+  ]
+}

@@ -1,9 +1,11 @@
-import {LLMClient} from '../src/ai/llmClient';
-import {BetaEngineRepository} from '../src/beta/engineRepository';
-import {afterEach,describe,expect,it,vi} from 'vitest';
-import {BetaStore} from '../src/beta/store';import {BetaFinancial} from '../src/beta/financial';import {BetaAnalysis} from '../src/beta/analysis';
+import { afterEach,describe,expect,it,vi } from 'vitest';
+import { LLMClient } from '../src/ai/llmClient';
+import { BetaAnalysis } from '../src/beta/analysis';
+import { BetaEngineRepository } from '../src/beta/engineRepository';
+import { BetaFinancial } from '../src/beta/financial';
+import { BetaStore } from '../src/beta/store';
 const stores:BetaStore[]=[];const user={id:'ai_user',name:'Private Mira',email:'private@example.com'};
-function setup(consent=true,options:any={}){const store=new BetaStore({filename:':memory:'});stores.push(store);const financial=new BetaFinancial(store);const state=financial.get(user);state.aiConsent=consent;store.put(user.id,'state',state);const provider={generateStructured:vi.fn(async(p:any)=>({data:{factIds:['accounts'],intent:'records'},provider:'gemini',modelUsed:'fake-test',liveCallUsed:true})),generateText:vi.fn()};return {store,financial,provider,analysis:new BetaAnalysis(store,financial,provider as any,options)};}
+function setup(consent=true,options:any={}){const store=new BetaStore({filename:':memory:'});stores.push(store);const financial=new BetaFinancial(store);const state=financial.get(user);state.aiConsent=consent;store.put(user.id,'state',state);const provider={generateStructured:vi.fn(async(_input:any)=>({data:{factIds:['accounts'],intent:'records'},provider:'gemini',modelUsed:'fake-test',liveCallUsed:true})),generateText:vi.fn()};return {store,financial,provider,analysis:new BetaAnalysis(store,financial,provider as any,options)};}
 afterEach(()=>{for(const store of stores.splice(0))store.close();});
 describe('Beta read-only AI gates and orchestration',()=>{
  it('requires consent without making provider calls',async()=>{const {analysis,provider}=setup(false);await expect(analysis.chat(user,'hello','a')).rejects.toMatchObject({code:'AI_CONSENT_REQUIRED'});await expect(analysis.review(user,0)).rejects.toMatchObject({code:'AI_CONSENT_REQUIRED'});expect(provider.generateStructured).not.toHaveBeenCalled();});

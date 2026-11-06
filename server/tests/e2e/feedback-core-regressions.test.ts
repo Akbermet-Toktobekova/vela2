@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SQLiteStore } from '../../src/db/sqliteStore';
-import { ReviewOrchestrator } from '../../src/orchestrator/reviewWorkflow';
-import { LLMClient } from '../../src/ai/llmClient';
-import { SuggestionGenerator } from '../../src/suggestion/suggestionGenerator';
 import { SharedFinancialCalculator } from '@shared/calculator';
-import { createBaselineSolventFixture, createRiskyAutoTransferFixture } from '../helpers/testFixtures';
+import { afterEach,beforeEach,describe,expect,it,vi } from 'vitest';
+import { LLMClient } from '../../src/ai/llmClient';
+import { ReviewOrchestrator } from '../../src/orchestrator/reviewWorkflow';
+import { SuggestionGenerator } from '../../src/suggestion/suggestionGenerator';
+import { SQLiteStore } from '../helpers/engineStore';
+import { createBaselineSolventFixture,createRiskyAutoTransferFixture } from '../helpers/testFixtures';
 
 describe('Core feedback commitments and manual execution', () => {
   let store:SQLiteStore, workflow:ReviewOrchestrator, user:string, recommendationId:string;

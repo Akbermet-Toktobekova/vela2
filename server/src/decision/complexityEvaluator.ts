@@ -1,11 +1,11 @@
 import {
-  CandidateAction,
-  CandidateComplexityEvaluation,
-  CandidateComplexityEvaluationSchema,
-  CatalogActionEntry,
-  ComplexityComponent,
-  ComplexityFactorScore,
-  PrototypePolicyBundle,
+CandidateAction,
+CandidateComplexityEvaluation,
+CandidateComplexityEvaluationSchema,
+CatalogActionEntry,
+ComplexityComponent,
+ComplexityFactorScore,
+PrototypePolicyBundle,
 } from '@shared/contracts';
 import { ASCatalogRepository } from '../catalog/asCatalogRepository';
 

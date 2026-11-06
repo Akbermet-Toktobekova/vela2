@@ -1,10 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AIEvaluationService, normalizeComplexityFactor } from '../src/ai/evaluationCall';
+import { afterEach,describe,expect,it,vi } from 'vitest';
+import { AIEvaluationService,normalizeComplexityFactor } from '../src/ai/evaluationCall';
 import { LLMClient } from '../src/ai/llmClient';
+import { loadPrototypePolicy } from '../src/config/policyLoader';
 import { ComplexityEvaluator } from '../src/decision/complexityEvaluator';
 import { SuggestionGenerator } from '../src/suggestion/suggestionGenerator';
-import { loadPrototypePolicy } from '../src/config/policyLoader';
-import { createBaselineSolventFixture, createCandidateActionFixture } from './helpers/testFixtures';
+import { createBaselineSolventFixture,createCandidateActionFixture } from './helpers/testFixtures';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 

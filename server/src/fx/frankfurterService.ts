@@ -1,5 +1,5 @@
-import { FXRateEntry } from '@shared/pi/types';
 import { PrototypePolicyBundle } from '@shared/contracts';
+import { FXRateEntry } from '@shared/pi/types';
 import { loadPrototypePolicy } from '../config/policyLoader';
 
 export interface FXCachePersistence {

@@ -288,5 +288,38 @@
     "minimumAmount": 10,
     "availableCashFraction": 0.4,
     "amountRoundingIncrement": 5
+  },
+  "findingDetectionPolicy": {
+    "version": "findings_v1_prototype",
+    "status": "PROTOTYPE_ONLY",
+    "description": "Engineering detection tolerances, not action eligibility or proven savings; no minimum spend filter.",
+    "minimumDistinctChargeDates": 3,
+    "maximumVisibleFindings": 5,
+    "cadenceDays": {
+      "weekly": [
+        6,
+        8
+      ],
+      "monthly": [
+        26,
+        35
+      ],
+      "annual": [
+        350,
+        380
+      ]
+    },
+    "maximumRelativeAmountVariation": 0.25,
+    "priorityOrder": [
+      "data_blocker",
+      "duplicate",
+      "fee",
+      "recurrence",
+      "transfer",
+      "classification"
+    ],
+    "aiMaximumRecords": 30,
+    "aiMerchantTokenLength": 80,
+    "aiTimeoutMs": 15000
   }
 }

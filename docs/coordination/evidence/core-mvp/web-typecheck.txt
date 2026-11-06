@@ -1,4 +1,0 @@
-Command: npx tsc --noEmit
-Working directory: react-app
-Exit code: 0
-No TypeScript diagnostics.

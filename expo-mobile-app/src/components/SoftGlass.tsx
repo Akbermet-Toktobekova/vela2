@@ -1,18 +1,18 @@
-import React, { ReactNode } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  Platform,
-} from "react-native";
-import Svg, { Path, Circle, Rect, Line } from "react-native-svg";
 import { BlurView } from "expo-blur";
+import React,{ ReactNode } from "react";
+import {
+Platform,
+StyleSheet,
+Text,
+TextInput,
+TouchableOpacity,
+View,
+} from "react-native";
+import Svg,{ Circle,Path,Rect } from "react-native-svg";
 
 export const colors = {
-  ink: "#292f25",
-  muted: "#787d72",
+  ink: "#272e23",
+  muted: "#74766d",
   sage: "#6c785d",
   line: "rgba(255,255,255,0.92)",
   green: "#386641",
@@ -177,22 +177,28 @@ export function Field({
   value,
   onChange,
   secure = false,
+  inputRef,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   secure?: boolean;
+  inputRef?: React.Ref<React.ComponentRef<typeof TextInput>>;
 }) {
   const email = label.toLowerCase().includes("email");
   return (
     <View style={{ gap: 7 }}>
       <Text style={glass.label}>{label}</Text>
       <TextInput
+        ref={inputRef}
         accessibilityLabel={label}
         value={value}
         onChangeText={onChange}
         style={glass.input}
         secureTextEntry={secure}
+        returnKeyType="done"
+        blurOnSubmit
+        autoCorrect={!secure && !email}
         autoCapitalize={secure || email ? "none" : "sentences"}
         keyboardType={
           email
@@ -223,7 +229,7 @@ export function FloatingNavigation({
       <BlurView intensity={65} tint="light" style={glass.navigation}>
         {items.map((item) => (
           <TouchableOpacity
-            key={item.name}
+            key={item.name.toUpperCase()}
             accessibilityRole="tab"
             accessibilityState={{ selected: active === item.name }}
             onPress={() => onChange(item.name)}
@@ -239,7 +245,7 @@ export function FloatingNavigation({
                 active === item.name && { color: colors.ink },
               ]}
             >
-              {item.name}
+              {item.name.toUpperCase()}
             </Text>
           </TouchableOpacity>
         ))}
@@ -257,24 +263,24 @@ export function AmbientBackground() {
 }
 export const glass = StyleSheet.create({
   card: {
-    borderRadius: 27,
+    borderRadius: 24,
     overflow: "hidden",
     borderWidth: 1.3,
     borderColor: colors.line,
-    backgroundColor: "rgba(255,255,255,0.39)",
+    backgroundColor: "rgba(255,255,255,0.47)",
     shadowColor: "#73806a",
     shadowOffset: { width: 0, height: 9 },
     shadowOpacity: 0.07,
     shadowRadius: 22,
     elevation: 1,
   },
-  cardContent: { padding: 20, gap: 15 },
+  cardContent: { padding: 16, gap: 12 },
   button: {
     minHeight: 49,
     paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.94)",
+    backgroundColor: "rgba(255,255,255,0.84)",
     borderColor: "#fff",
     borderWidth: 1,
     alignItems: "center",
@@ -284,7 +290,7 @@ export const glass = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 10,
   },
-  secondary: { backgroundColor: "rgba(255,255,255,0.34)", shadowOpacity: 0 },
+  secondary: { backgroundColor: "rgba(255,255,255,0.40)", shadowOpacity: 0 },
   buttonText: { fontSize: 14, fontWeight: "600", color: colors.ink },
   label: {
     fontSize: 10,
@@ -309,10 +315,10 @@ export const glass = StyleSheet.create({
     bottom: 14,
     alignSelf: "center",
     width: "92%",
-    maxWidth: 440,
+    maxWidth: 390,
     borderWidth: 1.5,
     borderColor: "white",
-    borderRadius: 33,
+    borderRadius: 28,
     overflow: "hidden",
     shadowColor: "#818b79",
     shadowOffset: { width: 0, height: 8 },
@@ -327,12 +333,12 @@ export const glass = StyleSheet.create({
   },
   navItem: {
     flex: 1,
-    minHeight: 54,
+    minHeight: 56,
     gap: 7,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 27,
+    borderRadius: 24,
   },
   navActive: { backgroundColor: "rgba(255,255,255,.92)" },
   navText: { fontSize: 11, fontWeight: "600", color: colors.muted },

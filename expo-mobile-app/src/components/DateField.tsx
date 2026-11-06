@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Keyboard, Platform, Text, TouchableOpacity, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Field, glass, colors } from "./SoftGlass";
+import { useState } from "react";
+import { Keyboard,Platform,Text,TouchableOpacity,View } from "react-native";
+import { colors,Field,glass } from "./SoftGlass";
 
 export function DateField({
   label,

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import nodemailer from 'nodemailer';
-import {createBetaApp} from './app';
+import { createBetaApp } from './app';
 const settingsFile=path.resolve('.env.beta.local');if(fs.existsSync(settingsFile))process.loadEnvFile(settingsFile);
 const configured=!!process.env.BETA_SMTP_HOST&&!!process.env.BETA_MAIL_FROM;
 const transport=configured?nodemailer.createTransport({host:process.env.BETA_SMTP_HOST,port:Number(process.env.BETA_SMTP_PORT||587),secure:process.env.BETA_SMTP_SECURE==='true',requireTLS:true,auth:process.env.BETA_SMTP_USER?{user:process.env.BETA_SMTP_USER,pass:process.env.BETA_SMTP_PASSWORD}:undefined}):null;

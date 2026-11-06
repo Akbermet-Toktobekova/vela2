@@ -1,7 +1,7 @@
 import { RecommendationDecision } from '@shared/contracts';
 import { FinancialSnapshot } from '@shared/pi/types';
 import { ASCatalogRepository } from '../catalog/asCatalogRepository';
-import { LLMClient, wrapUntrustedData } from './llmClient';
+import { LLMClient,wrapUntrustedData } from './llmClient';
 
 export interface ExplanationTexts {
   title: string;

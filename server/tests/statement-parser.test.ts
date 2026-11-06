@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { parseStatementCSVContent } from '../../react-app/src/services/statementParser';
-import type { FinancialAccount, TransactionRecord } from '../../react-app/src/types/pi';
+import { describe,expect,it } from 'vitest';
+import type { FinancialAccount,TransactionRecord } from '../../shared/pi/types';
+import { parseStatementCSVContent } from '../../shared/processing/statementParser';
 
 const account: FinancialAccount = {
   id: 'parser_account', userId: 'parser_user', name: 'Main', institution: 'Bank',

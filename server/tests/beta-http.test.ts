@@ -1,8 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
 import type { Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { BetaStore } from '../src/beta/store';
+import { afterEach,describe,expect,it,vi } from 'vitest';
 import { createBetaApp } from '../src/beta/app';
+import { BetaStore } from '../src/beta/store';
 
 const cleanups:(()=>Promise<void>)[]=[];
 afterEach(async()=>{for(const cleanup of cleanups.splice(0))await cleanup();});
@@ -22,6 +22,29 @@ async function setup(){
 }
 function withAccount(state:any,userId:string){const now=new Date().toISOString();state.accounts.push({id:'test-main',userId,name:'Main',institution:'Test Bank',currency:'EUR',purposes:['daily_spending'],fundsOwnership:'personal',personalAvailableAmount:null,isPrimary:true,notes:'',createdAt:now,updatedAt:now});return state;}
 describe('Authenticated beta HTTP integration',()=>{
+ it('returns safe field errors for invalid authentication inputs and preserves auth outcomes',async()=>{
+  const {request,register}=await setup();
+  for(const [field,value] of [['name',''],['email','invalid'],['password','short']]) {
+   const body={name:'Synthetic',email:'synthetic@example.invalid',password,[field]:value};
+   const r=await request('/auth/register','POST',body);
+   expect(r.status).toBe(400);expect(r.body.error.code).toBe('VALIDATION_ERROR');
+   expect(r.body.error.fields[field]).toBeTruthy();
+   expect(JSON.stringify(r.body)).not.toContain(password);
+  }
+  const a=await register();
+  expect((await request('/auth/register','POST',{name:'Alice',email:a.user.email,password})).status).toBe(409);
+  expect((await request('/auth/login','POST',{email:a.user.email,password:'Wrong-Test-Password!'})).status).toBe(401);
+  expect((await request('/auth/login','POST',{email:a.user.email,password})).status).toBe(200);
+ });
+ it('recognizes foreign validation constructors and hides unexpected server details',async()=>{
+  const {request,auth}=await setup();
+  vi.spyOn(auth,'register').mockRejectedValueOnce(Object.assign(new Error('private validation value'),{name:'ZodError',issues:[{path:['password']}]}));
+  const r=await request('/auth/register','POST',{name:'Synthetic',email:'synthetic@example.invalid',password});
+  expect(r.status).toBe(400);expect(r.body.error.fields.password).toContain('12');
+  vi.spyOn(auth,'login').mockRejectedValueOnce(new Error('internal secret diagnostic'));
+  const failed=await request('/auth/login','POST',{email:'synthetic@example.invalid',password});
+  expect(failed.status).toBe(500);expect(JSON.stringify(failed.body)).not.toContain('internal secret');
+ });
  it('confirms imported transaction classification with version checks and owner isolation',async()=>{
   const {request,register,store}=await setup();const a=await register(),b=await register('Bob','bob@example.com');
   const initial=(await request('/state','GET',undefined,a.token)).body;

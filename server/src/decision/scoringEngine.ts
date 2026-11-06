@@ -1,11 +1,11 @@
 import {
-  CandidateAction,
-  CandidateComplexityEvaluation,
-  ImpactSimulationResult,
-  PrototypePolicyBundle,
-  ScoredCandidate,
-  ScoredCandidateSchema,
-  WeightSelectionResult,
+CandidateAction,
+CandidateComplexityEvaluation,
+ImpactSimulationResult,
+PrototypePolicyBundle,
+ScoredCandidate,
+ScoredCandidateSchema,
+WeightSelectionResult,
 } from '@shared/contracts';
 
 export interface CandidateScoringInputItem {

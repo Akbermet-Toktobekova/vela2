@@ -1,74 +1,81 @@
-# Vela / FinAgent
+# Vela — Expo mobile app and API
 
-Локальный прототип: сервер, веб-приложение и детерминированные финансовые расчёты.
+This branch contains the Expo application and its authenticated backend. The updated Today, My Plan, charts, Assistant, statement imports, transaction review, review progress, and action history are retained. Expo also supports a browser preview of the same application.
 
-## Запуск
+## Layout
 
-В двух отдельных терминалах из корня проекта:
+- `expo-mobile-app/`: Android/iPhone application and Expo browser preview.
+- `server/`: authenticated beta API, encrypted persistence, jobs, financial engine, AI and regression tests.
+- `shared/`: domain types, blank profiles, processing, validated contracts and deterministic calculator.
+- `.agents/skills/` and `AGENTS.md`: project skills, ownership and financial safeguards.
+- `docs/`: specifications, decisions, current verification and cleanup mapping.
+- `server/data/as/`: canonical financial knowledge and provenance. Existing review/production-approval statuses remain unchanged.
+- `server/tests/fixtures/`: synthetic profiles and statements. Test-only engine/HTTP harnesses live under `server/tests/helpers/`; they are not production API entrypoints.
 
-```powershell
-cd server
+## Install
+
+Use Node.js with built-in `node:sqlite` support and a version compatible with the installed Expo SDK. In each package, run `npm ci` once:
+
+```bash
+cd ~/Desktop/Vela2/server
 npm ci
+```
+
+```bash
+cd ~/Desktop/Vela2/expo-mobile-app
+npm ci
+```
+
+## Start
+
+Terminal 1 — authenticated API on loopback port 3002:
+
+```bash
+cd ~/Desktop/Vela2/server
 npm run dev
 ```
 
-```powershell
-cd react-app
-npm ci
-npm run dev
+`npm start` and `npm run beta` also start the beta API. `dev` watches source changes.
+
+Terminal 2 — Expo Go on a phone:
+
+```bash
+cd ~/Desktop/Vela2/expo-mobile-app
+npm run friends
 ```
 
-Откройте локальный адрес, который выведет Vite. Сервер по умолчанию использует порт 3001. Настройки и ключи провайдера: [user-inputs/README.md](user-inputs/README.md). Секреты не добавляйте в Git.
+Scan the current QR code. Keep both terminals open. The phone also needs a separate approved HTTPS tunnel to port 3002. Set the app server address to that tunnel URL ending in `/api/beta`; localhost on a phone points to the phone itself. Restarting a tunnel may change its address. No public API exposure is started automatically.
 
-## Проверка
+For a Mac browser preview, use this instead of a second Expo process:
 
-```powershell
-cd server
+```bash
+npm run web -- --localhost --port 8081
+```
+
+Open http://localhost:8081 and use http://localhost:3002/api/beta as the server address. Run only one Expo process per port; stop it with Control+C before changing launch modes.
+
+## Local configuration and data
+
+- Optional mobile default: `EXPO_PUBLIC_API_URL` in `expo-mobile-app/.env.local`. No provider credentials belong in the app.
+- AI provider credentials remain in the ignored compatibility path `user-inputs/secrets/.env`. Only that local secrets directory remains; it is not part of tracked source.
+- Password email configuration: copy `server/.env.beta.example` to ignored `server/.env.beta.local` and configure SMTP. No reset email is delivered without a sender.
+- Beta records reside in `server/data/beta.sqlite`. Preserve the adjacent key file with the database; do not remove either to fix an error. On macOS the local key has owner-only permissions; Windows uses DPAPI.
+- AI processing and experimental recommendations retain their existing consent gates. User-reported action outcomes do not move money or change financial records.
+
+## Verify
+
+```bash
+cd ~/Desktop/Vela2/server
 npm run typecheck
 npm test
 ```
 
-```powershell
-cd react-app
-npx tsc --noEmit
-npm run build
+```bash
+cd ~/Desktop/Vela2/expo-mobile-app
+npm run typecheck
+npx expo export --platform all
 ```
 
-Веб-регрессии находятся в `server/tests/web-*.test.ts` и выполняются вместе с серверными тестами.
+Exports verify bundles, not physical-device behavior. Android/iPhone picking, keyboard, accessibility and UI acceptance must be checked separately.
 
-## Структура
-
-- `react-app/` — текущее веб-приложение; рабочие иконки находятся в `react-app/public/assets/`.
-- `server/` — API, SQLite, пайплайн рекомендаций и тесты.
-- `shared/` — общие контракты, типы и финансовый калькулятор.
-- `expo-mobile-app/` — отдельный мобильный прототип.
-- `user-inputs/` — исходные материалы, локальные настройки и синтетические профили.
-- `docs/SPEC.md`, `docs/coordination/DECISIONS.md` — спецификация и принятые решения.
-- `archive/` — сохранённые материалы раннего прототипа и дизайна; текущая сборка их не использует.
-
-Канонические записи AS и предварительные параметры политики имеют разные статусы. Правила работы с ними описаны в [AGENTS.md](AGENTS.md).
-
-## Мобильный прототип — Expo SDK 58
-
-```powershell
-cd expo-mobile-app
-npm ci
-npm start -- --localhost
-```
-
-Для просмотра на этом компьютере: `npm run web -- --localhost` (обычно http://localhost:8081).
-Проверки: `npm run typecheck`, `npx expo install --check`, `npx expo-doctor`, `npx expo export --platform all`.
-Мобильное приложение пока является отдельным интерфейсным демо с демонстрационными данными, без подключения к серверу. Работа на физическом устройстве требует отдельной проверки и совместимого клиента Expo SDK 58. Сервер остаётся доступен только на этом компьютере.
-
-
-## Authenticated mobile beta (work in progress)
-
-The new API is separate from the original local prototype. From `server`, run `npm run beta`. Its database is `server/data/beta.sqlite`; Windows protects its key with DPAPI. Keep the database and protected key together for backup/restore under the same Windows account. Do not delete either file to resolve an error.
-
-Copy `server/.env.beta.example` to `server/.env.beta.local` to configure password email. No message is sent until a real SMTP sender is configured. SMTP uses TLS. Set `BETA_RESET_URL` to your public HTTPS API address plus `/reset`.
-
-Expose only port 3002 through an HTTPS tunnel; legacy port 3001 must stay local. In the mobile app, enter the HTTPS address ending in `/api/beta`, or set `EXPO_PUBLIC_API_URL` before starting Expo. Run `npm run friends` from `expo-mobile-app` for Expo Go access. The API and Expo tunnels have different addresses and both must remain running. Never enter your computer's localhost address on a phone.
-
-Accounts use name, email and a 12–128 character password, with no email verification code. Sessions persist in native secure storage. Real-data financial recommendations remain gated pending policy approval; read-only records, import and analysis are available. Generic PDF tables may require manual CSV mapping; scanned PDFs are not OCR-supported.
-
-Source documents remain until deletion. No scheduled backup rotation is enabled yet; any manually created backups remain until the operator removes them. Account/file deletion removes active data, not separately created offline backups. Physical Android/iPhone acceptance and SMTP delivery must still be verified before calling the full beta complete.
+See `docs/EXPO-CLEANUP.md` for migration/recovery details and `docs/progress.md` for verification results. No production deployment is implied.

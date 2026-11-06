@@ -103,6 +103,14 @@ export class BetaAuth {
     if (!row || row.expires_at <= Date.now()) throw new BetaAuthError('UNAUTHENTICATED', 'Session expired or invalid.', 401);
     return this.user(row);
   }
+  updateName(userId: string, name: string): BetaUser {
+    const cleanName = validate(z.string().trim().min(1).max(100), name);
+    const row = this.db.prepare('SELECT * FROM auth_users WHERE id=?').get(userId) as any;
+    if (!row) throw new BetaAuthError('UNAUTHENTICATED', 'Please sign in.', 401);
+    const current = this.user(row);
+    this.db.prepare('UPDATE auth_users SET profile_cipher=? WHERE id=?').run(this.encrypt(JSON.stringify({name: cleanName, email: current.email})), userId);
+    return {...current, name: cleanName};
+  }
   logout(token: string): void { this.db.prepare('DELETE FROM auth_sessions WHERE token_hash=?').run(hash(token)); }
   async forgotPassword(email: string): Promise<{message:string}> {
     const normalized = validate(emailSchema, email); this.attempt(`reset:${hash(normalized)}`);

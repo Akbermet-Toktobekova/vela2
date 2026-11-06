@@ -1,14 +1,14 @@
-import { z } from 'zod';
+import { CalculatorContextExtras,SharedFinancialCalculator } from '@shared/calculator';
 import {
-  CandidateAction,
-  CandidateActionSchema,
-  CatalogActionEntry,
-  PrototypePolicyBundle,
+CandidateAction,
+CandidateActionSchema,
+CatalogActionEntry,
+PrototypePolicyBundle,
 } from '@shared/contracts';
-import { FinancialSnapshot, RecommendationRecord } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator } from '@shared/calculator';
+import { FinancialSnapshot,RecommendationRecord } from '@shared/pi/types';
+import { z } from 'zod';
+import { LLMClient,wrapUntrustedData } from '../ai/llmClient';
 import { ASCatalogRepository } from '../catalog/asCatalogRepository';
-import { LLMClient, wrapUntrustedData } from '../ai/llmClient';
 
 const LLMSuggestionRefinementSchema = z.object({
   selectedActionIds: z.array(z.string()).max(3),

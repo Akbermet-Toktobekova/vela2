@@ -1,10 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDemoSeedData } from '../../react-app/src/database/seed';
-import { buildFinancialSnapshot } from '../../react-app/src/services/snapshotBuilder';
-import { loadPrototypePolicy } from '../src/config/policyLoader';
-import { SQLiteStore } from '../src/db/sqliteStore';
-import { ReviewOrchestrator } from '../src/orchestrator/reviewWorkflow';
+import { afterEach,describe,expect,it,vi } from 'vitest';
+import { buildFinancialSnapshot } from '../../shared/processing/snapshotBuilder';
 import { LLMClient } from '../src/ai/llmClient';
+import { loadPrototypePolicy } from '../src/config/policyLoader';
+import { ReviewOrchestrator } from '../src/orchestrator/reviewWorkflow';
+import { createDemoSeedData } from './fixtures/profile';
+import { SQLiteStore } from './helpers/engineStore';
 import { createBaselineSolventFixture } from './helpers/testFixtures';
 
 afterEach(() => vi.useRealTimers());

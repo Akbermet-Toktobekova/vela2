@@ -2,15 +2,15 @@
 name: vela-synthetic-testing
 description: >-
   Use this skill to run the 14 mandatory E2E scenarios and any user-provided synthetic profiles
-  in user-inputs/synthetic/, generating an audit and calibration report.
+  in server/tests/fixtures/synthetic/, generating an audit and calibration report.
 ---
 
 # Vela Synthetic & E2E Testing
 
 ## Steps
 
-1. Execute the 14 mandatory E2E scenarios in `server/tests/e2e/finagent-e2e.test.ts`.
-2. Scan `user-inputs/synthetic/` for any additional `.json` or `.csv` profiles.
+1. Execute the 14 mandatory E2E scenarios in `server/tests/e2e/finagent-14-scenarios.test.ts`.
+2. Scan `server/tests/fixtures/synthetic/` for any additional `.json` or `.csv` profiles.
 3. For each scenario/profile, record:
    - `snapshotId`, `readinessState`, active weight profile, and `Critical` triggers;
    - candidate actions (`FINANCIAL_ACTION`, `VERIFICATION_ACTION`, `EDUCATIONAL_ACTION`), Checker outcomes (`VALID / REJECTED / NEEDS_DATA`);

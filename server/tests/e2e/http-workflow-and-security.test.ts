@@ -1,18 +1,18 @@
 import fs from 'node:fs';
+import { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { AddressInfo } from 'node:net';
-import { describe, it, expect } from 'vitest';
-import { createAppBundle } from '../../src/routes/api';
-import { SQLiteStore } from '../../src/db/sqliteStore';
-import { SecurityService } from '../../src/security/securityService';
+import { describe,expect,it } from 'vitest';
+import { FinancialSnapshot } from '../../../shared/pi/types';
+import { buildFinancialSnapshot } from '../../../shared/processing/snapshotBuilder';
 import { LLMClient } from '../../src/ai/llmClient';
 import { loadPrototypePolicy } from '../../src/config/policyLoader';
 import { FrankfurterFXService } from '../../src/fx/frankfurterService';
 import { ReviewOrchestrator } from '../../src/orchestrator/reviewWorkflow';
-import { createDemoSeedData } from '../../../react-app/src/database/seed';
-import { buildFinancialSnapshot } from '../../../react-app/src/services/snapshotBuilder';
-import { FinancialSnapshot } from '../../../shared/pi/types';
+import { SecurityService } from '../../src/security/securityService';
+import { createDemoSeedData } from '../fixtures/profile';
+import { createAppBundle } from '../helpers/engineHttp';
+import { SQLiteStore } from '../helpers/engineStore';
 
 function makeTestSnapshot(userId: string): FinancialSnapshot {
   const seed = createDemoSeedData();

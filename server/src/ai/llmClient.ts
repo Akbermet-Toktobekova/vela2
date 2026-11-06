@@ -1,7 +1,7 @@
+import { GoogleGenAI } from '@google/genai';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);

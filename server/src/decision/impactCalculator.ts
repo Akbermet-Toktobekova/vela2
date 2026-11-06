@@ -1,6 +1,6 @@
-import { CandidateAction, ImpactSimulationResult, ImpactSimulationResultSchema, PrototypePolicyBundle } from '@shared/contracts';
+import { SharedFinancialCalculator as Calculator,CalculatorContextExtras } from '@shared/calculator';
+import { CandidateAction,ImpactSimulationResult,ImpactSimulationResultSchema,PrototypePolicyBundle } from '@shared/contracts';
 import { FinancialSnapshot } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator as Calculator } from '@shared/calculator';
 
 export class ImpactCalculator {
   static computeResilienceDelta(before: number, after: number): number { return Number((after - before).toFixed(4)); }

@@ -1,0 +1,3 @@
+export type ActionOutcome='awaiting_update'|'done'|'changed'|'not_done'|'not_now';
+export interface ActionHistoryItem {id:string;revision:number;origin:'manual_review'|'legacy_user_feedback';requestId:string;recommendationId:string;fingerprint:string;suggestion:{actionId:string;title:string;description:string;amount:number|null;currency:string;targetId:string|null};proposedAt:string;lastReviewedAt:string;outcome:ActionOutcome;note:string;updatedAt:string;}
+export interface ActionOutcomeInput {requestId:string;expectedRevision:number;outcome:Exclude<ActionOutcome,'awaiting_update'>;note:string;}

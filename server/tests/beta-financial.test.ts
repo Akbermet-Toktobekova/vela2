@@ -1,6 +1,6 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { BetaStore } from '../src/beta/store';
+import { afterEach,describe,expect,it } from 'vitest';
 import { BetaFinancial } from '../src/beta/financial';
+import { BetaStore } from '../src/beta/store';
 
 const stores: BetaStore[]=[];
 const alice={id:'alice',name:'Alice',email:'alice@example.com'};

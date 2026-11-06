@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach,describe,expect,it } from 'vitest';
 import { BetaAuth } from '../src/beta/auth';
 const dbs:DatabaseSync[]=[];
 function setup(sender?: (email:string,url:string)=>Promise<void>){const database=new DatabaseSync(':memory:');dbs.push(database);return {database,auth:new BetaAuth({database,resetBaseUrl:'https://vela.example/reset',sendResetEmail:sender})};}

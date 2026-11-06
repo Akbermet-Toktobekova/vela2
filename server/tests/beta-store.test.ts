@@ -1,8 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import crypto from 'node:crypto';
+import { afterEach,describe,expect,it } from 'vitest';
 import { BetaStore } from '../src/beta/store';
 
 const directories: string[] = [];
@@ -99,4 +99,27 @@ describe('BetaStore encrypted persistent documents', () => {
     expect(fs.readFileSync(filename)).toEqual(before);
     expect(fs.existsSync(`${filename}.key.dpapi`)).toBe(false);
   }, 15000);
+  it.runIf(process.platform === 'darwin')('persists a private macOS key across restart and backup', () => {
+    const filename = path.join(temp(), 'mac.sqlite');
+    const first = open({filename}); first.put('synthetic', 'state', {value: 42});
+    const keyFile = `${filename}.key.local`;
+    expect(fs.statSync(keyFile).mode & 0o777).toBe(0o600);
+    expect(fs.readFileSync(keyFile).length).toBe(32);
+    const destination = path.join(temp(), 'backup.sqlite'); first.backup(destination); first.close();
+    expect(open({filename}).get('synthetic', 'state')).toEqual({value: 42});
+    expect(open({filename: destination}).get('synthetic', 'state')).toEqual({value: 42});
+    fs.chmodSync(keyFile, 0o644);
+    expect(() => new BetaStore({filename})).toThrow('BETA_KEY_PERMISSIONS');
+  });
+
+  it.runIf(process.platform === 'darwin')('refuses to replace a lost macOS key for an existing database', () => {
+    const filename = path.join(temp(), 'mac.sqlite');
+    const first = open({filename}); first.put('synthetic', 'state', {preserved: true}); first.close();
+    const before = fs.readFileSync(filename);
+    fs.unlinkSync(`${filename}.key.local`);
+    expect(() => new BetaStore({filename})).toThrow('BETA_KEY_MISSING');
+    expect(fs.readFileSync(filename)).toEqual(before);
+    expect(fs.existsSync(`${filename}.key.local`)).toBe(false);
+  });
+
 });

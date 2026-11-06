@@ -1,19 +1,14 @@
-import {
-  FinancialSnapshot,
-  FinancialObligation,
-  DebtRecord,
-  FinancialGoal,
-  IncomeSource,
-} from '../pi/types';
-import {
-  CashflowProjectionSummary,
-  DailyCashProjectionPoint,
-  ExtendedDebtTerms,
-  FXRateEntry,
-  ScheduledAutomaticTransfer,
-} from '../pi/types';
-import { CandidateAction, PrototypePolicyBundle } from '../contracts';
 import prototypePolicy from '../../server/config/prototype-policy.json';
+import { CandidateAction } from '../contracts';
+import {
+CashflowProjectionSummary,
+DailyCashProjectionPoint,
+DebtRecord,
+ExtendedDebtTerms,
+FinancialSnapshot,
+FXRateEntry,
+ScheduledAutomaticTransfer
+} from '../pi/types';
 
 // ============================================================================
 // FORMULA OWNERSHIP REGISTRY (Single Owner Verification per Review Point 7)
@@ -690,7 +685,6 @@ export class SharedFinancialCalculator {
     const { debt, extraPaymentDay0, horizonDays, interestAccruing = true, avoidedLateFee = 0 } = params;
     const balance0 = debt.remainingBalance ?? 0;
     const apr = debt.apr ?? 0;
-    const minPay = debt.minimumPayment ?? 0;
 
     if (balance0 <= 0 || apr <= 0 || !interestAccruing) {
       return {

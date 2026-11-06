@@ -1,21 +1,21 @@
-import {
-  AccountSummaryView,
-  BalanceObservation,
-  CurrencyCashSummary,
-  DebtRecord,
-  ExpenseCommitment,
-  FinancialAccount,
-  FinancialGoal,
-  FinancialObligation,
-  FinancialSnapshot,
-  GoalAllocation,
-  IncomeSource,
-  OnboardingSession,
-  UserPreferences,
-  UserProfile,
-} from '@shared/pi/types';
 import { CalculatorContextExtras } from '@shared/calculator';
 import { CandidateAction } from '@shared/contracts';
+import {
+AccountSummaryView,
+BalanceObservation,
+CurrencyCashSummary,
+DebtRecord,
+ExpenseCommitment,
+FinancialAccount,
+FinancialGoal,
+FinancialObligation,
+FinancialSnapshot,
+GoalAllocation,
+IncomeSource,
+OnboardingSession,
+UserPreferences,
+UserProfile,
+} from '@shared/pi/types';
 
 export const REFERENCE_DATE_ISO = '2026-11-03';
 export const REFERENCE_TIMESTAMP_ISO = '2026-11-03T09:30:00Z';

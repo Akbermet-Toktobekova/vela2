@@ -1,24 +1,24 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import {
-  CheckFailure,
-  PrototypePolicyBundleSchema,
-  PrototypePolicyBundle,
-} from '@shared/contracts';
-import {
-  FORMULA_OWNERSHIP_MAP,
-  SharedFinancialCalculator,
+FORMULA_OWNERSHIP_MAP,
+SharedFinancialCalculator,
 } from '@shared/calculator';
-import { loadPrototypePolicy, resetPolicyCache } from '../src/config/policyLoader';
+import {
+CheckFailure,
+PrototypePolicyBundle,
+PrototypePolicyBundleSchema,
+} from '@shared/contracts';
+import { beforeEach,describe,expect,it } from 'vitest';
 import { ASCatalogRepository } from '../src/catalog/asCatalogRepository';
 import { ActionChecker } from '../src/checker/actionChecker';
+import { loadPrototypePolicy,resetPolicyCache } from '../src/config/policyLoader';
 import {
-  createBaselineSolventFixture,
-  createCandidateActionFixture,
-  createImminentBillShortfallFixture,
-  createMultiCurrencyFixture,
-  createRiskyAutoTransferFixture,
-  createUnknownDebtTermsFixture,
-  createZeroGoalsFixture,
+createBaselineSolventFixture,
+createCandidateActionFixture,
+createImminentBillShortfallFixture,
+createMultiCurrencyFixture,
+createRiskyAutoTransferFixture,
+createUnknownDebtTermsFixture,
+createZeroGoalsFixture,
 } from './helpers/testFixtures';
 
 describe('Phase 1 Foundation: Policy Loader, AS Catalog (DB_FACT), SharedFinancialCalculator (F001-F020), and ActionChecker', () => {

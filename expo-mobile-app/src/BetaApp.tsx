@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React,{ useEffect,useRef,useState } from "react";
+import { ActionHistory } from "./components/ActionHistory";
+import { StatementReview } from "./components/StatementReview";
 
 import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Keyboard,
-  Modal,
-  Platform,
-  Alert,
-  Switch,
-  Share,
-  Linking,
+ActivityIndicator,
+Alert,
+AppState,
+Keyboard,
+KeyboardAvoidingView,
+Linking,
+Modal,
+Platform,
+ScrollView,
+Share,
+StyleSheet,
+Switch,
+Text,
+TextInput,
+TouchableOpacity,
+View,
 } from "react-native";
 
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider,SafeAreaView } from "react-native-safe-area-context";
 
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -29,32 +32,35 @@ import { CurrencyField } from "./components/CurrencyField";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import type { BetaPdfMapping,BetaPdfReview } from "../../shared/contracts/betaPdf";
 import {
-  GlassButton as Button,
-  GlassCard,
-  Field as Input,
-  Icon,
-  FloatingNavigation,
-  AmbientBackground,
-} from "./components/SoftGlass";
-import { DateField } from "./components/DateField";
-import { TodayScreen } from "./screens/TodayScreen";
-import type { BetaPdfMapping, BetaPdfReview } from "../../shared/contracts/betaPdf";
-import {
-  api,
-  readSession,
-  writeSession,
-  drafts,
-  StateEnvelope,
-  BetaUser,
-  saveImportJob,
-  readImportJob,
+api,
+ApiError,
+BetaUser,
+drafts,
+readImportJob,
+readSession,
+saveImportJob,
+StateEnvelope,
+writeSession,
 } from "./api";
+import { DateField } from "./components/DateField";
+import {
+AmbientBackground,
+GlassButton as Button,
+FloatingNavigation,
+GlassCard,
+Icon,
+Field as Input,
+} from "./components/SoftGlass";
+import { PlanInsights } from "./screens/PlanInsights";
+import { TodayScreen } from "./screens/TodayScreen";
 
 type Editor = {
   collection: string;
   values: Record<string, string>;
   id?: string;
+  version?: number;
 };
 
 const now = () => new Date().toISOString();
@@ -66,7 +72,7 @@ const money = (v: any, c = "EUR") =>
 
 const steps = [
   "Welcome",
-  "Profile",
+  "Profile & essential costs",
   "Priorities & goals",
   "Accounts",
   "Income",
@@ -322,6 +328,7 @@ export default function App() {
   const [base, setBase] = useState(process.env.EXPO_PUBLIC_API_URL || "");
   const [baseDraft, setBaseDraft] = useState(base);
   const [token, setToken] = useState<string | null>(null);
+  const activeSession = useRef<string | null>(null);
   const [user, setUser] = useState<BetaUser | null>(null);
   const [env, setEnv] = useState<StateEnvelope | null>(null);
 
@@ -334,34 +341,54 @@ export default function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const nameInput = useRef<React.ComponentRef<typeof TextInput>>(null);
+  const emailInput = useRef<React.ComponentRef<typeof TextInput>>(null);
+  const passwordInput = useRef<React.ComponentRef<typeof TextInput>>(null);
+  const authScroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const [resetToken, setResetToken] = useState("");
 
   const [documentsOpen, setDocumentsOpen] = useState(false);
   const [connectionOpen, setConnectionOpen] = useState(!base);
   const [tab, setTab] = useState("Today");
+  const [manualReviewMessage,setManualReviewMessage]=useState("");
   const [settings, setSettings] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [settingsSection, setSettingsSection] = useState("Profile");
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+  const [importDetails, setImportDetails] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [draft, setDraft] = useState<Editor | null>(null);
   const [importAccount, setImportAccount] = useState("");
   const [preview, setPreview] = useState<any>(null);
-  const [importSource, setImportSource] = useState<any>(null);
-  const [correctedCsv, setCorrectedCsv] = useState("");
   const [importJob, setImportJob] = useState<any>(null);
   const [job, setJob] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [question, setQuestion] = useState("");
-  const [allocation, setAllocation] = useState<{
-    goalId: string;
-    accountId: string;
-    amount: string;
-  } | null>(null);
-  const [adjust, setAdjust] = useState("");
   const [reviewTransaction, setReviewTransaction] = useState<any>(null);
   const [economicType, setEconomicType] = useState("unknown");
   const [category, setCategory] = useState("other");
   const [importHistory, setImportHistory] = useState<any[]>([]);
   const [chatRequestId, setChatRequestId] = useState(uid());
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [transactionFilter, setTransactionFilter] = useState<string | null>(null);
+  const [transactionCurrency, setTransactionCurrency] = useState<string | null>(null);
+  const [transactionMonth, setTransactionMonth] = useState<string | null>(null);
+  const [versionConflict, setVersionConflict] = useState(false);
+  const [profileName, setProfileName] = useState("");
+  const profileNameDirty = useRef(false);
+  const refreshLock = useRef(false);
+  const feedbackRequests = useRef(new Map<string, {id: string; version: number}>());
+  const chatClearRequest = useRef<string | null>(null);
+  const reviewStartRequest = useRef<string | null>(null);
+  const currentActivity = useRef({job, importJob, editor});
+  currentActivity.current = {job, importJob, editor};
+
+  useEffect(() => {
+    const show = Keyboard.addListener("keyboardDidShow", () => setKeyboardVisible(true));
+    const hide = Keyboard.addListener("keyboardDidHide", () => setKeyboardVisible(false));
+    return () => {show.remove(); hide.remove();};
+  }, []);
 
   const state = env?.state;
   const candidateAnalysis = env?.analysis || job?.result;
@@ -370,20 +397,66 @@ export default function App() {
   const recommendation = env?.recommendation || analysis?.recommendation;
   const snapshot: any = env?.snapshot || analysis?.snapshot;
   const onboarding =
-    !!state && (showOnboarding || state.onboarding.status !== "completed");
+    !!state && (showOnboarding || (!onboardingDismissed && state.onboarding.status !== "completed"));
   const step = Math.min(7, state?.onboarding.currentStep || 1);
 
-  const request = <T = any,>(path: string, method = "GET", data?: unknown) =>
-    api<T>(base, path, token, method, data);
+  async function discardExpiredSession(expectedToken: string) {
+    // A delayed rejection from an old request must not sign out a newer session.
+    if (activeSession.current !== expectedToken) return;
+    activeSession.current = null;
+    setToken(null);
+    setUser(null);
+    setEnv(null);
+    setMessages([]);
+    setJob(null);
+    setImportJob(null);
+    setPreview(null);
+    setSettings(false);
+    setDocumentsOpen(false);
+    setEditor(null);
+    setDraft(null);
+    profileNameDirty.current = false;
+    feedbackRequests.current.clear();
+    chatClearRequest.current = null;
+    reviewStartRequest.current = null;
+    setMode("login");
+    setAuthError("Your saved session is no longer valid. Sign in again; your saved records and saved drafts are preserved.");
+    // Do not use clearLocal: it also removes saved form drafts/import progress.
+    await writeSession(null);
+  }
+  const request = async <T = any,>(path: string, method = "GET", data?: unknown): Promise<T> => {
+    try {
+      const result = await api<T>(base, path, token, method, data);
+      if (token && activeSession.current !== token) throw new Error("The active account changed. Reload before continuing.");
+      return result;
+    }
+    catch (e) {
+      if (token && activeSession.current !== token) throw new Error("The active account changed. Reload before continuing.");
+      if (token && e instanceof ApiError && e.status === 401 &&
+          !["/auth/login", "/auth/register", "/auth/forgot-password", "/auth/reset-password"].includes(path)) {
+        await discardExpiredSession(token);
+      }
+      if (e instanceof ApiError && e.code === "VERSION_CONFLICT") {
+        setVersionConflict(true);
+        throw new ApiError("Your account changed on another device. Reload the latest records; your form is kept as a draft so you can compare before saving.", e.code, e.status, e.fields);
+      }
+      throw e;
+    }
+  };
+
+  function updateEnvelope(next: StateEnvelope) {
+    setEnv(current => current?.state.user.id === next.state.user.id && current.version > next.version ? current : next);
+  }
 
   async function run(action: () => Promise<void>) {
+    const startingSession = activeSession.current;
     setBusy(true);
     setError("");
     setNotice("");
     try {
       await action();
     } catch (e) {
-      setError(
+      if (startingSession === activeSession.current) setError(
         e instanceof Error ? e.message : "Something went wrong. Try again.",
       );
     } finally {
@@ -393,35 +466,85 @@ export default function App() {
 
   async function hydrate(session: string, address = base) {
     const me = await api<any>(address, "/auth/me", session);
-    setUser(me.user);
-    setEnv(await api<StateEnvelope>(address, "/state", session));
-    setDraft(await drafts.get(me.user.id));
-    const history = (await api<any>(address, "/imports", session)).imports || [];
-    setImportHistory(history);
-    const pending = await readImportJob(me.user.id);
+    const [fresh, historyResponse, savedDraft, pending] = await Promise.all([
+      api<StateEnvelope>(address, "/state", session),
+      api<any>(address, "/imports", session),
+      drafts.get(me.user.id),
+      readImportJob(me.user.id),
+    ]);
+    let pendingJob: any = null;
     if (pending) {
-      const job = await api<any>(address, "/jobs/" + pending, session);
-      setImportJob(job);
-      if (job.status === "completed") {
-        const saved = history.find((item: any) => item.id === job.result?.id);
+      try {pendingJob = await api<any>(address, "/jobs/" + pending, session);}
+      catch (e) {if (!(e instanceof ApiError && e.status === 404)) throw e;}
+    }
+    if (activeSession.current !== session) return;
+    setUser(me.user);
+    if (!profileNameDirty.current) setProfileName(me.user.name);
+    updateEnvelope(fresh);
+    if (!currentActivity.current.editor) setDraft(savedDraft);
+    const history = historyResponse.imports || [];
+    setImportHistory(history);
+    if (pendingJob) {
+      setImportJob(pendingJob);
+      if (pendingJob.status === "completed") {
+        const saved = history.find((item: any) => item.id === pendingJob.result?.id);
         if (saved && !saved.confirmed) setPreview(saved);
       }
     }
   }
 
+  async function refreshAccount() {
+    if (!token || refreshLock.current) return;
+    refreshLock.current = true;
+    const session = token;
+    try {
+      await hydrate(session);
+      if (activeSession.current !== session) return;
+      const current = currentActivity.current;
+      for (const [pending, setter, isImport] of [[current.job, setJob, false], [current.importJob, setImportJob, true]] as const) {
+        if (!pending?.id) continue;
+        try {
+          const latest = await request(`/jobs/${pending.id}`);
+          if (activeSession.current !== session) return;
+          setter(latest);
+          if (isImport && ["completed", "COMPLETED", "succeeded"].includes(latest.status)) {
+            const result = await request(`/imports/${latest.result?.id}`);
+            if (!result.confirmed) setPreview(result);
+          }
+        } catch (e) {
+          if (e instanceof ApiError && e.status === 404) setter(null);
+          else throw e;
+        }
+      }
+      setNotice("Account refreshed. Saved forms are preserved.");
+    } finally { refreshLock.current = false; }
+  }
+
+  useEffect(() => {
+    const listener = AppState.addEventListener("change", status => {
+      if (status === "active" && token && !busy) void run(refreshAccount);
+    });
+    return () => listener.remove();
+  }, [token, base, busy]);
+
   useEffect(() => {
     void (async () => {
       try {
         const address =
-          process.env.EXPO_PUBLIC_API_URL ||
           (await AsyncStorage.getItem("vela.beta.api")) ||
+          process.env.EXPO_PUBLIC_API_URL ||
           "";
         setBase(address);
         setBaseDraft(address);
         const session = await readSession();
         if (session && address) {
+          activeSession.current = session;
           setToken(session);
-          await hydrate(session, address);
+          try { await hydrate(session, address); }
+          catch (e) {
+            if (e instanceof ApiError && e.status === 401) await discardExpiredSession(session);
+            else throw e;
+          }
         }
       } catch (e) {
         setError(
@@ -454,13 +577,13 @@ export default function App() {
   useEffect(() => {
     const automatic = env?.reviewJob;
     if (automatic && ["queued", "running"].includes(automatic.status)) {
-      setJob((current: any) => current?.id === automatic.id ? current : automatic);
+      setJob((current: any) => ((current?.origin || current?.args?.origin) === "manual" && ["queued","running","connection_lost"].includes(current.status)) || current?.id === automatic.id ? current : automatic);
     }
   }, [env?.reviewJob?.id, env?.reviewJob?.status]);
 
   useEffect(() => {
     if (
-      !job?.id ||
+      !token || !job?.id ||
       ![
         "queued",
         "pending",
@@ -475,15 +598,19 @@ export default function App() {
     let stop = false;
     const timer = setInterval(() => {
       void request(`/jobs/${job.id}`)
-        .then((r) => {
+        .then(async (r) => {
           if (stop) return;
+          if (["completed", "COMPLETED", "succeeded"].includes(r.status)) {
+            const fresh = await request<StateEnvelope>("/state");
+            if (stop) return;
+            updateEnvelope(fresh);
+            if(r.origin === "manual")setManualReviewMessage(r.result?.manualReviewResult === "action_saved" ? "Your suggestion is saved in Action history." : "No new action to suggest right now. Your financial picture is up to date.");
+          }
           setJob(r);
-          if (["completed", "COMPLETED", "succeeded"].includes(r.status))
-            void request<StateEnvelope>("/state").then(setEnv);
         })
         .catch((e) => {
           if (!stop) {
-            setError(e.message);
+            if((job?.origin || job?.args?.origin) === "manual")setError(e.message);
             setJob((j: any) => ({ ...j, status: "connection_lost" }));
           }
         });
@@ -492,11 +619,11 @@ export default function App() {
       stop = true;
       clearInterval(timer);
     };
-  }, [job?.id, job?.status]);
+  }, [job?.id, job?.status, token, base]);
 
   useEffect(() => {
     if (
-      !importJob?.id ||
+      !token || !importJob?.id ||
       ![
         "queued",
         "pending",
@@ -530,7 +657,7 @@ export default function App() {
       stop = true;
       clearInterval(timer);
     };
-  }, [importJob?.id, importJob?.status]);
+  }, [importJob?.id, importJob?.status, token, base]);
 
   useEffect(() => {
     const apply = (url: string | null | undefined) => {
@@ -570,36 +697,80 @@ export default function App() {
     next: any,
     consent = env?.aiConsent || false,
     experimental = env?.experimentalRecommendations || false,
+    expectedVersion = env?.version,
   ) {
     if (!env) throw new Error("Load your profile first.");
-    const result = await request<StateEnvelope>("/state", "PUT", {
-      expectedVersion: env.version,
+    await request<StateEnvelope>("/state", "PUT", {
+      expectedVersion,
       state: next,
       aiConsent: consent,
       experimentalRecommendations: experimental,
     });
     const fresh = await request<StateEnvelope>("/state");
-    setEnv(fresh);
+    updateEnvelope(fresh);
     return fresh;
   }
 
   async function feedback(action: string, amount?: number) {
     if (!recommendation || !env) return;
+    const key = JSON.stringify([recommendation.id, action, amount ?? null]);
+    const pending = feedbackRequests.current.get(key) || {id: uid(), version: env.version};
+    feedbackRequests.current.set(key, pending);
     await run(async () => {
-      const result = await request("/feedback", "POST", {
-        recommendationId: recommendation.id,
-        action,
-        adjustedAmount: amount,
-        amount,
-        expectedVersion: env.version,
-        requestId: uid(),
-      });
-      setEnv(await request("/state"));
-      setNotice(result.message || "Your response has been saved.");
+      try {
+        const result = await request("/feedback", "POST", {
+          recommendationId: recommendation.id, action, adjustedAmount: amount, amount,
+          expectedVersion: pending.version, requestId: pending.id,
+        });
+        if (result.accepted === false || ["ADJUSTMENT_REJECTED", "VERIFICATION_REQUIRED"].includes(result.status)) {
+          feedbackRequests.current.delete(key);
+          throw new Error(result.rejectionReason || result.message || "This action was not saved. Review the required verification.");
+        }
+        if (result.accepted !== true || !["ACCEPTED", "ADJUSTED", "DECLINED_AND_RERUN", "COMPLETED"].includes(result.status)) {
+          throw new Error("The server did not confirm this response. Refresh Today before trying again.");
+        }
+        updateEnvelope(await request("/state"));
+        feedbackRequests.current.delete(key);
+        setNotice(result.message || "Your response has been saved.");
+      } catch (e) {
+        if (e instanceof ApiError && e.status < 500) feedbackRequests.current.delete(key);
+        throw e;
+      }
     });
   }
-  async function authenticate() {
+
+  function reviewTransactions(filter?: string, currency?: string, month?: string) {
+    setTransactionFilter(filter || null);
+    setTransactionCurrency(currency || null);
+    setTransactionMonth(month || null);
+    setSettings(false); setDocumentsOpen(false); setShowOnboarding(false);
+    setOnboardingDismissed(true); setTab("Transactions");
+    requestAnimationFrame(() => authScroll.current?.scrollTo({y: 0, animated: false}));
+  }
+  async function clearChat() {
     await run(async () => {
+      chatClearRequest.current ||= uid();
+      const result = await request("/chat", "DELETE", {requestId: chatClearRequest.current});
+      setMessages(result.messages || []);
+      chatClearRequest.current = null;
+      setNotice("Chat history cleared.");
+    });
+  }
+  function showAuthError(message: string, field?: string) {
+    setAuthError(message);
+    ({name: nameInput, email: emailInput, password: passwordInput} as const)[field as "name" | "email" | "password"]?.current?.focus();
+    setTimeout(() => authScroll.current?.scrollTo({y: 0, animated: true}), 150);
+  }
+  async function authenticate() {
+    setAuthError("");
+    const cleanEmail = email.trim();
+    if (mode === "register" && (!name.trim() || name.trim().length > 100)) return showAuthError("Enter a name between 1 and 100 characters.", "name");
+    if (mode !== "reset" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return showAuthError("Enter a valid email address.", "email");
+    if (mode !== "forgot" && (password.length < 12 || password.length > 128)) return showAuthError("Password must be between 12 and 128 characters.", "password");
+    await run(async () => {
+      try {
+      const health = await api<any>(base, "/health", null);
+      if (health.runtime !== "authenticated-beta") throw new Error("This address is not the Vela account server. Check Connection settings.");
       if (mode === "forgot") {
         await request("/auth/forgot-password", "POST", { email });
         setNotice("If this account exists, a recovery link will be sent.");
@@ -616,30 +787,45 @@ export default function App() {
         return;
       }
       const r = await request(`/auth/${mode}`, "POST", {
-        name,
-        email,
+        name: name.trim(),
+        email: cleanEmail,
         password,
       });
       await writeSession(r.token);
+      activeSession.current = r.token;
       setToken(r.token);
       setPassword("");
-      await hydrate(r.token);
+      try { await hydrate(r.token); }
+      catch (e) {
+        if (e instanceof ApiError && e.status === 401) await discardExpiredSession(r.token);
+        throw e;
+      }
+      } catch (e) {
+        const field = e instanceof ApiError ? Object.keys(e.fields)[0] : undefined;
+        showAuthError(e instanceof Error ? e.message : "Sign-in could not finish. Try again.", field);
+      }
     });
   }
 
   async function clearLocal() {
+    activeSession.current = null;
     await writeSession(null);
     if (user) {
       await drafts.clear(user.id);
       await saveImportJob(user.id, null);
     }
+    setOnboardingDismissed(false);
+    setShowOnboarding(false);
+    profileNameDirty.current = false;
+    feedbackRequests.current.clear();
+    chatClearRequest.current = null;
+    reviewStartRequest.current = null;
     setToken(null);
     setUser(null);
     setEnv(null);
     setMessages([]);
     setJob(null);
     setImportJob(null);
-    setImportSource(null);
     setImportHistory([]);
     setEditor(null);
     setDraft(null);
@@ -685,14 +871,27 @@ export default function App() {
           .sort((a, b) => b.asOf.localeCompare(a.asOf))[0];
         defaults.balance = balance ? String(balance.amount) : "";
         defaults.balanceDate = balance?.asOf.slice(0, 10) || today();
-        defaults.purpose = item.purposes[0];
+        defaults.purpose = item.purposes.join(",");
       }
     }
-    setEditor({ collection, id: item?.id, values: defaults });
+    setVersionConflict(false);
+    setEditor({ collection, id: item?.id, values: defaults, version: env?.version });
   }
 
+  const staleEditor = !!editor && !!env && editor.version !== env.version;
+  const latestEditorRecord = editor && state ? editor.collection === "expenses" ? state.expenseCommitment : (state as any)[editor.collection]?.find((r: any) => r.id === editor.id) : null;
+  function latestFieldValue(key: string) {
+    if (!editor || !state) return "Unknown";
+    if (editor.collection === "accounts" && ["balance", "balanceDate"].includes(key)) {
+      const latest = state.balances.filter(b => b.accountId === editor.id).sort((a,b) => b.asOf.localeCompare(a.asOf))[0];
+      return key === "balance" ? String(latest?.amount ?? "Unknown") : latest?.asOf.slice(0,10) || "Unknown";
+    }
+    if (key === "purpose") return latestEditorRecord?.purposes?.join(", ") || "Unknown";
+    return String(latestEditorRecord?.[key] ?? "Unknown");
+  }
   async function submit() {
     if (!editor || !state || !user) return;
+    if (staleEditor) {setError("Review the latest saved values before reapplying this draft."); return;}
     await run(async () => {
       const next = JSON.parse(JSON.stringify(state));
       const record: any = {
@@ -729,7 +928,8 @@ export default function App() {
       }
 
       if (editor.collection === "accounts") {
-        record.purposes = [record.purpose];
+        record.purposes = String(record.purpose || "").split(",").filter(Boolean);
+        if (!record.purposes.length) throw new Error("Choose at least one account purpose.");
         delete record.purpose;
         record.isPrimary =
           next.accounts.find((a: any) => a.id === record.id)?.isPrimary ||
@@ -761,7 +961,8 @@ export default function App() {
         if (index < 0) rows.push(record);
         else rows[index] = { ...rows[index], ...record };
       }
-      await save(next);
+      await save(next, env?.aiConsent, env?.experimentalRecommendations, editor.version ?? env?.version);
+      setVersionConflict(false);
       await drafts.clear(user.id);
       setEditor(null);
       setDraft(null);
@@ -869,8 +1070,6 @@ export default function App() {
         fileName,
         contentBase64,
       };
-      setImportSource(source);
-      setCorrectedCsv("");
       setPreview(null);
       setImportJob(await request("/imports", "POST", source));
     });
@@ -989,9 +1188,15 @@ export default function App() {
 
   const confirmImport = () => void run(async () => {
     await request(`/imports/${preview.id}/confirm`, "POST", {expectedVersion: env?.version});
-    setEnv(await request("/state"));
+    updateEnvelope(await request("/state"));
     setPreview(null);
-    setNotice("Import confirmed.");
+    setImportDetails(false);
+    setDocumentsOpen(false);
+    setSettings(false);
+    setShowOnboarding(false);
+    setOnboardingDismissed(true);
+    setTab("Today");
+    setNotice(env?.aiConsent ? "Statement imported. Review your financial picture on Today; analysis status appears there." : "Statement imported. Deterministic findings are ready on Today. Optional AI processing stays off.");
   });
   const sourceImport = (statementId: string) => importHistory.find(
     item => item.statement?.id === statementId || item.statements?.some((statement: any) => statement.id === statementId),
@@ -1018,7 +1223,7 @@ export default function App() {
         disabled={busy || !state?.accounts.length}
         onPress={() => void upload()}
       />
-      {importJob && <Text style={s.muted}>Import: {importJob.status}</Text>}
+      {importJob && <Text style={s.muted}>{["queued", "running", "processing"].includes(importJob.status) ? "Preparing your statement…" : importJob.status === "connection_lost" ? "Connection interrupted. Reload your profile to resume." : importJob.status === "failed" ? "Statement needs attention. Review the error below." : "Statement ready for review"}</Text>}
       {preview && (
         <>
           <Text style={s.h2}>
@@ -1032,76 +1237,9 @@ export default function App() {
               })))}
               confirm={confirmImport} />
           : <>
-          <Text>{preview.status || preview.statement?.status}</Text>
-          {!importSource &&
-            ["needs_mapping", "needs_sheet_selection"].includes(
-              preview.status,
-            ) && (
-              <Text style={s.muted}>
-                Select the original file again to choose a sheet or correct the
-                extracted data. The saved preview remains available.
-              </Text>
-            )}
-          {preview.sheetNames?.map((sheetName: string) => (
-            <Button
-              key={sheetName}
-              secondary
-              title={`Use sheet: ${sheetName}`}
-              disabled={busy || !importSource}
-              onPress={() =>
-                void run(async () => {
-                  setPreview(null);
-                  setImportJob(
-                    await request("/imports", "POST", {
-                      ...importSource,
-                      sheetName,
-                    }),
-                  );
-                })
-              }
-            />
-          ))}
-          {preview.status === "needs_mapping" && (
-            <>
-              <Text style={s.muted}>
-                Review extracted lines and enter corrected CSV with
-                Date,Description,Amount,Currency headers. Confirm only values
-                verified in the original.
-              </Text>
-              <Text style={s.small}>
-                {(preview.sourceLines || [])
-                  .map((r: any) =>
-                    typeof r === "string"
-                      ? r
-                      : "Page " + r.page + ", line " + r.line + ": " + r.text,
-                  )
-                  .join("\n")}
-              </Text>
-              <TextInput
-                accessibilityLabel="Corrected CSV"
-                multiline
-                style={[s.input, { minHeight: 180 }]}
-                value={correctedCsv}
-                onChangeText={setCorrectedCsv}
-              />
-              <Button
-                secondary
-                title="Preview corrected CSV"
-                disabled={busy || !correctedCsv.trim() || !importSource}
-                onPress={() =>
-                  void run(async () => {
-                    setPreview(null);
-                    setImportJob(
-                      await request("/imports", "POST", {
-                        ...importSource,
-                        correctedCsv,
-                      }),
-                    );
-                  })
-                }
-              />
-            </>
-          )}
+          <Text style={s.muted}>Review the summary before adding these records to your account.</Text>
+          <StatementReview key={`${preview.id}:${JSON.stringify(preview.parsing?.options)}`} preview={preview} busy={busy}
+            revise={body => void run(async () => setPreview(await request(`/imports/${preview.id}/review`, "PUT", {...body, expectedVersion: env?.version})))} />
           {preview.statement?.errorMessage && (
             <Text style={s.error}>{preview.statement.errorMessage}</Text>
           )}
@@ -1109,7 +1247,8 @@ export default function App() {
             {preview.transactions?.length || 0} operations ·{" "}
             {preview.statement?.duplicateCountSkipped || 0} duplicates
           </Text>
-          {preview.transactions?.map((t: any) => (
+          <Button secondary title={importDetails ? "Hide transaction details" : "Inspect transactions and technical details"} onPress={() => setImportDetails(v => !v)} />
+          {importDetails && preview.transactions?.map((t: any) => (
             <View key={t.id} style={s.record}>
               <Text>
                 {t.date} · {t.description}
@@ -1130,7 +1269,7 @@ export default function App() {
           ))}
           <Button
             title="Confirm import"
-            disabled={busy || !preview.transactions?.length}
+            disabled={busy || !preview.transactions?.length || !["parsed_successfully", "ready_to_confirm"].includes(preview.status)}
             onPress={confirmImport}
           />
           </>}
@@ -1167,7 +1306,7 @@ export default function App() {
                           await request(`/imports/${item.id}`, "DELETE", {
                             expectedVersion: env?.version,
                           });
-                          setEnv(await request("/state"));
+                          updateEnvelope(await request("/state"));
                         }),
                     },
                   ],
@@ -1192,12 +1331,12 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <LinearGradient colors={["#f6f7f3", "#e4e7e0", "#f9f9f6"]} style={s.root}>
+      <LinearGradient colors={["#f2f2ef", "#e8eade", "#f4f3ed"]} style={s.root}>
         <AmbientBackground />
         <SafeAreaView style={s.root}>
           <KeyboardAvoidingView
             style={s.root}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View style={s.header}>
               <View
@@ -1222,6 +1361,9 @@ export default function App() {
               )}
             </View>
             <ScrollView
+              ref={authScroll}
+              automaticallyAdjustKeyboardInsets={false}
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
               contentContainerStyle={s.content}
             >
@@ -1237,7 +1379,7 @@ export default function App() {
                       title="Reload saved profile"
                       onPress={() =>
                         void run(async () => {
-                          setEnv(await request("/state"));
+                          updateEnvelope(await request("/state"));
                         })
                       }
                     />
@@ -1245,6 +1387,15 @@ export default function App() {
                 </View>
               ) : null}
               {notice ? <Text style={s.notice}>{notice}</Text> : null}
+
+              {user && state && <Button secondary disabled={busy} title="Refresh account & resume pending work" onPress={() => void run(refreshAccount)} />}
+              {versionConflict && user && <View style={s.card}>
+                <Text style={s.error}>A newer version exists. Your draft has not been overwritten.</Text>
+                <Button secondary disabled={busy} title="Reload records; keep my draft" onPress={() => void run(async () => {
+                  if (editor) {await drafts.set(user.id, editor); setDraft(editor); setEditor(null);}
+                  await refreshAccount(); setVersionConflict(false);
+                })} />
+              </View>}
 
               {!user ? (
                 <>
@@ -1261,11 +1412,12 @@ export default function App() {
                     Your private financial picture, saved to your account.
                   </Text>
                   <View style={s.card}>
+                    {authError ? <Text accessibilityRole="alert" style={s.error}>{authError}</Text> : null}
                     {mode === "register" && (
-                      <Input label="Name" value={name} onChange={setName} />
+                      <Input label="Name" value={name} onChange={setName} inputRef={nameInput} />
                     )}
                     {mode !== "reset" && (
-                      <Input label="Email" value={email} onChange={setEmail} />
+                      <Input label="Email" value={email} onChange={setEmail} inputRef={emailInput} />
                     )}
                     {mode !== "forgot" && (
                       <Input
@@ -1273,6 +1425,7 @@ export default function App() {
                         value={password}
                         onChange={setPassword}
                         secure
+                        inputRef={passwordInput}
                       />
                     )}
                     {mode === "reset" && (
@@ -1282,6 +1435,7 @@ export default function App() {
                         onChange={setResetToken}
                       />
                     )}
+                    {authError ? <Text accessibilityRole="alert" style={s.error}>{authError}</Text> : null}
                     <Button
                       disabled={busy || !base}
                       title={
@@ -1304,6 +1458,7 @@ export default function App() {
                       }
                       onPress={() => {
                         setMode(mode === "register" ? "login" : "register");
+                        setAuthError("");
                         setError("");
                       }}
                     />
@@ -1329,7 +1484,7 @@ export default function App() {
                     <Text style={s.serviceLink}>
                       {connectionOpen
                         ? "Hide connection settings"
-                        : "Connection settings"}
+                        : "Advanced connection settings"}
                     </Text>
                   </TouchableOpacity>
                   {connectionOpen && (
@@ -1350,7 +1505,8 @@ export default function App() {
                         title="Save server address"
                         onPress={() =>
                           void run(async () => {
-                            const url = new URL(baseDraft);
+                            const normalized = baseDraft.trim().replace(/\/$/, "");
+                            const url = new URL(normalized);
                             if (!["https:", "http:"].includes(url.protocol))
                               throw new Error("Use an HTTPS server address.");
                             if (
@@ -1360,12 +1516,24 @@ export default function App() {
                               throw new Error(
                                 "Remote connections require HTTPS.",
                               );
-                            setBase(baseDraft.replace(/\/$/, ""));
+                            const health = await api<any>(normalized, "/health", null);
+                            if (health.runtime !== "authenticated-beta") throw new Error("This is not the Vela account server.");
+                            if (base !== normalized) {
+                              // A session belongs to its server; never forward it to a newly selected endpoint.
+                              activeSession.current = null;
+                              await writeSession(null);
+                              setToken(null); setUser(null); setEnv(null); setMessages([]);
+                              setJob(null); setImportJob(null); setPreview(null); setEditor(null); setDraft(null);
+                              feedbackRequests.current.clear(); chatClearRequest.current = null; reviewStartRequest.current = null;
+                              profileNameDirty.current = false;
+                              setMode("login"); setAuthError("");
+                            }
+                            setBase(normalized);
                             await AsyncStorage.setItem(
                               "vela.beta.api",
-                              baseDraft.replace(/\/$/, ""),
+                              normalized,
                             );
-                            setNotice("Server address saved.");
+                            setNotice("Connected to Vela. Server address saved.");
                             setConnectionOpen(false);
                           })
                         }
@@ -1389,19 +1557,33 @@ export default function App() {
 
               {user && state && settings ? (
                 <>
-                  <Text style={s.h1}>Your account</Text>
-                  <Text>
-                    {user.name} · {user.email}
-                  </Text>
-                  {consent()}
-                  <Button
-                    secondary
-                    title="Continue onboarding"
-                    onPress={() => {
-                      setShowOnboarding(true);
-                      setSettings(false);
-                    }}
-                  />
+                  <Text style={s.eyebrow}>SETTINGS & ACCOUNT</Text>
+                  <Text style={s.h1}>Financial Profile & Controls</Text>
+                  <View style={s.chips}>
+                    {["Profile", "Accounts", "Statements", "Privacy & AI", "Data & Account"].map(sectionName => (
+                      <TouchableOpacity key={sectionName} accessibilityRole="tab" accessibilityState={{selected: settingsSection === sectionName}} onPress={() => setSettingsSection(sectionName)} style={[s.chip, settingsSection === sectionName && {backgroundColor: "rgba(255,255,255,.94)"}]}><Text style={s.body}>{sectionName}</Text></TouchableOpacity>
+                    ))}
+                  </View>
+                  {settingsSection === "Profile" && <View style={s.card}>
+                    <Text style={s.h2}>Your profile</Text>
+                    <Text style={s.body}>{user.email}</Text>
+                    <Input label="Display name" value={profileName} onChange={v => {profileNameDirty.current = true; setProfileName(v);}} />
+                    <Button secondary disabled={busy || !profileName.trim()} title="Save display name" onPress={() => void run(async () => {
+                      const result = await request("/profile", "PUT", {name: profileName.trim()});
+                      profileNameDirty.current = false;
+                      setUser(result.user); await refreshAccount(); setNotice("Display name saved.");
+                    })} />
+                    <Text style={s.small}>Your sign-in email is unchanged.</Text>
+                    <CurrencyField label="Planning currency" value={state.profile.baseCurrency} onChange={v => void run(async () => {await save({...state, profile: {...state.profile, baseCurrency: v, updatedAt: now()}});})} />
+                    <Text style={s.muted}>Setup {state.onboarding.status === "completed" ? "completed" : `in progress · step ${step} of 7`}</Text>
+                    <Button secondary title="Continue onboarding" onPress={() => {setShowOnboarding(true); setOnboardingDismissed(false); setSettings(false);}} />
+                  </View>}
+                  {settingsSection === "Accounts" && section("accounts", "Your accounts")}
+                  {settingsSection === "Statements" && <>{imports()}<Button secondary title="Review imported transactions" onPress={() => {setSettings(false); setDocumentsOpen(false); setOnboardingDismissed(true); setShowOnboarding(false); setTab("My Plan");}} /></>}
+                  {settingsSection === "Privacy & AI" && consent()}
+                  {settingsSection === "Data & Account" && <View style={s.card}>
+                    <Text style={s.h2}>Your data & account</Text>
+                    <Text style={s.muted}>Export a copy before deleting. Sign out only affects this device's session.</Text>
                   <Button
                     secondary
                     title="Export my data"
@@ -1421,7 +1603,7 @@ export default function App() {
                     title="Refresh account"
                     onPress={() =>
                       void run(async () => {
-                        await hydrate(token!);
+                        await refreshAccount();
                       })
                     }
                   />
@@ -1459,6 +1641,7 @@ export default function App() {
                       )
                     }
                   />
+                  </View>}
                 </>
               ) : null}
 
@@ -1516,6 +1699,13 @@ export default function App() {
                       />
                     </View>
                   )}
+                  {step === 2 && <View style={s.card}>
+                    <Text style={s.h2}>Your essential monthly costs</Text>
+                    <Text style={s.muted}>Estimate rent, food, utilities and transport. This total includes your regular bills; adding bill records later does not mean adding them to this estimate again. Unknown is different from zero.</Text>
+                    <Text style={s.body}>{money(state.expenseCommitment?.estimatedMonthlyAmount, state.expenseCommitment?.currency || state.profile.baseCurrency)}</Text>
+                    <Button secondary title="Add or edit essential costs" onPress={() => open("expenses")} />
+                    <Text style={s.small}>Not sure yet? Continue and complete the estimate later. Vela will explain which calculations need it.</Text>
+                  </View>}
                   {step === 3 && (
                     <>
                       <View style={s.card}>
@@ -1544,8 +1734,6 @@ export default function App() {
                           }
                         />
                       </View>
-                      {section("accounts", "Your accounts")}
-                      {section("obligations", "Upcoming bills")}
                       {section("goals", "Your goals")}
                     </>
                   )}
@@ -1629,21 +1817,10 @@ export default function App() {
                   </View>
                   <Button
                     secondary
-                    title="View dashboard"
+                    title="Finish setup later · View Today"
                     disabled={busy}
-                    onPress={() =>
-                      void run(async () => {
-                        await save({
-                          ...state,
-                          onboarding: {
-                            ...state.onboarding,
-                            status: "completed",
-                            completedAt: now(),
-                          },
-                        });
-                        setShowOnboarding(false);
-                      })
-                    }
+                    onPress={() => {setShowOnboarding(false); setOnboardingDismissed(true); setTab("Today");}}
+
                   />
                 </>
               ) : null}
@@ -1656,16 +1833,28 @@ export default function App() {
               tab === "Today" ? (
                 <TodayScreen
                   snapshot={snapshot}
+                  findings={env.findings}
+                  onFindingResponse={async (finding, body) => {
+                    await request(`/findings/${finding.id}/respond`, "POST", {...body, expectedVersion: env.version, evidenceVersion: finding.evidenceVersion});
+                    updateEnvelope(await request("/state"));
+                    setNotice(body.response === "unsure" ? "Deferred—saved for later review." : body.response === "dismiss" ? "✓ Dismissed and saved." : "✓ Classification saved. Your progress is updated.");
+                  }}
                   recommendation={recommendation}
                   analysis={analysis}
-                  job={job}
+                  job={(job?.origin || job?.args?.origin) === "manual" ? job : null}
+                  manualReviewMessage={manualReviewMessage}
                   busy={busy}
                   experimental={env.experimentalRecommendations || false}
-                  onReview={() =>
-                    void run(async () => {
-                      setJob(await request("/review", "POST", { forceRefresh: true, requestId: uid() }));
-                    })
-                  }
+                  onReview={() => void run(async () => {
+                    if ((job?.origin || job?.args?.origin) === "manual" && job?.id && ["connection_lost", "queued", "running"].includes(job.status)) {
+                      await refreshAccount();
+                    } else {
+                      setManualReviewMessage("");
+                      reviewStartRequest.current ||= uid();
+                      setJob(await request("/review", "POST", {forceRefresh: true, requestId: reviewStartRequest.current}));
+                      reviewStartRequest.current = null;
+                    }
+                  })}
                   onFeedback={(action, amount) => void feedback(action, amount)}
                   onExplain={() => {
                     setQuestion(
@@ -1676,6 +1865,7 @@ export default function App() {
                   onOpen={open}
                   onUpload={() => setDocumentsOpen(true)}
                   onManage={() => setTab("My Plan")}
+                  onReviewTransactions={() => reviewTransactions()}
                 />
               ) : null}
               {user && state && !settings && !onboarding && documentsOpen ? (
@@ -1689,54 +1879,19 @@ export default function App() {
                   {imports()}
                 </>
               ) : null}
-              {user &&
-              state &&
-              !settings &&
-              !onboarding &&
-              !documentsOpen &&
-              tab === "My Plan" ? (
+              {user && state && !settings && !onboarding && !documentsOpen && tab === "Transactions" ? (
                 <>
-                  <Text style={s.eyebrow}>YOUR FINANCIAL PICTURE</Text>
-                  <Text style={s.h1}>A plan that moves with you.</Text>
-                  <Text style={s.muted}>
-                    Your goals, commitments and accepted next steps.
-                  </Text>
-                  <Button
-                    secondary
-                    title="Manage statements"
-                    onPress={() => setDocumentsOpen(true)}
-                  />
-                  {section("accounts", "Your accounts")}
-                  {section("obligations", "Upcoming bills")}
-                  {section("goals", "Your goals")}
-                  {state.recommendations?.length > 0 && (
-                    <View style={s.card}>
-                      <Text style={s.h2}>Action history</Text>
-                      {state.recommendations.map((r) => (
-                        <View key={r.id} style={s.record}>
-                          <Text style={s.h2}>{r.title}</Text>
-                          <Text style={s.muted}>
-                            {r.status.replaceAll("_", " ")} ·{" "}
-                            {r.updatedAt.slice(0, 10)}
-                          </Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-                  <View style={s.card}>
-                    <Text style={s.muted}>
-                      You can create and track goals. Suggested goal funding
-                      appears on Today when experimental recommendations are
-                      enabled and the financial checks pass.
-                    </Text>
-                  </View>
+                  <Button secondary title="← Back to My Plan" onPress={() => setTab("My Plan")} />
+                  <Text accessibilityRole="header" style={s.h1}>Review transactions</Text>
+                  {!state.transactions.length && <Text style={s.muted}>No imported transactions yet. Confirm a statement import to review its transactions.</Text>}
                   <View style={s.card}>
                     <Text style={s.h2}>Imported operations</Text>
                     <Text style={s.muted}>
                       Confirm the economic meaning of each operation. Internal
                       transfers are not new income.
                     </Text>
-                    {state.transactions.map((t) => (
+                    {(transactionFilter || transactionCurrency || transactionMonth) && <><Text style={s.small}>Showing {[transactionFilter?.replaceAll("_", " "), transactionCurrency, transactionMonth].filter(Boolean).join(" · ")}</Text><Button secondary title="Show all transactions" onPress={() => {setTransactionFilter(null); setTransactionCurrency(null); setTransactionMonth(null);}} /></>}
+                    {state.transactions.filter(t => (!transactionFilter || state.classifications.find(c => c.transactionId === t.id)?.category === transactionFilter) && (!transactionCurrency || t.currency === transactionCurrency) && (!transactionMonth || t.date.startsWith(transactionMonth))).map((t) => (
                       <TouchableOpacity
                         key={t.id}
                         style={s.record}
@@ -1757,11 +1912,45 @@ export default function App() {
                           {state.classifications.find(
                             (c) => c.transactionId === t.id,
                           )?.economicType || "unknown"}{" "}
-                          · Tap to review
+                          · {state.classifications.find(c => c.transactionId === t.id)?.status === "user_confirmed" ? "✓ Approved" : state.classifications.find(c => c.transactionId === t.id)?.confidence === "high" ? "Automatically classified" : "Needs review"} · Tap to review
                         </Text>
                       </TouchableOpacity>
                     ))}
                   </View>
+                </>
+              ) : null}
+              {user &&
+              state &&
+              !settings &&
+              !onboarding &&
+              !documentsOpen &&
+              tab === "My Plan" ? (
+                <>
+                  <Text style={s.eyebrow}>YOUR FINANCIAL PICTURE</Text>
+                  <Text style={s.h1}>My Plan</Text>
+                  <Text style={s.muted}>
+                    Your goals, commitments and accepted next steps.
+                  </Text>
+                  <PlanInsights snapshot={snapshot} onReviewTransactions={reviewTransactions} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} />
+                  <Button
+                    secondary
+                    title="Manage statements"
+                    onPress={() => setDocumentsOpen(true)}
+                  />
+                  {section("accounts", "Your accounts")}
+                  {section("obligations", "Upcoming bills")}
+                  {section("goals", "Your goals")}
+                  <ActionHistory items={env.actionHistory || []}
+                    refresh={async()=>{const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}}
+                    save={async(id,body)=>{await request(`/action-history/${id}/outcome`,"PUT",body);const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}} />
+                  <View style={s.card}>
+                    <Text style={s.muted}>
+                      You can create and track goals. Suggested goal funding
+                      appears on Today when experimental recommendations are
+                      enabled and the financial checks pass.
+                    </Text>
+                  </View>
+                  <Button secondary title="Review all transactions" onPress={() => reviewTransactions()} />
                   {section("debts", "Debts")}
                   {section("incomes", "Income")}
                   <View style={s.card}>
@@ -1792,8 +1981,8 @@ export default function App() {
                     <View style={s.brandIcon}>
                       <Icon name="chat" />
                     </View>
-                    <View>
-                      <Text style={s.h1}>Ask Vela.</Text>
+                    <View style={{flex: 1}}>
+                      <Text style={s.h1}>Vela Financial Assistant</Text>
                       <Text style={s.small}>YOUR FINANCIAL GUIDE</Text>
                     </View>
                   </View>
@@ -1801,6 +1990,11 @@ export default function App() {
                     Answers use your saved financial picture. Financial changes
                     require separate confirmation.
                   </Text>
+                  <Text style={s.small}>{state.accounts.length} accounts · {state.transactions.length} transactions · {env.aiConsent ? "AI processing enabled" : "AI processing off"}</Text>
+                  <View style={s.chips}>
+                    {["Explain my current next step", "Show my accounts and currencies", "What bills are coming up?"].map(prompt => <TouchableOpacity key={prompt} accessibilityRole="button" style={s.chip} onPress={() => setQuestion(prompt)}><Text style={s.muted}>{prompt}</Text></TouchableOpacity>)}
+                  </View>
+                  {messages.length > 0 && <Button secondary disabled={busy} title="Clear chat history" onPress={() => Alert.alert("Clear chat history?", "This removes the saved conversation from your account on all devices.", [{text: "Cancel", style: "cancel"}, {text: "Clear chat", style: "destructive", onPress: () => void clearChat()}])} />}
                   {!env.aiConsent && consent()}
                   {messages.map((m, i) => (
                     <View
@@ -1864,7 +2058,7 @@ export default function App() {
                 </View>
               )}
             </ScrollView>
-            {user && !onboarding && !settings && (
+            {user && !onboarding && !settings && !keyboardVisible && (
               <FloatingNavigation
                 active={tab}
                 onChange={(value) => {
@@ -1946,7 +2140,7 @@ export default function App() {
                               category,
                             },
                           );
-                          setEnv(await request("/state"));
+                          updateEnvelope(await request("/state"));
                           setReviewTransaction(null);
                         })
                       }
@@ -1961,14 +2155,14 @@ export default function App() {
               </View>
             )}
 
-            {editor && (
+            {editor && user && (
               <Modal animationType="slide" presentationStyle="fullScreen" onRequestClose={() => {setDraft(editor); setEditor(null);}}>
                 <SafeAreaView style={{flex: 1, backgroundColor: '#f4f6f1'}}>
                   <AmbientBackground />
                   <KeyboardAvoidingView style={s.sheet} behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{flexDirection: 'row', padding: 16, justifyContent: 'space-between'}}>
                       <Button secondary title="Back" onPress={() => {Keyboard.dismiss(); setDraft(editor); setEditor(null);}} />
-                      <Button disabled={busy} title={busy ? "Saving…" : "Save"} onPress={() => void submit()} />
+                      <Button disabled={busy || staleEditor} title={busy ? "Saving…" : "Save"} onPress={() => void submit()} />
                     </View>
                   <ScrollView
                     keyboardShouldPersistTaps="handled"
@@ -1990,7 +2184,17 @@ export default function App() {
                               name: a.name,
                             }))
                           : options[key]?.map((id) => ({ id, name: id }));
-                      return key === "currency" ? (
+                      return key === "purpose" ? (
+                        <View key={key} style={{gap: 8}}><Text style={s.h2}>Account purposes</Text>
+                          {options.purpose.map(purpose => {
+                            const selected = (editor.values.purpose || "").split(",").filter(Boolean);
+                            const checked = selected.includes(purpose);
+                            return <TouchableOpacity key={purpose} accessibilityRole="checkbox" accessibilityState={{checked}} onPress={() => setEditor({...editor, values: {...editor.values, purpose: (checked ? selected.filter(p => p !== purpose) : [...selected, purpose]).join(",")}})} style={s.row}>
+                              <Text style={s.body}>{checked ? "☑" : "☐"} {purpose.replaceAll("_", " ")}</Text>
+                            </TouchableOpacity>;
+                          })}
+                        </View>
+                      ) : key === "currency" ? (
                         <CurrencyField key={key} label="Currency" value={editor.values[key] || ""} onChange={v => setEditor({...editor, values:{...editor.values, [key]:v}})} />
                       ) : list ? (
                         <Select
@@ -2039,9 +2243,25 @@ export default function App() {
                         {error}
                       </Text>
                     )}
+                    {staleEditor && <View style={s.card}>
+                      <Text style={s.h2}>Compare with your latest saved records</Text>
+                      <Text style={s.muted}>This draft was started on an older version. Nothing is saved until you review, reapply and tap Save.</Text>
+                      {editor.id && !latestEditorRecord ? <Text style={s.error}>This record was deleted. Keep this draft for reference or close it and create a new record.</Text> : <>
+                        {(fields[editor.collection] || []).map(key => <View key={key} style={{paddingVertical: 6}}>
+                          <Text style={s.small}>{key}</Text>
+                          <Text style={s.body}>Saved: {latestFieldValue(key)}</Text>
+                          <Text style={s.body}>Your draft: {editor.values[key] || "Unknown"}</Text>
+                        </View>)}
+                        <Button secondary disabled={busy} title="I reviewed these changes · Reapply my draft" onPress={() => {setEditor({...editor, version: env?.version}); setVersionConflict(false); setError("");}} />
+                      </>}
+                    </View>}
+                    {versionConflict && <Button secondary disabled={busy} title="Reload latest records; keep draft" onPress={() => void run(async () => {
+                      await drafts.set(user.id, editor); setDraft(editor); setEditor(null);
+                      await refreshAccount(); setVersionConflict(false);
+                    })} />}
                     <Button
                       title={busy ? "Saving…" : "Save to my account"}
-                      disabled={busy}
+                      disabled={busy || staleEditor}
                       onPress={() => void submit()}
                     />
                     <Button
@@ -2141,9 +2361,9 @@ const s = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,.22)",
   },
   brand: {
-    fontSize: 27,
+    fontSize: 20,
     fontWeight: "600",
-    color: "#292f25",
+    color: "#272e23",
     letterSpacing: -0.9,
   },
   brandIcon: {
@@ -2157,43 +2377,43 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   settingsButton: { padding: 10, borderRadius: 18 },
-  small: { fontSize: 10, color: "#7b8075", letterSpacing: 0.5, lineHeight: 17 },
+  small: { fontSize: 10, color: "#74766d", letterSpacing: 0.5, lineHeight: 17 },
   eyebrow: {
     fontSize: 10,
     fontWeight: "600",
     letterSpacing: 1,
-    color: "#7b8075",
+    color: "#74766d",
   },
   content: {
-    padding: 20,
-    gap: 21,
+    padding: 16,
+    gap: 16,
     paddingBottom: 112,
-    maxWidth: 560,
+    maxWidth: 422,
     width: "100%",
     alignSelf: "center",
   },
   h1: {
-    fontSize: 31,
+    fontSize: 24,
     fontWeight: "600",
-    color: "#292f25",
+    color: "#272e23",
     letterSpacing: -0.8,
-    lineHeight: 39,
+    lineHeight: 31,
   },
   h2: { fontSize: 17, fontWeight: "600", color: "#353d2e", lineHeight: 24 },
   body: { fontSize: 15, color: "#353d2e", lineHeight: 24 },
-  muted: { fontSize: 13, color: "#7a7f73", lineHeight: 21 },
+  muted: { fontSize: 13, color: "#74766d", lineHeight: 21 },
   label: {
     fontSize: 10,
     fontWeight: "600",
-    color: "#7b8075",
+    color: "#74766d",
     textTransform: "uppercase",
     letterSpacing: 0.8,
   },
   card: {
-    padding: 20,
-    gap: 15,
-    backgroundColor: "rgba(255,255,255,.43)",
-    borderRadius: 26,
+    padding: 16,
+    gap: 12,
+    backgroundColor: "rgba(255,255,255,.47)",
+    borderRadius: 24,
     borderWidth: 1.2,
     borderColor: "#fff",
     shadowColor: "#8e9882",
@@ -2210,7 +2430,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 13,
     minHeight: 50,
-    color: "#292f25",
+    color: "#272e23",
     fontSize: 15,
   },
   row: {
@@ -2268,7 +2488,7 @@ const s = StyleSheet.create({
     backgroundColor: "#eef1e9f5",
     zIndex: 50,
   },
-  sheet: { flex: 1, maxWidth: 560, width: "100%", alignSelf: "center" },
+  sheet: { flex: 1, maxWidth: 422, width: "100%", alignSelf: "center" },
   serviceLink: {
     fontSize: 11,
     color: "#80877a",

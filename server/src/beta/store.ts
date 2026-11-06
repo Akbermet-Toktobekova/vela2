@@ -1,7 +1,7 @@
+import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
-import { execFileSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 
 const PREFIX = 'beta:v1:';
@@ -46,17 +46,25 @@ export class BetaStore {
     }
     if (!inMemory) fs.mkdirSync(path.dirname(path.resolve(filename)), { recursive: true });
     const existed = !inMemory && fs.existsSync(filename);
-    this.keyFile = !inMemory && !options.key ? `${filename}.key.dpapi` : null;
+    this.keyFile = !inMemory && !options.key ? `${filename}${process.platform === 'darwin' ? '.key.local' : '.key.dpapi'}` : null;
     if (options.key) {
       this.key = Buffer.from(options.key);
     } else if (inMemory) {
       this.key = crypto.randomBytes(32);
     } else if (this.keyFile && fs.existsSync(this.keyFile)) {
-      this.key = dpapi(fs.readFileSync(this.keyFile), false);
+      if (process.platform === 'darwin') {
+        const stat = fs.lstatSync(this.keyFile);
+        if (!stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077) !== 0 || stat.uid !== process.getuid?.()) {
+          throw new Error('BETA_KEY_PERMISSIONS: Local storage key must be a private owner-only file.');
+        }
+        this.key = fs.readFileSync(this.keyFile);
+      } else {
+        this.key = dpapi(fs.readFileSync(this.keyFile), false);
+      }
     } else {
       if (existed) throw new Error('BETA_KEY_MISSING: Existing database has no protected key; refusing to reset it.');
       this.key = crypto.randomBytes(32);
-      const protectedKey = dpapi(this.key, true);
+      const protectedKey = process.platform === 'darwin' ? this.key : dpapi(this.key, true);
       fs.writeFileSync(this.keyFile!, protectedKey, { flag: 'wx', mode: 0o600 });
     }
     if (this.key.length !== 32) throw new Error('BETA_INVALID_KEY: Protected key has an invalid length.');
@@ -162,7 +170,11 @@ export class BetaStore {
     fs.mkdirSync(path.dirname(target), { recursive: true });
     // SQLite produces a consistent snapshot, including committed auth tables, without copying a live WAL.
     this.database.prepare('VACUUM INTO ?').run(target);
-    if (this.keyFile) fs.copyFileSync(this.keyFile, `${target}.key.dpapi`, fs.constants.COPYFILE_EXCL);
+    if (this.keyFile) {
+      const suffix = process.platform === 'darwin' ? '.key.local' : '.key.dpapi';
+      fs.copyFileSync(this.keyFile, `${target}${suffix}`, fs.constants.COPYFILE_EXCL);
+      if (process.platform === 'darwin') fs.chmodSync(`${target}${suffix}`, 0o600);
+    }
   }
 
   close(): void {

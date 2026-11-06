@@ -1,7 +1,7 @@
+import { CalculatorContextExtras,SharedFinancialCalculator } from '@shared/calculator';
 import { FinancialSnapshot } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator } from '@shared/calculator';
+import { LLMClient,wrapUntrustedData } from '../ai/llmClient';
 import { loadPrototypePolicy } from '../config/policyLoader';
-import { LLMClient, wrapUntrustedData } from '../ai/llmClient';
 
 export interface AnalyzedDebtItem {
   debtId: string;

@@ -1,8 +1,8 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import express from 'express';
 import type { Server } from 'node:http';
 import { request } from 'node:http';
-import { createLocalAccessMiddleware, LOCAL_LISTEN_HOST } from '../src/security/localAccess';
+import { afterAll,beforeAll,describe,expect,it } from 'vitest';
+import { createLocalAccessMiddleware,LOCAL_LISTEN_HOST } from './helpers/localAccess';
 
 describe('D-011 local-only transport boundary', () => {
   let server: Server;
@@ -68,8 +68,8 @@ describe('D-011 local-only transport boundary', () => {
     expect(() => createLocalAccessMiddleware({ allowedOrigins: ['https://public.example'] })).toThrow(/loopback/);
   });
   it('mounts the boundary on the actual API before any public diagnostics route', async () => {
-    const { createAppBundle } = await import('../src/routes/api');
-    const { SQLiteStore } = await import('../src/db/sqliteStore');
+    const { createAppBundle } = await import('./helpers/engineHttp');
+    const { SQLiteStore } = await import('./helpers/engineStore');
     const { LLMClient } = await import('../src/ai/llmClient');
     const store = new SQLiteStore(':memory:');
     const bundle = createAppBundle({ store, llmClient: new LLMClient({ mockMode: true }) });

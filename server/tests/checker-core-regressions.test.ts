@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe,expect,it } from 'vitest';
 import { ActionChecker } from '../src/checker/actionChecker';
 import { loadPrototypePolicy } from '../src/config/policyLoader';
-import { createBaselineSolventFixture, createCandidateActionFixture, createRiskyAutoTransferFixture } from './helpers/testFixtures';
+import { createBaselineSolventFixture,createCandidateActionFixture,createRiskyAutoTransferFixture } from './helpers/testFixtures';
 const policy = loadPrototypePolicy();
 describe('Core Checker publication gates', () => {
   it('uses canonical requirements even when AI omits them', () => {

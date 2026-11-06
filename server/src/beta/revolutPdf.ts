@@ -1,4 +1,4 @@
-import type {BetaPdfIssue as RevolutIssue, BetaPdfOperation as RevolutOperation} from '../../../shared/contracts/betaPdf';
+import type { BetaPdfIssue as RevolutIssue,BetaPdfOperation as RevolutOperation } from '../../../shared/contracts/betaPdf';
 
 export type PdfLine = { page: number; line: number; items: {x: number; text: string}[] };
 

@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { BetaStateUpdateSchema } from "../../../shared/contracts/beta";
+import { buildFinancialSnapshot } from "../../../shared/processing/snapshotBuilder";
 import {
-  createBlankUserSeedData,
-  PIDatabaseSeed,
-} from "../../../react-app/src/database/seed";
-import { buildFinancialSnapshot } from "../../../react-app/src/services/snapshotBuilder";
+createBlankUserSeedData,
+PIDatabaseSeed,
+} from "../../../shared/profile/seed";
 import type { BetaStore } from "./store";
 export class BetaError extends Error {
   constructor(

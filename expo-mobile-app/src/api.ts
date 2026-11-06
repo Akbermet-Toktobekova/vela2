@@ -1,7 +1,11 @@
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
-import type { PIDatabaseSeed } from "../../react-app/src/database/seed";
+import type { ActionHistoryItem } from "../../shared/contracts/actionHistoryTypes";
+import type { FindingsPacket } from "../../shared/contracts/findingsTypes";
+import type { PIDatabaseSeed } from "../../shared/profile/seed";
 export type StateEnvelope = {
+  actionHistory?: ActionHistoryItem[];
+  findings?: FindingsPacket;
   reviewJob?: { id: string; status: string } | null;
   version: number;
   state: PIDatabaseSeed;
@@ -39,6 +43,9 @@ export const drafts = {
     await SecureStore.deleteItemAsync(`vela.beta.draft.${userId}`);
   },
 };
+export class ApiError extends Error {
+  constructor(message: string, public code: string, public status: number, public fields: Record<string, string> = {}) { super(message); }
+}
 export async function api<T = any>(
   base: string,
   path: string,
@@ -69,10 +76,11 @@ export async function api<T = any>(
       throw new Error(`Vela server returned an unexpected response (${response.status}). Check the connection and try again. Your form is still here.`);
     }
     if (!response.ok)
-      throw new Error(
-        body.error?.message ||
-          body.message ||
-          `Request failed (${response.status})`,
+      throw new ApiError(
+        response.status >= 500 && body.error?.code !== "EMAIL_NOT_CONFIGURED"
+          ? "The Vela server could not finish this request. Your input is still here; please try again."
+          : body.error?.message || body.message || `Request failed (${response.status})`,
+        body.error?.code || "REQUEST_FAILED", response.status, body.error?.fields || {},
       );
     return body;
   } catch (error) {
@@ -80,6 +88,7 @@ export async function api<T = any>(
       throw new Error(
         "The server did not respond. Your form remains available; try again.",
       );
+    if (error instanceof TypeError) throw new Error("Cannot reach the Vela server. Check your connection and server address, then try again.");
     throw error;
   } finally {
     clearTimeout(timeout);

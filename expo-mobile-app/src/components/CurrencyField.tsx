@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
-import { colors, glass, GlassButton } from './SoftGlass';
+import { useState } from 'react';
+import { FlatList,Keyboard,KeyboardAvoidingView,Modal,Platform,Pressable,SafeAreaView,Text,TextInput,View } from 'react-native';
+import { colors,glass,GlassButton } from './SoftGlass';
 import { currencyNames } from './currencyCodes';
 
 const popular = ['USD', 'EUR', 'GBP', 'JPY', 'CHF'];

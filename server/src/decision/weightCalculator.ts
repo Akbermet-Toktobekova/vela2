@@ -1,11 +1,11 @@
+import { CalculatorContextExtras,SharedFinancialCalculator } from '@shared/calculator';
 import {
-  PrototypePolicyBundle,
-  WeightProfileId,
-  WeightSelectionResult,
-  WeightSelectionResultSchema,
+PrototypePolicyBundle,
+WeightProfileId,
+WeightSelectionResult,
+WeightSelectionResultSchema,
 } from '@shared/contracts';
 import { FinancialSnapshot } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator } from '@shared/calculator';
 
 function diffDaysIso(startIso: string, endIso: string): number {
   const s = new Date(startIso.slice(0, 10) + 'T00:00:00Z').getTime();

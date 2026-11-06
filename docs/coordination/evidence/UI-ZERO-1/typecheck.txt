@@ -1,4 +1,0 @@
-
-> vela-finagent-server@1.1.0 typecheck
-> tsc --noEmit
-

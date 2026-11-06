@@ -1,12 +1,12 @@
 import type { CalculatorContextExtras } from '../../../shared/calculator';
-import type { DecisionTrace, RecommendationDecision, WeightProfileId } from '../../../shared/contracts';
-import type { ActionFeedback, AssistantMessage, FinancialSnapshot, FXRateEntry, RecommendationRecord } from '../../../shared/pi/types';
-import type { PIDatabaseSeed } from '../../../react-app/src/database/seed';
-import { buildFinancialSnapshot } from '../../../react-app/src/services/snapshotBuilder';
-import { SecurityService } from '../security/securityService';
-import type { AgentResultRow, EvaluationRunRow, PublishedRecommendationBundle, SavePIStateInput, StoredPIStateEnvelope } from '../db/sqliteStore';
+import type { DecisionTrace,RecommendationDecision,WeightProfileId } from '../../../shared/contracts';
+import type { ActionFeedback,AssistantMessage,FinancialSnapshot,FXRateEntry,RecommendationRecord } from '../../../shared/pi/types';
+import { buildFinancialSnapshot } from '../../../shared/processing/snapshotBuilder';
+import type { PIDatabaseSeed } from '../../../shared/profile/seed';
+import type { AgentResultRow,EvaluationRunRow,PublishedRecommendationBundle,SavePIStateInput,StoredPIStateEnvelope } from '../orchestrator/engineTypes';
 import type { EngineRepository } from '../orchestrator/reviewWorkflow';
-import { BetaError, BetaFinancial, BetaState } from './financial';
+import { SecurityService } from '../security/securityService';
+import { BetaError,BetaFinancial,BetaState } from './financial';
 import type { BetaStore } from './store';
 
 type User = { id: string; name: string; email: string };

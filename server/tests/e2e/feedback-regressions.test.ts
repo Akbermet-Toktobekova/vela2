@@ -1,9 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
-import { createAppBundle } from '../../src/routes/api';
-import { SQLiteStore } from '../../src/db/sqliteStore';
+import type { AddressInfo } from 'node:net';
+import { afterEach,beforeEach,describe,expect,it,vi } from 'vitest';
 import { LLMClient } from '../../src/ai/llmClient';
+import { createAppBundle } from '../helpers/engineHttp';
+import { SQLiteStore } from '../helpers/engineStore';
 import { createBaselineSolventFixture } from '../helpers/testFixtures';
 
 describe('Feedback lifecycle and snapshot consistency through HTTP', () => {

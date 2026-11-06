@@ -1,13 +1,13 @@
+import { CalculatorContextExtras,SharedFinancialCalculator } from '@shared/calculator';
 import {
-  CandidateAction,
-  CheckFailure,
-  PrototypePolicyBundle,
-  ValidationResult,
-  ValidationResultSchema,
+CandidateAction,
+CheckFailure,
+PrototypePolicyBundle,
+ValidationResult,
+ValidationResultSchema,
 } from '@shared/contracts';
-import { FinancialSnapshot, RecommendationRecord } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator } from '@shared/calculator';
-import { ASCatalogRepository, KnowledgeDatabaseSnapshot } from '../catalog/asCatalogRepository';
+import { FinancialSnapshot,RecommendationRecord } from '@shared/pi/types';
+import { ASCatalogRepository,KnowledgeDatabaseSnapshot } from '../catalog/asCatalogRepository';
 
 export interface CheckerContext {
   snapshot: FinancialSnapshot;
@@ -504,9 +504,6 @@ export class ActionChecker {
     }
 
     if (candidate.actionId === 'A012' || candidate.actionId === 'A013') {
-      const nonCushionGoals = snapshot.goals.filter(
-        (g) => g.targetAmount !== null && g.targetAmount > 0
-      );
       const targetGoal =
         snapshot.goals.find((g) => g.id === candidate.targetId);
       if (!targetGoal || !targetGoal.targetAmount || targetGoal.targetAmount <= 0) {

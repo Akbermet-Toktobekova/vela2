@@ -1,7 +1,0 @@
-# Seven-block integration verification — 2026-11-05
-
-D-014 connects the existing engine to encrypted beta persistence and explicitly opted-in experimental recommendations. Canonical AS statuses, calculator formulas and prototype policy were preserved. Mobile Soft Glass includes Today, My Plan, Assistant and onboarding. The automatic review job now reaches the mobile status card.
-
-Server `npm run typecheck` exited 0. `npx vitest run --exclude tests/e2e/live-ai-integration.test.ts` passed 262 tests in 24 suites, including the mandatory 14 scenarios. After the final scheduler key change, `npx vitest run tests/beta-review-scheduler.test.ts tests/beta-cycle.test.ts tests/beta-http.test.ts` passed 12 tests in 3 suites. Logs are in evidence/beta/seven-block-tests.txt. HTTP tests cover checked recommendation, trace, Accept without balance change, duplicate feedback and reopen. Repository tests cover encrypted persistence and elapsed-time snapshot freshness. Import deletion purges stored engine snapshots and feedback replay copies and asks users to resolve pending commitments first.
-
-Mobile `npm run typecheck` and `npx expo export --platform all --max-workers 2` passed. Export bundles included web 258 modules, Android 778 and iOS 771. Browser verified registration, onboarding and Today before the final small display fixes. Browser access subsequently became unavailable. Expo Android/iOS manifests and HTTPS API health returned 200. Physical-device full flow, live AI provider and SMTP delivery remain unverified.

@@ -1,55 +1,45 @@
+import { CalculatorContextExtras } from '@shared/calculator';
 import {
-  ActionType,
-  CandidateAction,
-  CandidateComplexityEvaluation,
-  CandidateComplexityEvaluationSchema,
-  CheckFailure,
-  ComplexityComponent,
-  ComplexityFactorScore,
-  DecisionTrace,
-  DecisionTraceSchema,
-  ImpactSimulationResult,
-  ImpactSimulationResultSchema,
-  PrototypePolicyBundle,
-  RecommendationDecision,
-  RecommendationDecisionSchema,
-  RobustnessResult,
-  RobustnessResultSchema,
-  ScoredCandidate,
-  ScoredCandidateSchema,
-  ValidationResult,
-  WeightProfileId,
+ActionType,
+CandidateAction,
+CheckFailure,
+ComplexityComponent,
+ComplexityFactorScore,
+DecisionTrace,
+PrototypePolicyBundle,
+RecommendationDecision,
+RecommendationDecisionSchema,
+ValidationResult,
+WeightProfileId
 } from '@shared/contracts';
 import {
-  ActionFeedback,
-  FinancialSnapshot,
-  GoalAllocation,
-  ReadinessState,
-  RecommendationRecord,
+ActionFeedback,
+FinancialSnapshot,
+GoalAllocation,
+ReadinessState,
+RecommendationRecord,
 } from '@shared/pi/types';
-import { CalculatorContextExtras, SharedFinancialCalculator } from '@shared/calculator';
-import { loadPrototypePolicy } from '../config/policyLoader';
-import { ASCatalogRepository } from '../catalog/asCatalogRepository';
-import { ActionChecker, CheckerBatchOutput, CheckerContext } from '../checker/actionChecker';
-import { SecurityService } from '../security/securityService';
-import { FrankfurterFXService } from '../fx/frankfurterService';
-import {
-  AgentResultRow,
-  SavePIStateInput,
-  SQLiteStore,
-  StoredPIStateEnvelope,
-} from '../db/sqliteStore';
-import { LLMClient } from '../ai/llmClient';
-import { BehaviorAgent, BehaviorAnalysisResult } from '../analyzer/behaviorAgent';
-import { DebtAgent, DebtAnalysisOutput } from '../analyzer/debtAgent';
-import { SuggestionGenerator } from '../suggestion/suggestionGenerator';
-import { AIEvaluationService } from '../ai/evaluationCall';
+import { buildFinancialSnapshot } from '../../../shared/processing/snapshotBuilder';
+import type { PIDatabaseSeed } from '../../../shared/profile/seed';
 import { AssistantAgent } from '../ai/assistantAgent';
+import { AIEvaluationService } from '../ai/evaluationCall';
+import { LLMClient } from '../ai/llmClient';
+import { BehaviorAgent,BehaviorAnalysisResult } from '../analyzer/behaviorAgent';
+import { DebtAgent,DebtAnalysisOutput } from '../analyzer/debtAgent';
+import { ASCatalogRepository } from '../catalog/asCatalogRepository';
+import { ActionChecker,CheckerBatchOutput,CheckerContext } from '../checker/actionChecker';
+import { loadPrototypePolicy } from '../config/policyLoader';
 import { DecisionEngine } from '../decision/decisionEngine';
 import { ImpactCalculator } from '../decision/impactCalculator';
-import { WeightCalculator } from '../decision/weightCalculator';
-import { buildFinancialSnapshot } from '../../../react-app/src/services/snapshotBuilder';
-import type { PIDatabaseSeed } from '../../../react-app/src/database/seed';
+import { FrankfurterFXService } from '../fx/frankfurterService';
+import { SecurityService } from '../security/securityService';
+import { SuggestionGenerator } from '../suggestion/suggestionGenerator';
+import {
+AgentResultRow,
+EngineRepository,
+SavePIStateInput,
+StoredPIStateEnvelope,
+} from './engineTypes';
 
 export interface AgentStalenessCheck {
   agentName: 'BehaviorAgent' | 'DebtAgent';
@@ -112,11 +102,10 @@ export interface SubmitFeedbackResult {
   reviewMessage?: string;
 }
 
-export type EngineRepository = Pick<SQLiteStore,
-  'runInTransaction' | 'getPIState' | 'savePIState' | 'getLatestSnapshotVersion' | 'getAgentResult' | 'saveAgentResult' | 'createEvaluationRun' | 'updateEvaluationRunStatus' | 'getLatestEvaluationRun' | 'saveDecisionTrace' | 'getDecisionTrace' | 'getLatestWeightProfileId' | 'saveRecommendation' | 'getRecommendationById' | 'getLatestRecommendationBundle' | 'listRecommendationsForUser' | 'listPendingFinancialCommitments' | 'recordActionFeedback' | 'listActionFeedbackForUser' | 'saveAssistantMessage' | 'listAssistantMessages' | 'getCachedFXRate' | 'upsertFXRate'>;
+export type { EngineRepository } from './engineTypes';
 
 export interface ReviewOrchestratorOptions {
-  store?: EngineRepository;
+  store: EngineRepository;
   fxService?: FrankfurterFXService;
   llmClient?: LLMClient;
   policy?: PrototypePolicyBundle;
@@ -179,8 +168,8 @@ export class ReviewOrchestrator {
   public readonly llmClient: LLMClient;
   private customPolicy?: PrototypePolicyBundle;
 
-  constructor(options?: ReviewOrchestratorOptions) {
-    this.store = options?.store || new SQLiteStore();
+  constructor(options: ReviewOrchestratorOptions) {
+    this.store = options.store;
     this.customPolicy = options?.policy;
     this.fxService =
       options?.fxService ||

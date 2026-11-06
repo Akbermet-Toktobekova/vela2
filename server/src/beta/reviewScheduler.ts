@@ -12,7 +12,6 @@ export class BetaReviewScheduler {
 
   constructor(
     private readonly store: BetaStore,
-    private readonly financial: BetaFinancial,
     private readonly analysis: BetaAnalysis,
     private readonly jobs: BetaJobs,
   ) {}

@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { LLMClient, parseEnvFile } from '../../src/ai/llmClient';
-import { BehaviorAgent } from '../../src/analyzer/behaviorAgent';
-import { SuggestionGenerator } from '../../src/suggestion/suggestionGenerator';
+import { describe,expect,it } from 'vitest';
+import { buildFinancialSnapshot } from '../../../shared/processing/snapshotBuilder';
 import { AIEvaluationService } from '../../src/ai/evaluationCall';
+import { LLMClient,parseEnvFile } from '../../src/ai/llmClient';
+import { BehaviorAgent } from '../../src/analyzer/behaviorAgent';
 import { ActionChecker } from '../../src/checker/actionChecker';
-import { DecisionEngine } from '../../src/decision/decisionEngine';
 import { loadPrototypePolicy } from '../../src/config/policyLoader';
-import { createDemoSeedData } from '../../../react-app/src/database/seed';
-import { buildFinancialSnapshot } from '../../../react-app/src/services/snapshotBuilder';
+import { DecisionEngine } from '../../src/decision/decisionEngine';
+import { SuggestionGenerator } from '../../src/suggestion/suggestionGenerator';
+import { createDemoSeedData } from '../fixtures/profile';
 
 describe('FinAgent Separated Live Gemini AI Integration Suite (mockMode: false)', () => {
   const envVars = parseEnvFile();

@@ -1,0 +1,13 @@
+
+> vela-finagent-server@1.1.0 test
+> vitest run --reporter=dot
+
+
+ RUN  v3.2.7 /Users/akbermettoktobekova/Desktop/Vela2/server
+
+···························································································································--··························································································································································································
+
+ Test Files  32 passed (32)
+      Tests  309 passed | 2 skipped (311)
+   Start at  14:13:16
+   Duration  5.69s (transform 1.34s, setup 0ms, collect 5.50s, tests 16.25s, environment 4ms, prepare 2.04s)

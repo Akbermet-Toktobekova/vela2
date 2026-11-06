@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
 import { SharedFinancialCalculator as Calc } from '@shared/calculator';
-import { ImpactCalculator } from '../src/decision/impactCalculator';
-import { DecisionEngine } from '../src/decision/decisionEngine';
-import { RobustnessEngine } from '../src/decision/robustnessChecker';
-import { ComplexityEvaluator } from '../src/decision/complexityEvaluator';
-import { ScoringEngine } from '../src/decision/scoringEngine';
-import { loadPrototypePolicy } from '../src/config/policyLoader';
-import { createBaselineSolventFixture as fixture, createCandidateActionFixture as candidate } from './helpers/testFixtures';
+import { afterEach,describe,expect,it,vi } from 'vitest';
 import type { CheckerBatchOutput } from '../src/checker/actionChecker';
+import { loadPrototypePolicy } from '../src/config/policyLoader';
+import { ComplexityEvaluator } from '../src/decision/complexityEvaluator';
+import { DecisionEngine } from '../src/decision/decisionEngine';
+import { ImpactCalculator } from '../src/decision/impactCalculator';
+import { RobustnessEngine } from '../src/decision/robustnessChecker';
+import { ScoringEngine } from '../src/decision/scoringEngine';
+import { createCandidateActionFixture as candidate,createBaselineSolventFixture as fixture } from './helpers/testFixtures';
 const policy = loadPrototypePolicy();
 function checkOutput(c: ReturnType<typeof candidate>, status: 'VALID' | 'REJECTED' = 'VALID'): CheckerBatchOutput {
   const validation = { candidate: c, status, isCritical: false, criticalPriorityRank: null, resolvesCriticalProblemDirectly: false, failedChecks: [], missingFields: [], projectedMinCashAfterAction: 1000, unlocksActionIds: [] };
