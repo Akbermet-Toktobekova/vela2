@@ -10,14 +10,12 @@ View,
 } from "react-native";
 import Svg,{ Circle,Path,Rect } from "react-native-svg";
 
-export const colors = {
-  ink: "#272e23",
-  muted: "#74766d",
-  sage: "#6c785d",
-  line: "rgba(255,255,255,0.92)",
-  green: "#386641",
-};
+import { colors, cardStyle, themedStyles } from '../theme';
+export { colors } from '../theme';
 export type IconName =
+  | "profile"
+  | "analytics"
+  | "compass"
   | "leaf"
   | "sun"
   | "plan"
@@ -42,6 +40,9 @@ export function Icon({
 }) {
   const common = { stroke: color, strokeWidth: 1.8, fill: "none" };
   const paths: Record<IconName, ReactNode> = {
+    profile: <><Circle cx="12" cy="8" r="4" {...common} /><Path d="M4 22v-3a8 8 0 0 1 16 0v3" {...common} /></>,
+    analytics: <Path d="M3 3v18h18M7 16l4-5 4 2 6-8" {...common} />,
+    compass: <><Path d="M4 5 12 19 20 5" {...common} /><Circle cx="12" cy="9" r="1.6" fill={color} /></>,
     leaf: (
       <>
         <Path
@@ -221,8 +222,9 @@ export function FloatingNavigation({
 }) {
   const items: { name: string; icon: IconName }[] = [
     { name: "Today", icon: "sun" },
-    { name: "My Plan", icon: "plan" },
+    { name: "Analytics", icon: "analytics" },
     { name: "Assistant", icon: "chat" },
+    { name: "Profile", icon: "profile" },
   ];
   return (
     <View style={glass.navigationWrap}>
@@ -235,10 +237,7 @@ export function FloatingNavigation({
             onPress={() => onChange(item.name)}
             style={[glass.navItem, active === item.name && glass.navActive]}
           >
-            <Icon
-              name={item.icon}
-              color={active === item.name ? colors.ink : colors.muted}
-            />
+            <View style={[glass.navIcon, active === item.name && glass.navIconActive]}><Icon name={item.icon} size={19} color={active === item.name ? colors.white : colors.muted} /></View>
             <Text
               style={[
                 glass.navText,
@@ -261,26 +260,15 @@ export function AmbientBackground() {
     </View>
   );
 }
-export const glass = StyleSheet.create({
-  card: {
-    borderRadius: 24,
-    overflow: "hidden",
-    borderWidth: 1.3,
-    borderColor: colors.line,
-    backgroundColor: "rgba(255,255,255,0.47)",
-    shadowColor: "#73806a",
-    shadowOffset: { width: 0, height: 9 },
-    shadowOpacity: 0.07,
-    shadowRadius: 22,
-    elevation: 1,
-  },
+export const glass = themedStyles({
+  card: {...cardStyle, overflow: "hidden"},
   cardContent: { padding: 16, gap: 12 },
   button: {
     minHeight: 49,
     paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.84)",
+    backgroundColor: colors.green,
     borderColor: "#fff",
     borderWidth: 1,
     alignItems: "center",
@@ -290,8 +278,8 @@ export const glass = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 10,
   },
-  secondary: { backgroundColor: "rgba(255,255,255,0.40)", shadowOpacity: 0 },
-  buttonText: { fontSize: 14, fontWeight: "600", color: colors.ink },
+  secondary: { backgroundColor: colors.secondary, shadowOpacity: 0 },
+  buttonText: { fontSize: 14, fontWeight: "600", color: colors.white },
   label: {
     fontSize: 10,
     fontWeight: "600",
@@ -315,10 +303,10 @@ export const glass = StyleSheet.create({
     bottom: 14,
     alignSelf: "center",
     width: "92%",
-    maxWidth: 390,
+    maxWidth: 398,
     borderWidth: 1.5,
-    borderColor: "white",
-    borderRadius: 28,
+    borderColor: colors.line,
+    borderRadius: 24,
     overflow: "hidden",
     shadowColor: "#818b79",
     shadowOffset: { width: 0, height: 8 },
@@ -329,19 +317,21 @@ export const glass = StyleSheet.create({
   navigation: {
     flexDirection: "row",
     padding: 6,
-    backgroundColor: "rgba(255,255,255,.46)",
+    backgroundColor: "rgba(245,246,242,.90)",
   },
   navItem: {
     flex: 1,
     minHeight: 56,
     gap: 7,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 24,
+    borderRadius: 18,
   },
-  navActive: { backgroundColor: "rgba(255,255,255,.92)" },
-  navText: { fontSize: 11, fontWeight: "600", color: colors.muted },
+  navActive: {},
+  navIcon: {width: 34, height: 34, borderRadius: 13, alignItems: "center", justifyContent: "center"},
+  navIconActive: {backgroundColor: colors.green},
+  navText: { fontSize: 9, fontWeight: "600", color: colors.muted },
   greenOrb: {
     width: 470,
     height: 470,

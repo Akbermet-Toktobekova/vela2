@@ -20,4 +20,4 @@ function HistoryCard({item,save,refresh}:{item:ActionHistoryItem;save:(id:string
  <GlassButton title={busy?'Saving…':'Save update'} disabled={busy||(outcome==='changed'&&!note.trim())} onPress={()=>void submit()}/></>}
  </GlassCard>;
 }
-export function ActionHistory({items,save,refresh}:{items:ActionHistoryItem[];save:(id:string,body:ActionOutcomeInput)=>Promise<void>;refresh:()=>Promise<void>}){return <View style={{gap:12}}><Text style={{fontSize:20,fontWeight:'700'}}>Action history</Text>{!items.length&&<Text>Useful suggestions you request with “Review my finances” will appear here.</Text>}{items.map(item=><HistoryCard key={item.id} item={item} save={save} refresh={refresh}/>)}</View>;}
+export function ActionHistory({items,save,refresh}:{items:ActionHistoryItem[];save:(id:string,body:ActionOutcomeInput)=>Promise<void>;refresh:()=>Promise<void>}){return <View style={{gap:12}}><Text style={{fontSize:20,fontWeight:'700'}}>Suggestion history</Text>{!items.length&&<Text>Useful suggestions you request with “Review my finances” will appear here.</Text>}{items.map(item=><HistoryCard key={item.id} item={item} save={save} refresh={refresh}/>)}</View>;}

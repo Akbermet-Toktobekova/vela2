@@ -3,7 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "paths": {
+      "zod": [
+        "./node_modules/zod"
+      ]
+    }
   },
   "include": [
     "**/*.ts",

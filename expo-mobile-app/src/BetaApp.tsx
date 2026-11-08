@@ -1,3 +1,4 @@
+import { themedStyles } from './theme';
 import React,{ useEffect,useRef,useState } from "react";
 import { ActionHistory } from "./components/ActionHistory";
 import { StatementReview } from "./components/StatementReview";
@@ -13,7 +14,6 @@ Modal,
 Platform,
 ScrollView,
 Share,
-StyleSheet,
 Switch,
 Text,
 TextInput,
@@ -53,7 +53,10 @@ GlassCard,
 Icon,
 Field as Input,
 } from "./components/SoftGlass";
-import { PlanInsights } from "./screens/PlanInsights";
+import { AnalyticsScreen } from "./screens/AnalyticsScreen";
+import { AssistantScreen } from "./screens/AssistantScreen";
+import { ProfileScreen } from "./screens/ProfileScreen";
+import { colors } from "./theme";
 import { TodayScreen } from "./screens/TodayScreen";
 
 type Editor = {
@@ -351,10 +354,10 @@ export default function App() {
   const [documentsOpen, setDocumentsOpen] = useState(false);
   const [connectionOpen, setConnectionOpen] = useState(!base);
   const [tab, setTab] = useState("Today");
+  useEffect(() => { authScroll.current?.scrollTo({y: 0, animated: false}); }, [tab, documentsOpen]);
   const [manualReviewMessage,setManualReviewMessage]=useState("");
   const [settings, setSettings] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const [settingsSection, setSettingsSection] = useState("Profile");
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
   const [importDetails, setImportDetails] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
@@ -752,6 +755,8 @@ export default function App() {
       chatClearRequest.current ||= uid();
       const result = await request("/chat", "DELETE", {requestId: chatClearRequest.current});
       setMessages(result.messages || []);
+      setQuestion("");
+      setChatRequestId(uid());
       chatClearRequest.current = null;
       setNotice("Chat history cleared.");
     });
@@ -1331,7 +1336,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <LinearGradient colors={["#f2f2ef", "#e8eade", "#f4f3ed"]} style={s.root}>
+      <LinearGradient colors={[colors.background, colors.background]} style={s.root}>
         <AmbientBackground />
         <SafeAreaView style={s.root}>
           <KeyboardAvoidingView
@@ -1343,7 +1348,7 @@ export default function App() {
                 style={{ flexDirection: "row", alignItems: "center", gap: 11 }}
               >
                 <View style={s.brandIcon}>
-                  <Icon name="leaf" size={24} />
+                  <Icon name="compass" size={24} color={colors.white} />
                 </View>
                 <Text style={s.brand}>Vela</Text>
               </View>
@@ -1351,10 +1356,10 @@ export default function App() {
                 <TouchableOpacity
                   accessibilityRole="button"
                   accessibilityLabel={
-                    settings ? "Close settings" : "Open settings"
+                    "Open profile and settings"
                   }
                   style={s.settingsButton}
-                  onPress={() => setSettings((v) => !v)}
+                  onPress={() => {setSettings(false); setDocumentsOpen(false); setTab("Profile"); setOnboardingDismissed(true); setShowOnboarding(false);}}
                 >
                   <Icon name="settings" size={23} />
                 </TouchableOpacity>
@@ -1555,16 +1560,9 @@ export default function App() {
                 />
               )}
 
-              {user && state && settings ? (
-                <>
-                  <Text style={s.eyebrow}>SETTINGS & ACCOUNT</Text>
-                  <Text style={s.h1}>Financial Profile & Controls</Text>
-                  <View style={s.chips}>
-                    {["Profile", "Accounts", "Statements", "Privacy & AI", "Data & Account"].map(sectionName => (
-                      <TouchableOpacity key={sectionName} accessibilityRole="tab" accessibilityState={{selected: settingsSection === sectionName}} onPress={() => setSettingsSection(sectionName)} style={[s.chip, settingsSection === sectionName && {backgroundColor: "rgba(255,255,255,.94)"}]}><Text style={s.body}>{sectionName}</Text></TouchableOpacity>
-                    ))}
-                  </View>
-                  {settingsSection === "Profile" && <View style={s.card}>
+              {user && state && !onboarding && tab === "Profile" && !documentsOpen ? (
+                <ProfileScreen name={user.name || state.profile.nickname} email={user.email} currency={state.profile.baseCurrency} sections={[
+{title: 'Profile details', content: (<View style={s.card}>
                     <Text style={s.h2}>Your profile</Text>
                     <Text style={s.body}>{user.email}</Text>
                     <Input label="Display name" value={profileName} onChange={v => {profileNameDirty.current = true; setProfileName(v);}} />
@@ -1577,11 +1575,11 @@ export default function App() {
                     <CurrencyField label="Planning currency" value={state.profile.baseCurrency} onChange={v => void run(async () => {await save({...state, profile: {...state.profile, baseCurrency: v, updatedAt: now()}});})} />
                     <Text style={s.muted}>Setup {state.onboarding.status === "completed" ? "completed" : `in progress · step ${step} of 7`}</Text>
                     <Button secondary title="Continue onboarding" onPress={() => {setShowOnboarding(true); setOnboardingDismissed(false); setSettings(false);}} />
-                  </View>}
-                  {settingsSection === "Accounts" && section("accounts", "Your accounts")}
-                  {settingsSection === "Statements" && <>{imports()}<Button secondary title="Review imported transactions" onPress={() => {setSettings(false); setDocumentsOpen(false); setOnboardingDismissed(true); setShowOnboarding(false); setTab("My Plan");}} /></>}
-                  {settingsSection === "Privacy & AI" && consent()}
-                  {settingsSection === "Data & Account" && <View style={s.card}>
+                  </View>)},
+{title: 'Accounts', content: (section("accounts", "Your accounts"))},
+{title: 'Statements', content: (<>{imports()}<Button secondary title="Review imported transactions" onPress={() => {setSettings(false); setDocumentsOpen(false); setOnboardingDismissed(true); setShowOnboarding(false); reviewTransactions();}} /></>)},
+{title: 'Privacy & AI', content: (consent())},
+{title: "Data & account", content: (<View style={s.card}>
                     <Text style={s.h2}>Your data & account</Text>
                     <Text style={s.muted}>Export a copy before deleting. Sign out only affects this device's session.</Text>
                   <Button
@@ -1609,7 +1607,7 @@ export default function App() {
                   />
                   <Button
                     secondary
-                    title="Sign out"
+                    title="Log out"
                     disabled={busy}
                     onPress={() =>
                       void run(async () => {
@@ -1641,8 +1639,8 @@ export default function App() {
                       )
                     }
                   />
-                  </View>}
-                </>
+                  </View>)}
+                ]} />
               ) : null}
 
               {user && state && !settings && onboarding ? (
@@ -1864,7 +1862,7 @@ export default function App() {
                   }}
                   onOpen={open}
                   onUpload={() => setDocumentsOpen(true)}
-                  onManage={() => setTab("My Plan")}
+                  onManage={() => setTab("Profile")}
                   onReviewTransactions={() => reviewTransactions()}
                 />
               ) : null}
@@ -1881,7 +1879,7 @@ export default function App() {
               ) : null}
               {user && state && !settings && !onboarding && !documentsOpen && tab === "Transactions" ? (
                 <>
-                  <Button secondary title="← Back to My Plan" onPress={() => setTab("My Plan")} />
+                  <Button secondary title="← Back to Analytics" onPress={() => setTab("Analytics")} />
                   <Text accessibilityRole="header" style={s.h1}>Review transactions</Text>
                   {!state.transactions.length && <Text style={s.muted}>No imported transactions yet. Confirm a statement import to review its transactions.</Text>}
                   <View style={s.card}>
@@ -1924,14 +1922,14 @@ export default function App() {
               !settings &&
               !onboarding &&
               !documentsOpen &&
-              tab === "My Plan" ? (
+              tab === "Analytics" ? (
                 <>
                   <Text style={s.eyebrow}>YOUR FINANCIAL PICTURE</Text>
-                  <Text style={s.h1}>My Plan</Text>
+                  <Text style={s.h1}>Analytics</Text>
                   <Text style={s.muted}>
                     Your goals, commitments and accepted next steps.
                   </Text>
-                  <PlanInsights snapshot={snapshot} onReviewTransactions={reviewTransactions} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} />
+                  <AnalyticsScreen snapshot={snapshot} onReviewTransactions={reviewTransactions} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} onUpdateBalance={() => open("accounts", state.accounts.find(account => account.isPrimary) || state.accounts[0])} />
                   <Button
                     secondary
                     title="Manage statements"
@@ -1940,9 +1938,7 @@ export default function App() {
                   {section("accounts", "Your accounts")}
                   {section("obligations", "Upcoming bills")}
                   {section("goals", "Your goals")}
-                  <ActionHistory items={env.actionHistory || []}
-                    refresh={async()=>{const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}}
-                    save={async(id,body)=>{await request(`/action-history/${id}/outcome`,"PUT",body);const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}} />
+
                   <View style={s.card}>
                     <Text style={s.muted}>
                       You can create and track goals. Suggested goal funding
@@ -1967,6 +1963,9 @@ export default function App() {
                       onPress={() => open("expenses")}
                     />
                   </View>
+                  <ActionHistory items={env.actionHistory || []}
+                    refresh={async()=>{const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}}
+                    save={async(id,body)=>{await request(`/action-history/${id}/outcome`,"PUT",body);const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}} />
                 </>
               ) : null}
 
@@ -1976,65 +1975,15 @@ export default function App() {
               !onboarding &&
               !documentsOpen &&
               tab === "Assistant" ? (
-                <>
-                  <View style={s.assistantHeading}>
-                    <View style={s.brandIcon}>
-                      <Icon name="chat" />
-                    </View>
-                    <View style={{flex: 1}}>
-                      <Text style={s.h1}>Vela Financial Assistant</Text>
-                      <Text style={s.small}>YOUR FINANCIAL GUIDE</Text>
-                    </View>
-                  </View>
-                  <Text style={s.muted}>
-                    Answers use your saved financial picture. Financial changes
-                    require separate confirmation.
-                  </Text>
-                  <Text style={s.small}>{state.accounts.length} accounts · {state.transactions.length} transactions · {env.aiConsent ? "AI processing enabled" : "AI processing off"}</Text>
-                  <View style={s.chips}>
-                    {["Explain my current next step", "Show my accounts and currencies", "What bills are coming up?"].map(prompt => <TouchableOpacity key={prompt} accessibilityRole="button" style={s.chip} onPress={() => setQuestion(prompt)}><Text style={s.muted}>{prompt}</Text></TouchableOpacity>)}
-                  </View>
-                  {messages.length > 0 && <Button secondary disabled={busy} title="Clear chat history" onPress={() => Alert.alert("Clear chat history?", "This removes the saved conversation from your account on all devices.", [{text: "Cancel", style: "cancel"}, {text: "Clear chat", style: "destructive", onPress: () => void clearChat()}])} />}
-                  {!env.aiConsent && consent()}
-                  {messages.map((m, i) => (
-                    <View
-                      key={m.id || i}
-                      style={[
-                        s.card,
-                        m.role === "user" ? s.userBubble : s.assistantBubble,
-                      ]}
-                    >
-                      <Text style={s.small}>
-                        {m.role === "user" ? "You" : "Vela"}
-                      </Text>
-                      <Text style={s.body}>{m.content || m.text}</Text>
-                    </View>
-                  ))}
-                  <Input
-                    label="Your question"
-                    value={question}
-                    onChange={setQuestion}
-                  />
-                  <Button
-                    title="Send message"
-                    disabled={busy || !question.trim() || !env.aiConsent}
-                    onPress={() =>
-                      void run(async () => {
-                        const r = await request("/chat", "POST", {
-                          message: question,
-                          requestId: chatRequestId,
-                        });
-                        setMessages(r.messages || []);
-                        setQuestion("");
-                        setChatRequestId(uid());
-                        if (r.status === "PROVIDER_UNAVAILABLE")
-                          setError(
-                            "The AI provider is unavailable. This is not a completed model response.",
-                          );
-                      })
-                    }
-                  />
-                </>
+                <AssistantScreen messages={messages} question={question} onQuestion={setQuestion}
+                  accounts={state.accounts.length} transactions={state.transactions.length} busy={busy} consent={!!env.aiConsent} consentControls={consent()}
+                  onNewChat={() => Alert.alert("Start a new chat?", "This clears the saved conversation on all devices.", [{text: "Cancel", style: "cancel"}, {text: "New chat", style: "destructive", onPress: () => void clearChat()}])}
+                  onSend={() => void run(async () => {
+                    const r = await request("/chat", "POST", {message: question, requestId: chatRequestId});
+                    setMessages(r.messages || []); setQuestion(""); setChatRequestId(uid());
+                    if (r.status === "PROVIDER_UNAVAILABLE") setError("The AI provider is unavailable. This is not a completed model response.");
+                  })}
+                />
               ) : null}
 
               {draft && !editor && user && (
@@ -2157,7 +2106,7 @@ export default function App() {
 
             {editor && user && (
               <Modal animationType="slide" presentationStyle="fullScreen" onRequestClose={() => {setDraft(editor); setEditor(null);}}>
-                <SafeAreaView style={{flex: 1, backgroundColor: '#f4f6f1'}}>
+                <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
                   <AmbientBackground />
                   <KeyboardAvoidingView style={s.sheet} behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{flexDirection: 'row', padding: 16, justifyContent: 'space-between'}}>
@@ -2342,14 +2291,14 @@ const friendly: Record<string, string> = {
   medium: "Medium",
   low: "Low",
 };
-const s = StyleSheet.create({
+const s = themedStyles({
   root: { flex: 1 },
   loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     gap: 16,
-    backgroundColor: "#f2f3ee",
+    backgroundColor: colors.background,
   },
   header: {
     flexShrink: 0,
@@ -2370,7 +2319,7 @@ const s = StyleSheet.create({
     width: 43,
     height: 43,
     borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,.65)",
+    backgroundColor: colors.green,
     borderWidth: 1,
     borderColor: "#fff",
     alignItems: "center",

@@ -11,12 +11,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#f2f2ef"
+        "backgroundColor": "#e3e5df"
       },
       "package": "com.vela.finance",
       "softwareKeyboardLayoutMode": "resize"
     },
-    "backgroundColor": "#f2f2ef",
+    "backgroundColor": "#e3e5df",
     "plugins": [
       "expo-secure-store",
       "@react-native-community/datetimepicker"

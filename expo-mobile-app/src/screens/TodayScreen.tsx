@@ -1,5 +1,6 @@
+import { themedStyles } from '../theme';
 import { useState } from "react";
-import { StyleSheet,Text,TouchableOpacity,View } from "react-native";
+import { Text,TouchableOpacity,View } from "react-native";
 import type { Finding,FindingResponse,FindingsPacket } from "../../../shared/contracts/findingsTypes";
 import type {
 FinancialSnapshot,
@@ -100,7 +101,6 @@ export function TodayScreen(props: Props) {
             : props.onOpen("accounts"),
       },
       { title: "Upload statement", icon: "statement", action: props.onUpload },
-      { title: "Review transactions", icon: "plan", action: props.onReviewTransactions },
     ];
   return (
     <>
@@ -110,7 +110,7 @@ export function TodayScreen(props: Props) {
           <Text style={styles.link}>{snapshot?.readinessState === "state_a_action_ready" ? "Ready" : "Needs review"} · {snapshot?.unresolvedConfirmations.length || 0} checks</Text>
         </TouchableOpacity>
       </View>
-      <GlassCard>
+      <GlassCard style={{backgroundColor: "rgba(56,102,65,.08)", borderColor: "rgba(56,102,65,.25)"}}>
         <View style={styles.topRow}>
           <Text style={styles.eyebrow}>✧ RECOMMENDED NEXT STEP</Text>
           <Text style={styles.badge}>
@@ -242,13 +242,30 @@ export function TodayScreen(props: Props) {
         )}
       </GlassCard>
 
+      <View style={styles.quickActions}>
+        {quickActions.map((action) => (
+          <TouchableOpacity
+            accessibilityRole="button"
+            disabled={busy}
+            key={action.title}
+            onPress={action.action}
+            style={styles.quickAction}
+          >
+            <View style={styles.quickIcon}>
+              <Icon name={action.icon} size={24} />
+            </View>
+            <Text style={styles.quickText}>{action.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <GlassCard>
         <Text style={styles.eyebrow}>YOUR FINANCIAL PICTURE</Text>
         <Text style={styles.actionTitle}>Here's what Vela found</Text>
         <ValueRow label={`Observed spending · ${currency}`} value={formatMoney(observed?.grossSpending, currency)} />
         <ValueRow label="Subscriptions" value={formatMoney(observed?.categories.subscriptions ?? (observed ? 0 : null), currency)} />
         <ValueRow label="Transfer movements (excluded)" value={formatMoney(observed?.transfers, currency)} />
-        {snapshot?.dataQuality.multiCurrencyDetected && <Text style={styles.note}>Showing {currency} only. Other currencies remain separate in My Plan; no currency conversion is assumed.</Text>}
+        {snapshot?.dataQuality.multiCurrencyDetected && <Text style={styles.note}>Showing {currency} only. Other currencies remain separate in Analytics; no currency conversion is assumed.</Text>}
         {!!observed?.unknownCount && <Text style={styles.note}>{observed.unknownCount} transactions in this currency still need review and are excluded from classified totals.</Text>}
         <Text style={styles.note}>Coverage: {snapshot?.dataQuality.accountsWithStatements || 0} of {snapshot?.dataQuality.totalAccounts || 0} accounts have statements. These are observed history figures, not guaranteed monthly averages.</Text>
         <View style={styles.line} />
@@ -310,22 +327,6 @@ export function TodayScreen(props: Props) {
         </TouchableOpacity>
       </GlassCard>
 
-      <View style={styles.quickActions}>
-        {quickActions.map((action) => (
-          <TouchableOpacity
-            accessibilityRole="button"
-            disabled={busy}
-            key={action.title}
-            onPress={action.action}
-            style={styles.quickAction}
-          >
-            <View style={styles.quickIcon}>
-              <Icon name={action.icon} size={24} />
-            </View>
-            <Text style={styles.quickText}>{action.title}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
       <View style={styles.topRow}>
         <Text style={styles.eyebrow}>UPCOMING OBLIGATIONS</Text>
         <TouchableOpacity
@@ -394,7 +395,7 @@ function ValueRow({ label, value }: { label: string; value: string }) {
     </View>
   );
 }
-const styles = StyleSheet.create({
+const styles = themedStyles({
   topRow: {
     flexDirection: "row",
     alignItems: "center",
