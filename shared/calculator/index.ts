@@ -37,6 +37,7 @@ export const FORMULA_OWNERSHIP_MAP: Record<string, string> = {
 };
 
 export interface CalculatorContextExtras {
+  confirmedGoalContributions?: Record<string, { sourceAccountId: string; amount: number; currency: string }>;
   pendingFinancialCommitments?: Array<{ recommendationId: string; actionId: string; sourceAccountId: string | null; amount: number; currency: string }>;
   referenceDateIso?: string; // defaults to the actual current UTC calendar date
   simulationHorizonDays?: number;
@@ -163,6 +164,7 @@ export class SharedFinancialCalculator {
           base,
           extras?.fxRates
         );
+        if (conv.fxStatus !== 'OK' && !fxWarningCurrencies.includes(alloc.currency)) fxWarningCurrencies.push(alloc.currency);
         if (conv.converted !== null) {
           dedicatedEmergencyReserve += conv.converted;
         }
@@ -179,6 +181,7 @@ export class SharedFinancialCalculator {
           base,
           extras?.fxRates
         );
+        if (conv.fxStatus !== 'OK' && !fxWarningCurrencies.includes(alloc.currency)) fxWarningCurrencies.push(alloc.currency);
         if (conv.converted !== null) nonEmergencyAllocated += conv.converted;
       }
     }
@@ -186,6 +189,7 @@ export class SharedFinancialCalculator {
     let unpaidObligationsInBase = 0;
     for (const obl of snapshot.upcomingUnpaidObligations) {
       const conv = this.convertToBaseCurrency(obl.amount, obl.currency, base, extras?.fxRates);
+      if (conv.fxStatus !== 'OK' && !fxWarningCurrencies.includes(obl.currency)) fxWarningCurrencies.push(obl.currency);
       if (conv.converted !== null) unpaidObligationsInBase += conv.converted;
     }
 
@@ -196,6 +200,7 @@ export class SharedFinancialCalculator {
       totalAccessible - dedicatedEmergencyReserve - nonEmergencyAllocated - unpaidObligationsInBase -
       (extras?.pendingFinancialCommitments || []).reduce((sum, commitment) => {
         const converted = this.convertToBaseCurrency(commitment.amount, commitment.currency, base, extras?.fxRates);
+        if (converted.fxStatus !== 'OK' && !fxWarningCurrencies.includes(commitment.currency)) fxWarningCurrencies.push(commitment.currency);
         return sum + (converted.converted ?? 0);
       }, 0);
 
@@ -260,7 +265,7 @@ export class SharedFinancialCalculator {
     snapshot: FinancialSnapshot,
     extras?: CalculatorContextExtras,
     candidateAction?: CandidateAction | null
-  ): CashflowProjectionSummary {
+  ): CashflowProjectionSummary & { paymentCoverage: CashflowProjectionSummary['shortfallsByObligation'] } {
     const refDate = (extras?.referenceDateIso || new Date().toISOString()).slice(0, 10);
     const horizonDays = extras?.simulationHorizonDays ?? prototypePolicy.horizonAndFreshness.simulationHorizonDays;
     const bufferFloor = extras?.bufferFloor ?? 0;
@@ -517,7 +522,7 @@ export class SharedFinancialCalculator {
     }
 
     // Compute F019 shortfalls per dated obligation/minimum
-    const shortfallsByObligation = datedEvents
+    const paymentCoverage = datedEvents
       .sort((a, b) => a.dayOffset - b.dayOffset)
       .map((ev) => {
         const netAfterDay = dailyTrajectory[ev.dayOffset]?.netCashSigned ?? 0;
@@ -535,8 +540,8 @@ export class SharedFinancialCalculator {
           liquidAvailableByDue: Math.max(0, availableBeforeThisBill),
           shortfallAmountF019: shortfall,
         };
-      })
-      .filter((s) => s.shortfallAmountF019 > 0);
+      });
+    const shortfallsByObligation = paymentCoverage.filter((s) => s.shortfallAmountF019 > 0);
 
     const availableCashBeforeActionF003 = this.computeAvailableCashBeforeAction({
       startingCash: currentCash,
@@ -554,6 +559,7 @@ export class SharedFinancialCalculator {
       minProjectedCashDate,
       hasProjectedDeficit: minProjectedCashSignedF004 < bufferFloor || shortfallsByObligation.length > 0,
       shortfallsByObligation,
+      paymentCoverage,
       dailyTrajectory,
       missingInputs: Array.from(missingInputs),
     };
@@ -677,17 +683,34 @@ export class SharedFinancialCalculator {
     interestAccruing?: boolean;
     avoidedLateFee?: number;
   }): {
-    baselineInterest: number;
-    afterActionInterest: number;
-    interestAvoidedF008: number;
-    effectiveIncrementalCostAvoidedF010: number;
+    baselineInterest: number | null;
+    afterActionInterest: number | null;
+    interestAvoidedF008: number | null;
+    effectiveIncrementalCostAvoidedF010: number | null;
+    status: 'OK' | 'NEEDS_DATA';
+    missingInputs: string[];
   } {
-    const { debt, extraPaymentDay0, horizonDays, interestAccruing = true, avoidedLateFee = 0 } = params;
-    const balance0 = debt.remainingBalance ?? 0;
-    const apr = debt.apr ?? 0;
+    const { debt, extraPaymentDay0, horizonDays, avoidedLateFee = 0 } = params;
+    const interestAccruing = params.interestAccruing ?? (debt.apr === 0 || debt.remainingBalance === 0 ? false : undefined);
+    const missingInputs: string[] = [];
+    if (debt.remainingBalance == null) missingInputs.push('remainingBalance');
+    if (interestAccruing === undefined) missingInputs.push('interestAccruing');
+    if (debt.apr == null && interestAccruing && debt.remainingBalance !== 0) missingInputs.push('apr');
+    if (debt.remainingBalance !== 0 && interestAccruing && debt.apr !== 0) {
+      if (debt.minimumPayment == null) missingInputs.push('minimumPayment');
+      if (!debt.nextDueDate) missingInputs.push('nextDueDate');
+      if (!debt.paymentFrequency) missingInputs.push('paymentFrequency');
+    }
+    if (missingInputs.length) return {
+      status: 'NEEDS_DATA', missingInputs, baselineInterest: null, afterActionInterest: null,
+      interestAvoidedF008: null, effectiveIncrementalCostAvoidedF010: null,
+    };
+    const balance0 = debt.remainingBalance!;
+    const apr = debt.apr;
 
-    if (balance0 <= 0 || apr <= 0 || !interestAccruing) {
+    if (balance0 <= 0 || apr === 0 || interestAccruing !== true) {
       return {
+        status: 'OK', missingInputs,
         baselineInterest: 0,
         afterActionInterest: 0,
         interestAvoidedF008: 0,
@@ -703,6 +726,7 @@ export class SharedFinancialCalculator {
     const totalAvoided = interestAvoided + Math.max(0, avoidedLateFee);
 
     return {
+      status: 'OK', missingInputs,
       baselineInterest: Number(baselineInterest.toFixed(2)),
       afterActionInterest: Number(afterActionInterest.toFixed(2)),
       interestAvoidedF008: Number(interestAvoided.toFixed(2)),

@@ -1,10 +1,10 @@
 # Vela — Expo mobile app and API
 
-This branch contains the Expo application and its authenticated backend. The updated Today, My Plan, charts, Assistant, statement imports, transaction review, review progress, and action history are retained. Expo also supports a browser preview of the same application.
+This branch contains the Expo application and its authenticated backend. The updated Today, My Plan, charts, Assistant, statement imports, transaction review, review progress, and action history are retained. Delivery targets are Android and iOS. The completed Compass UI is integrated with the seven-stage backend pipeline.
 
 ## Layout
 
-- `expo-mobile-app/`: Android/iPhone application and Expo browser preview.
+- `expo-mobile-app/`: Android/iPhone application.
 - `server/`: authenticated beta API, encrypted persistence, jobs, financial engine, AI and regression tests.
 - `shared/`: domain types, blank profiles, processing, validated contracts and deterministic calculator.
 - `.agents/skills/` and `AGENTS.md`: project skills, ownership and financial safeguards.
@@ -17,12 +17,12 @@ This branch contains the Expo application and its authenticated backend. The upd
 Use Node.js with built-in `node:sqlite` support and a version compatible with the installed Expo SDK. In each package, run `npm ci` once:
 
 ```bash
-cd ~/Desktop/Vela2/server
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
 npm ci
 ```
 
 ```bash
-cd ~/Desktop/Vela2/expo-mobile-app
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/expo-mobile-app
 npm ci
 ```
 
@@ -31,7 +31,7 @@ npm ci
 Terminal 1 — authenticated API on loopback port 3002:
 
 ```bash
-cd ~/Desktop/Vela2/server
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
 npm run dev
 ```
 
@@ -40,19 +40,11 @@ npm run dev
 Terminal 2 — Expo Go on a phone:
 
 ```bash
-cd ~/Desktop/Vela2/expo-mobile-app
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/expo-mobile-app
 npm run friends
 ```
 
 Scan the current QR code. Keep both terminals open. The phone also needs a separate approved HTTPS tunnel to port 3002. Set the app server address to that tunnel URL ending in `/api/beta`; localhost on a phone points to the phone itself. Restarting a tunnel may change its address. No public API exposure is started automatically.
-
-For a Mac browser preview, use this instead of a second Expo process:
-
-```bash
-npm run web -- --localhost --port 8081
-```
-
-Open http://localhost:8081 and use http://localhost:3002/api/beta as the server address. Run only one Expo process per port; stop it with Control+C before changing launch modes.
 
 ## Local configuration and data
 
@@ -65,17 +57,19 @@ Open http://localhost:8081 and use http://localhost:3002/api/beta as the server 
 ## Verify
 
 ```bash
-cd ~/Desktop/Vela2/server
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
 npm run typecheck
 npm test
 ```
 
 ```bash
-cd ~/Desktop/Vela2/expo-mobile-app
+cd C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/expo-mobile-app
 npm run typecheck
-npx expo export --platform all
+npx expo export --platform android --platform ios
 ```
 
 Exports verify bundles, not physical-device behavior. Android/iPhone picking, keyboard, accessibility and UI acceptance must be checked separately.
 
 See `docs/EXPO-CLEANUP.md` for migration/recovery details and `docs/progress.md` for verification results. No production deployment is implied.
+
+Integration verification and limitations: [UI/backend handoff](docs/coordination/handoffs/UI-BACKEND.md). Original checkout data and local secrets are preserved in their original location; this isolated worktree does not automatically reuse that database or credentials.

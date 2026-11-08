@@ -1,0 +1,846 @@
+# 02 Strong · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **Confirm financial information**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 4
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "a43de4d3-30ae-413a-860a-bb2484877942",
+  "decision": {
+    "evaluationId": "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+    "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+    "snapshotVersion": "4.0",
+    "decisionStatus": "NEEDS_DATA",
+    "priorityClass": "NONE",
+    "selectedActionId": null,
+    "selectedActionType": null,
+    "candidate": null,
+    "title": "Confirm financial information",
+    "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+    "reasoning": "This information is needed before choosing a useful next action.",
+    "expectedEffectSummary": "No balance movement proposed; continue monitoring upcoming obligations.",
+    "weightProfileId": "liquidity_protection",
+    "weights": {
+      "resilience": 0.5,
+      "financial_benefit": 0.35,
+      "goal_progress": 0.15
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [],
+    "ruleIds": [],
+    "claimIds": [],
+    "dataQualityStatus": "NEEDS_DATA",
+    "clarificationQuestion": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+    "missingFields": [
+      "verified_fx_rate_HUF",
+      "Desired dedicated emergency reserve target"
+    ],
+    "trace": {
+      "evaluationId": "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+      "userId": "9a74bbe3-cd6a-419b-83b4-94e0dbe16287",
+      "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T20:37:15.750Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "fallback_A007",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Start or add EUR 6840 to your emergency reserve",
+            "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+            "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+            "targetId": "goal_cushion",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 6840,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1760,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "stageArtifactIds": [
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pi",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:fx",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:classification",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pattern-recognition",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:behavior-agent",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:financial-calculator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-calculator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-agent",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:suggestion-generator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:catalog-selector",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:checker",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:critical-coverage",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:ai-evaluation",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:weights",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:decision-engine",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "financial-metrics",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Proposal slot unavailable",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "SYSTEM_UNAVAILABLE",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "factIds": [],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Proposal slot unavailable",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "SYSTEM_UNAVAILABLE",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "factIds": [],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "The model did not return a valid three-proposal response.",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NEEDS_DATA",
+      "decisionReason": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [
+        "verified_fx_rate_HUF",
+        "Desired dedicated emergency reserve target"
+      ],
+      "clarificationQuestion": "What dedicated emergency reserve target would you like to protect before funding other goals?"
+    }
+  },
+  "todayCard": {
+    "id": "rec_NONE_eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+    "userId": "9a74bbe3-cd6a-419b-83b4-94e0dbe16287",
+    "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+    "actionType": "allocate_safety_cushion",
+    "clarification": {
+      "question": "What dedicated emergency reserve target would you like to protect before funding other goals?"
+    },
+    "title": "Confirm financial information",
+    "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+    "reasoning": "This information is needed before choosing a useful next action.",
+    "suggestedAmount": null,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": null,
+    "sourceAccountId": null,
+    "priority": "clarification",
+    "status": "proposed",
+    "readinessState": "state_b_clarification_needed",
+    "createdAt": "2026-11-08T20:37:15.795Z",
+    "updatedAt": "2026-11-08T20:37:15.795Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pi",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:fx",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:classification",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pattern-recognition",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:behavior-agent",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:financial-calculator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-calculator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-agent",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:suggestion-generator",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:catalog-selector",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:checker",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:critical-coverage",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:ai-evaluation",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:weights",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:decision-engine",
+        "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:explanation"
+      ],
+      "evaluationId": "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+      "userId": "9a74bbe3-cd6a-419b-83b4-94e0dbe16287",
+      "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T20:37:15.750Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "fallback_A007",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Start or add EUR 6840 to your emergency reserve",
+            "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+            "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+            "targetId": "goal_cushion",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 6840,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1760,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "financial-metrics",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Proposal slot unavailable",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "SYSTEM_UNAVAILABLE",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "factIds": [],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Proposal slot unavailable",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "SYSTEM_UNAVAILABLE",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "factIds": [],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "The model did not return a valid three-proposal response.",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NEEDS_DATA",
+      "decisionReason": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [
+        "verified_fx_rate_HUF",
+        "Desired dedicated emergency reserve target"
+      ],
+      "clarificationQuestion": "What dedicated emergency reserve target would you like to protect before funding other goals?"
+    },
+    "decision": {
+      "evaluationId": "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+      "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+      "snapshotVersion": "4.0",
+      "decisionStatus": "NEEDS_DATA",
+      "priorityClass": "NONE",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "title": "Confirm financial information",
+      "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "reasoning": "This information is needed before choosing a useful next action.",
+      "expectedEffectSummary": "No balance movement proposed; continue monitoring upcoming obligations.",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "NEEDS_DATA",
+      "clarificationQuestion": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "missingFields": [
+        "verified_fx_rate_HUF",
+        "Desired dedicated emergency reserve target"
+      ],
+      "trace": {
+        "evaluationId": "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909",
+        "userId": "9a74bbe3-cd6a-419b-83b4-94e0dbe16287",
+        "snapshotId": "snap_beta_9a74bbe3-cd6a-419b-83b4-94e0dbe16287_v4_92b445f365343e3f",
+        "snapshotVersion": "4.0",
+        "createdAt": "2026-11-08T20:37:15.750Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "fallback_A007",
+              "actionId": "A007",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Start or add EUR 6840 to your emergency reserve",
+              "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+              "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+              "targetId": "goal_cushion",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 6840,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R003",
+                "R011"
+              ],
+              "supportingClaimIds": [
+                "C001",
+                "C002"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "liquid_balance",
+                "mandatory_outflows",
+                "amount"
+              ],
+              "origin": "CATALOG_FALLBACK"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "verified_fx_rate_HUF",
+              "verified_fx_rate_HUF",
+              "verified_fx_rate_HUF"
+            ],
+            "inputEvidence": [
+              {
+                "field": "liquid_balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "mandatory_outflows",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "amount",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 1760,
+            "unlocksActionIds": []
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "stageArtifactIds": [
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pi",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:fx",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:classification",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pattern-recognition",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:behavior-agent",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:financial-calculator",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-calculator",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-agent",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:suggestion-generator",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:catalog-selector",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:checker",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:critical-coverage",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:ai-evaluation",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:weights",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:decision-engine",
+          "eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Desired dedicated emergency reserve target",
+              "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "financial-metrics",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Desired dedicated emergency reserve target"
+              ],
+              "factIds": [
+                "financial-metrics",
+                "data-quality"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Desired dedicated emergency reserve target",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Proposal slot unavailable",
+              "description": "",
+              "rationale": "",
+              "actionId": null,
+              "origin": "SYSTEM_UNAVAILABLE",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "factIds": [],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Proposal slot unavailable",
+              "description": "",
+              "rationale": "",
+              "actionId": null,
+              "origin": "SYSTEM_UNAVAILABLE",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "factIds": [],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "The model did not return a valid three-proposal response.",
+          "fallbackReason": "NO_USEFUL_PRIMARY",
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "NEEDS_DATA",
+        "decisionReason": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [
+          "verified_fx_rate_HUF",
+          "Desired dedicated emergency reserve target"
+        ],
+        "clarificationQuestion": "What dedicated emergency reserve target would you like to protect before funding other goals?"
+      }
+    }
+  },
+  "primaryProposals": [
+    {
+      "id": "primary-1",
+      "title": "Desired dedicated emergency reserve target",
+      "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "rationale": "This information is missing from the supplied records.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "SYSTEM_CLARIFICATION",
+      "targetFactId": "financial-metrics",
+      "usefulness": "NOT_ELIGIBLE",
+      "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+      "prerequisites": [],
+      "missingInfo": [
+        "Desired dedicated emergency reserve target"
+      ],
+      "factIds": [
+        "financial-metrics",
+        "data-quality"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Desired dedicated emergency reserve target",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-2",
+      "title": "Proposal slot unavailable",
+      "description": "",
+      "rationale": "",
+      "actionId": null,
+      "origin": "SYSTEM_UNAVAILABLE",
+      "usefulness": "NOT_ELIGIBLE",
+      "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+      "factIds": [],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-3",
+      "title": "Proposal slot unavailable",
+      "description": "",
+      "rationale": "",
+      "actionId": null,
+      "origin": "SYSTEM_UNAVAILABLE",
+      "usefulness": "NOT_ELIGIBLE",
+      "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+      "factIds": [],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "No validated model proposal or distinct recorded clarification for this slot.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    }
+  ],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 352444
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 996
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 876
+    },
+    {
+      "doc_key": "chat-request:strong-context",
+      "stored_bytes": 2080
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 1457120
+    },
+    {
+      "doc_key": "import:4da2849b-f4e5-414c-857d-d974a69f85ab",
+      "stored_bytes": 88516
+    },
+    {
+      "doc_key": "import:e407f3d0-03ef-4976-ae57-4cce514418d9",
+      "stored_bytes": 197072
+    },
+    {
+      "doc_key": "job-request:8650f5655b3195afe0bfd535119fa3462b29519a80c2b69bd4fd0bac68e2e09a",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:dbaf46526e249beea47b683a8b7d7b1166d667fbfd3ba687063d833dfbde93a0",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:f772b386cd4f5d0036a3e5189bbbcfe57382e7cbb11e356af92b689cd3e9b4e7",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:6cb195d6-eabd-44ee-81fa-37e3cccb92f7",
+      "stored_bytes": 233820
+    },
+    {
+      "doc_key": "job:a43de4d3-30ae-413a-860a-bb2484877942",
+      "stored_bytes": 352892
+    },
+    {
+      "doc_key": "job:d1ae81ac-e274-4c7d-b90c-55aba835fc49",
+      "stored_bytes": 104624
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:ai-evaluation",
+      "stored_bytes": 1600
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:behavior-agent",
+      "stored_bytes": 2896
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:catalog-selector",
+      "stored_bytes": 1660
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:checker",
+      "stored_bytes": 7280
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:classification",
+      "stored_bytes": 118832
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:critical-coverage",
+      "stored_bytes": 1404
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-agent",
+      "stored_bytes": 1636
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:debt-calculator",
+      "stored_bytes": 1336
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:decision-engine",
+      "stored_bytes": 6348
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:explanation",
+      "stored_bytes": 1920
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:financial-calculator",
+      "stored_bytes": 15660
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:fx",
+      "stored_bytes": 1524
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pattern-recognition",
+      "stored_bytes": 66008
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:pi",
+      "stored_bytes": 1624
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:suggestion-generator",
+      "stored_bytes": 2552
+    },
+    {
+      "doc_key": "stage:eval_c0f2bb5d-cb74-4db7-ae84-9d741cbfe909:weights",
+      "stored_bytes": 1780
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 322868
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+This information is needed before choosing a useful next action.
+~~~~

@@ -1,0 +1,58 @@
+(node:12936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+nora/import
+nora/pi
+nora/as
+Model attempt gemini-3.5-flash-lite: failed or invalid response
+nora/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated pi
+nora evaluated fx
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated classification
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated pattern-recognition
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated behavior-agent
+nora evaluated financial-calculator
+nora evaluated debt-calculator
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated debt-agent
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated suggestion-generator
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated catalog-selector
+nora evaluated checker
+nora evaluated critical-coverage
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated ai-evaluation
+nora evaluated weights
+nora evaluated decision-engine
+nora evaluated explanation
+nora/conversation-memory
+nora/fx
+nora/classification
+nora/pattern-recognition
+nora/behavior-agent
+nora/financial-calculator
+nora/debt-calculator
+nora/debt-agent
+nora/suggestion-generator
+nora/catalog-selector
+nora/checker
+nora/critical-coverage
+nora/ai-evaluation
+nora/weights
+nora/decision-engine
+nora/explanation
+nora/scoring
+nora/robustness
+nora/impact
+nora/beta-review
+Model attempt gemini-3.5-flash-lite: live response
+nora/assistant
+nora/feedback
+nora/postgres-mock
+Saved C:\Users\sanat\OneDrive\Desktop\vela1\docs\testing\live-review\runs\2026-11-08T21-16-14-699Z\RECAP.md

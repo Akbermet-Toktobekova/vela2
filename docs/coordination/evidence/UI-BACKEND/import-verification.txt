@@ -1,0 +1,19 @@
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
+
+(node:6900) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6672) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/reliable-imports.test.ts (13 tests) 228ms
+(node:22944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-imports.test.ts (11 tests) 1277ms
+   ✓ Beta real-file imports > extracts text PDF with page provenance and requires mapping rather than inventing records  993ms
+ ✓ tests/pipeline-v2.test.ts (10 tests) 275ms
+
+ Test Files  3 passed (3)
+      Tests  34 passed (34)
+   Start at  22:35:18
+   Duration  3.44s (transform 1.85s, setup 0ms, collect 3.68s, tests 1.78s, environment 1ms, prepare 1.23s)
+

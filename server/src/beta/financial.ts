@@ -25,12 +25,15 @@ export class BetaFinancial {
   constructor(private store: BetaStore) {}
   get(user: { id: string; name: string; email: string }): BetaState {
     const existing = this.store.get(user.id, "state") as BetaState | null;
-    if (existing)
+    if (existing) {
+      const engine = this.store.get(user.id, 'engine') as { feedback?: PIDatabaseSeed['actionFeedback'] } | null;
       return {
         ...existing,
+        state: { ...existing.state, actionFeedback: engine?.feedback ?? existing.state.actionFeedback },
         experimentalRecommendations:
           existing.experimentalRecommendations === true,
       };
+    }
     const seed = createBlankUserSeedData();
     seed.user.id = user.id;
     seed.user.email = user.email;
@@ -46,8 +49,14 @@ export class BetaFinancial {
       aiConsent: false,
       experimentalRecommendations: false,
     };
-    this.store.put(user.id, "state", result);
+    this.persist(user.id, result);
     return result;
+  }
+  persist(userId: string, envelope: BetaState): void {
+    const engine = this.store.get(userId, 'engine') as { feedback?: PIDatabaseSeed['actionFeedback'] } | null;
+    this.store.put(userId, 'state', engine?.feedback
+      ? { ...envelope, state: { ...envelope.state, actionFeedback: [] } }
+      : envelope);
   }
   save(
     user: { id: string; name: string; email: string },
@@ -151,7 +160,7 @@ export class BetaFinancial {
         current.experimentalRecommendations ??
         false,
     };
-    this.store.put(user.id, "state", result);
+    this.persist(user.id, result);
     this.store.remove(user.id, "analysis");
     this.store.remove(user.id, "analysis-private");
     return result;

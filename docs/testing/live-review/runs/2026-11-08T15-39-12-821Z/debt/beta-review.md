@@ -1,0 +1,1060 @@
+# 01 Debt · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **Contact Credit card issuer for hardship payment options**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 2
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "7032e43b-de47-4fd3-a109-7d14dd0a4924",
+  "decision": {
+    "evaluationId": "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+    "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+    "snapshotVersion": "2.0",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "priorityClass": "CRITICAL",
+    "selectedActionId": "A005",
+    "selectedActionType": "FINANCIAL_ACTION",
+    "candidate": {
+      "candidateId": "crit_A005_card",
+      "actionId": "A005",
+      "actionType": "FINANCIAL_ACTION",
+      "title": "Contact Credit card issuer for hardship payment options",
+      "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+      "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+      "targetId": "card",
+      "sourceAccountId": null,
+      "destinationAccountId": null,
+      "amount": 20,
+      "currency": "EUR",
+      "proposedTiming": "2026-11-05",
+      "supportingRuleIds": [
+        "R008"
+      ],
+      "supportingClaimIds": [
+        "C017",
+        "C018"
+      ],
+      "supportingSourceIds": [
+        "S004"
+      ],
+      "requiredPiInputs": [
+        "issuer_contact",
+        "minimum_due",
+        "affordable_payment"
+      ],
+      "origin": "CRITICAL_COVERAGE"
+    },
+    "title": "Contact Credit card issuer for hardship payment options",
+    "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+    "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+    "expectedEffectSummary": "Addresses imminent payment or cash-flow shortfall directly (A005).",
+    "weightProfileId": "liquidity_protection",
+    "weights": {
+      "resilience": 0.5,
+      "financial_benefit": 0.35,
+      "goal_progress": 0.15
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [
+      "S004"
+    ],
+    "ruleIds": [
+      "R008"
+    ],
+    "claimIds": [
+      "C017",
+      "C018"
+    ],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": null,
+    "missingFields": [],
+    "trace": {
+      "evaluationId": "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+      "userId": "0578bd62-f9ec-4375-b1d7-061c86c44f81",
+      "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+      "snapshotVersion": "2.0",
+      "createdAt": "2026-11-08T15:42:05.208Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "CRITICAL",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Liquid expense coverage M = 0.02 months is below entry threshold 1.00 months.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "crit_A005_card",
+            "actionId": "A005",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contact Credit card issuer for hardship payment options",
+            "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+            "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 20,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R008"
+            ],
+            "supportingClaimIds": [
+              "C017",
+              "C018"
+            ],
+            "supportingSourceIds": [
+              "S004"
+            ],
+            "requiredPiInputs": [
+              "issuer_contact",
+              "minimum_due",
+              "affordable_payment"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 1,
+          "resolvesCriticalProblemDirectly": true,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "issuer_contact",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "minimum_due",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "affordable_payment",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "crit_A020_deficit",
+            "actionId": "A020",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review projected EUR 45 cash shortfall before 2026-11-08",
+            "description": "Projected cash drops below required obligations by 2026-11-08 (Credit card minimum). Review upcoming bills and available balances.",
+            "rationale": "Diagnostic alert (F004, F019, R009): flags upcoming payment shortfall for user verification without assuming automatic resolution.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 45,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-08",
+            "supportingRuleIds": [
+              "R009"
+            ],
+            "supportingClaimIds": [
+              "C004",
+              "C009"
+            ],
+            "supportingSourceIds": [
+              "S001",
+              "S007"
+            ],
+            "requiredPiInputs": [
+              "cash",
+              "due_obligations",
+              "confirmed_income"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 3,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "cash",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "due_obligations",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "confirmed_income",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": [
+            "A001",
+            "A005",
+            "A011"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "crit_A005_card",
+        "actionId": "A005",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contact Credit card issuer for hardship payment options",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+        "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+        "targetId": "card",
+        "sourceAccountId": null,
+        "destinationAccountId": null,
+        "amount": 20,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [
+          "C017",
+          "C018"
+        ],
+        "supportingSourceIds": [
+          "S004"
+        ],
+        "requiredPiInputs": [
+          "issuer_contact",
+          "minimum_due",
+          "affordable_payment"
+        ],
+        "origin": "CRITICAL_COVERAGE"
+      },
+      "stageArtifactIds": [
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pi",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:fx",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:classification",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pattern-recognition",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:behavior-agent",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:financial-calculator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-calculator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-agent",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:suggestion-generator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:catalog-selector",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:checker",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:critical-coverage",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:ai-evaluation",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:weights",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:decision-engine",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review debt payment timing",
+            "description": "Examine the credit card payment due on 2026-11-08 and the energy obligation due on 2026-11-18 in relation to your upcoming salary date of 2026-11-25.",
+            "rationale": "The current financial data indicates that both the credit card minimum payment and the energy bill are due before your next salary payment, which may impact your available liquid balance.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "targetFactId": "debt-1",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "debt-1",
+              "obligation-1",
+              "income-1",
+              "pattern-findings"
+            ],
+            "claimIds": [
+              "C023"
+            ],
+            "status": "REJECTED",
+            "reason": "The evidence provided (a meta-analysis on financial education) does not establish contractual terms, financial eligibility, or specific factual support for the proposed review of debt payment timing.",
+            "evidence": [
+              {
+                "claimId": "C023",
+                "sourceId": "S013",
+                "text": "A meta-analysis of 126 studies finds heterogeneous financial education effects; debt behavior is comparatively difficult to change and teachable-moment delivery is associated with stronger effects.",
+                "jurisdiction": "INTERNATIONAL",
+                "population": "126 evaluated studies",
+                "limitations": "Heterogeneous by behavior, country, audience"
+              }
+            ]
+          }
+        ],
+        "shortfallReason": "The generator returned fewer than three proposals.",
+        "fallbackReason": "NO_VALID_PRIMARY",
+        "criticalCoverageAddedIds": [
+          "A005",
+          "A020"
+        ]
+      },
+      "selectedActionType": "FINANCIAL_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+      "supportingSourceIds": [
+        "S004"
+      ],
+      "supportingRuleIds": [
+        "R008"
+      ],
+      "supportingClaimIds": [
+        "C017",
+        "C018"
+      ],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    }
+  },
+  "todayCard": {
+    "id": "rec_A005_eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+    "userId": "0578bd62-f9ec-4375-b1d7-061c86c44f81",
+    "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+    "actionType": "confirm_upcoming_bill",
+    "title": "Contact Credit card issuer for hardship payment options",
+    "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+    "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+    "suggestedAmount": 20,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "card",
+    "sourceAccountId": null,
+    "priority": "priority",
+    "status": "proposed",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-08T15:42:05.226Z",
+    "updatedAt": "2026-11-08T15:42:05.226Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pi",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:fx",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:classification",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pattern-recognition",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:behavior-agent",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:financial-calculator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-calculator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-agent",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:suggestion-generator",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:catalog-selector",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:checker",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:critical-coverage",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:ai-evaluation",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:weights",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:decision-engine",
+        "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:explanation"
+      ],
+      "evaluationId": "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+      "userId": "0578bd62-f9ec-4375-b1d7-061c86c44f81",
+      "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+      "snapshotVersion": "2.0",
+      "createdAt": "2026-11-08T15:42:05.208Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "CRITICAL",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Liquid expense coverage M = 0.02 months is below entry threshold 1.00 months.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "crit_A005_card",
+            "actionId": "A005",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contact Credit card issuer for hardship payment options",
+            "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+            "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 20,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R008"
+            ],
+            "supportingClaimIds": [
+              "C017",
+              "C018"
+            ],
+            "supportingSourceIds": [
+              "S004"
+            ],
+            "requiredPiInputs": [
+              "issuer_contact",
+              "minimum_due",
+              "affordable_payment"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 1,
+          "resolvesCriticalProblemDirectly": true,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "issuer_contact",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "minimum_due",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "affordable_payment",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "crit_A020_deficit",
+            "actionId": "A020",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review projected EUR 45 cash shortfall before 2026-11-08",
+            "description": "Projected cash drops below required obligations by 2026-11-08 (Credit card minimum). Review upcoming bills and available balances.",
+            "rationale": "Diagnostic alert (F004, F019, R009): flags upcoming payment shortfall for user verification without assuming automatic resolution.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 45,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-08",
+            "supportingRuleIds": [
+              "R009"
+            ],
+            "supportingClaimIds": [
+              "C004",
+              "C009"
+            ],
+            "supportingSourceIds": [
+              "S001",
+              "S007"
+            ],
+            "requiredPiInputs": [
+              "cash",
+              "due_obligations",
+              "confirmed_income"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 3,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "cash",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "due_obligations",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "confirmed_income",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": [
+            "A001",
+            "A005",
+            "A011"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "crit_A005_card",
+        "actionId": "A005",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contact Credit card issuer for hardship payment options",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+        "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+        "targetId": "card",
+        "sourceAccountId": null,
+        "destinationAccountId": null,
+        "amount": 20,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [
+          "C017",
+          "C018"
+        ],
+        "supportingSourceIds": [
+          "S004"
+        ],
+        "requiredPiInputs": [
+          "issuer_contact",
+          "minimum_due",
+          "affordable_payment"
+        ],
+        "origin": "CRITICAL_COVERAGE"
+      },
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review debt payment timing",
+            "description": "Examine the credit card payment due on 2026-11-08 and the energy obligation due on 2026-11-18 in relation to your upcoming salary date of 2026-11-25.",
+            "rationale": "The current financial data indicates that both the credit card minimum payment and the energy bill are due before your next salary payment, which may impact your available liquid balance.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "targetFactId": "debt-1",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "debt-1",
+              "obligation-1",
+              "income-1",
+              "pattern-findings"
+            ],
+            "claimIds": [
+              "C023"
+            ],
+            "status": "REJECTED",
+            "reason": "The evidence provided (a meta-analysis on financial education) does not establish contractual terms, financial eligibility, or specific factual support for the proposed review of debt payment timing.",
+            "evidence": [
+              {
+                "claimId": "C023",
+                "sourceId": "S013",
+                "text": "A meta-analysis of 126 studies finds heterogeneous financial education effects; debt behavior is comparatively difficult to change and teachable-moment delivery is associated with stronger effects.",
+                "jurisdiction": "INTERNATIONAL",
+                "population": "126 evaluated studies",
+                "limitations": "Heterogeneous by behavior, country, audience"
+              }
+            ]
+          }
+        ],
+        "shortfallReason": "The generator returned fewer than three proposals.",
+        "fallbackReason": "NO_VALID_PRIMARY",
+        "criticalCoverageAddedIds": [
+          "A005",
+          "A020"
+        ]
+      },
+      "selectedActionType": "FINANCIAL_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+      "supportingSourceIds": [
+        "S004"
+      ],
+      "supportingRuleIds": [
+        "R008"
+      ],
+      "supportingClaimIds": [
+        "C017",
+        "C018"
+      ],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    },
+    "decision": {
+      "evaluationId": "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+      "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+      "snapshotVersion": "2.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "CRITICAL",
+      "selectedActionId": "A005",
+      "selectedActionType": "FINANCIAL_ACTION",
+      "candidate": {
+        "candidateId": "crit_A005_card",
+        "actionId": "A005",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contact Credit card issuer for hardship payment options",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+        "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+        "targetId": "card",
+        "sourceAccountId": null,
+        "destinationAccountId": null,
+        "amount": 20,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [
+          "C017",
+          "C018"
+        ],
+        "supportingSourceIds": [
+          "S004"
+        ],
+        "requiredPiInputs": [
+          "issuer_contact",
+          "minimum_due",
+          "affordable_payment"
+        ],
+        "origin": "CRITICAL_COVERAGE"
+      },
+      "title": "Contact Credit card issuer for hardship payment options",
+      "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+      "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+      "expectedEffectSummary": "Addresses imminent payment or cash-flow shortfall directly (A005).",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [
+        "S004"
+      ],
+      "ruleIds": [
+        "R008"
+      ],
+      "claimIds": [
+        "C017",
+        "C018"
+      ],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456",
+        "userId": "0578bd62-f9ec-4375-b1d7-061c86c44f81",
+        "snapshotId": "snap_beta_0578bd62-f9ec-4375-b1d7-061c86c44f81_v2_04142a5667547faa",
+        "snapshotVersion": "2.0",
+        "createdAt": "2026-11-08T15:42:05.208Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "CRITICAL",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Liquid expense coverage M = 0.02 months is below entry threshold 1.00 months.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "crit_A005_card",
+              "actionId": "A005",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Contact Credit card issuer for hardship payment options",
+              "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+              "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+              "targetId": "card",
+              "sourceAccountId": null,
+              "destinationAccountId": null,
+              "amount": 20,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R008"
+              ],
+              "supportingClaimIds": [
+                "C017",
+                "C018"
+              ],
+              "supportingSourceIds": [
+                "S004"
+              ],
+              "requiredPiInputs": [
+                "issuer_contact",
+                "minimum_due",
+                "affordable_payment"
+              ],
+              "origin": "CRITICAL_COVERAGE"
+            },
+            "status": "VALID",
+            "isCritical": true,
+            "criticalPriorityRank": 1,
+            "resolvesCriticalProblemDirectly": true,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "issuer_contact",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "minimum_due",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "affordable_payment",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": -110,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "crit_A020_deficit",
+              "actionId": "A020",
+              "actionType": "VERIFICATION_ACTION",
+              "title": "Review projected EUR 45 cash shortfall before 2026-11-08",
+              "description": "Projected cash drops below required obligations by 2026-11-08 (Credit card minimum). Review upcoming bills and available balances.",
+              "rationale": "Diagnostic alert (F004, F019, R009): flags upcoming payment shortfall for user verification without assuming automatic resolution.",
+              "targetId": "card",
+              "sourceAccountId": null,
+              "destinationAccountId": null,
+              "amount": 45,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-08",
+              "supportingRuleIds": [
+                "R009"
+              ],
+              "supportingClaimIds": [
+                "C004",
+                "C009"
+              ],
+              "supportingSourceIds": [
+                "S001",
+                "S007"
+              ],
+              "requiredPiInputs": [
+                "cash",
+                "due_obligations",
+                "confirmed_income"
+              ],
+              "origin": "CRITICAL_COVERAGE"
+            },
+            "status": "VALID",
+            "isCritical": true,
+            "criticalPriorityRank": 3,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "cash",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "due_obligations",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "confirmed_income",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": -110,
+            "unlocksActionIds": [
+              "A001",
+              "A005",
+              "A011"
+            ]
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": {
+          "candidateId": "crit_A005_card",
+          "actionId": "A005",
+          "actionType": "FINANCIAL_ACTION",
+          "title": "Contact Credit card issuer for hardship payment options",
+          "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+          "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+          "targetId": "card",
+          "sourceAccountId": null,
+          "destinationAccountId": null,
+          "amount": 20,
+          "currency": "EUR",
+          "proposedTiming": "2026-11-05",
+          "supportingRuleIds": [
+            "R008"
+          ],
+          "supportingClaimIds": [
+            "C017",
+            "C018"
+          ],
+          "supportingSourceIds": [
+            "S004"
+          ],
+          "requiredPiInputs": [
+            "issuer_contact",
+            "minimum_due",
+            "affordable_payment"
+          ],
+          "origin": "CRITICAL_COVERAGE"
+        },
+        "stageArtifactIds": [
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pi",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:fx",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:classification",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pattern-recognition",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:behavior-agent",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:financial-calculator",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-calculator",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-agent",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:suggestion-generator",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:catalog-selector",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:checker",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:critical-coverage",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:ai-evaluation",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:weights",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:decision-engine",
+          "eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review debt payment timing",
+              "description": "Examine the credit card payment due on 2026-11-08 and the energy obligation due on 2026-11-18 in relation to your upcoming salary date of 2026-11-25.",
+              "rationale": "The current financial data indicates that both the credit card minimum payment and the energy bill are due before your next salary payment, which may impact your available liquid balance.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "targetFactId": "debt-1",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "debt-1",
+                "obligation-1",
+                "income-1",
+                "pattern-findings"
+              ],
+              "claimIds": [
+                "C023"
+              ],
+              "status": "REJECTED",
+              "reason": "The evidence provided (a meta-analysis on financial education) does not establish contractual terms, financial eligibility, or specific factual support for the proposed review of debt payment timing.",
+              "evidence": [
+                {
+                  "claimId": "C023",
+                  "sourceId": "S013",
+                  "text": "A meta-analysis of 126 studies finds heterogeneous financial education effects; debt behavior is comparatively difficult to change and teachable-moment delivery is associated with stronger effects.",
+                  "jurisdiction": "INTERNATIONAL",
+                  "population": "126 evaluated studies",
+                  "limitations": "Heterogeneous by behavior, country, audience"
+                }
+              ]
+            }
+          ],
+          "shortfallReason": "The generator returned fewer than three proposals.",
+          "fallbackReason": "NO_VALID_PRIMARY",
+          "criticalCoverageAddedIds": [
+            "A005",
+            "A020"
+          ]
+        },
+        "selectedActionType": "FINANCIAL_ACTION",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+        "supportingSourceIds": [
+          "S004"
+        ],
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [
+          "C017",
+          "C018"
+        ],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    }
+  },
+  "primaryProposals": [
+    {
+      "id": "primary-1",
+      "title": "Review debt payment timing",
+      "description": "Examine the credit card payment due on 2026-11-08 and the energy obligation due on 2026-11-18 in relation to your upcoming salary date of 2026-11-25.",
+      "rationale": "The current financial data indicates that both the credit card minimum payment and the energy bill are due before your next salary payment, which may impact your available liquid balance.",
+      "actionId": null,
+      "intent": "REVIEW",
+      "targetFactId": "debt-1",
+      "prerequisites": [],
+      "missingInfo": [],
+      "factIds": [
+        "debt-1",
+        "obligation-1",
+        "income-1",
+        "pattern-findings"
+      ],
+      "claimIds": [
+        "C023"
+      ],
+      "status": "REJECTED",
+      "reason": "The evidence provided (a meta-analysis on financial education) does not establish contractual terms, financial eligibility, or specific factual support for the proposed review of debt payment timing.",
+      "evidence": [
+        {
+          "claimId": "C023",
+          "sourceId": "S013",
+          "text": "A meta-analysis of 126 studies finds heterogeneous financial education effects; debt behavior is comparatively difficult to change and teachable-moment delivery is associated with stronger effects.",
+          "jurisdiction": "INTERNATIONAL",
+          "population": "126 evaluated studies",
+          "limitations": "Heterogeneous by behavior, country, audience"
+        }
+      ],
+      "score": null,
+      "selected": false
+    }
+  ],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 29784
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 688
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 896
+    },
+    {
+      "doc_key": "chat-request:debt-context",
+      "stored_bytes": 1480
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 68276
+    },
+    {
+      "doc_key": "job-request:9f91d0f2dfc1c34796c4430d792ef03e8363b417aa750fc84703a90a890cbc6e",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:7032e43b-de47-4fd3-a109-7d14dd0a4924",
+      "stored_bytes": 30224
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:ai-evaluation",
+      "stored_bytes": 7284
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:behavior-agent",
+      "stored_bytes": 3044
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:catalog-selector",
+      "stored_bytes": 1660
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:checker",
+      "stored_bytes": 10088
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:classification",
+      "stored_bytes": 1924
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:critical-coverage",
+      "stored_bytes": 3400
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-agent",
+      "stored_bytes": 2620
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:debt-calculator",
+      "stored_bytes": 1724
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:decision-engine",
+      "stored_bytes": 9620
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:explanation",
+      "stored_bytes": 2472
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:financial-calculator",
+      "stored_bytes": 15848
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:fx",
+      "stored_bytes": 1300
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pattern-recognition",
+      "stored_bytes": 3408
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:pi",
+      "stored_bytes": 1612
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:suggestion-generator",
+      "stored_bytes": 3136
+    },
+    {
+      "doc_key": "stage:eval_b0e46ce8-3602-4092-b6c8-0a7339c54456:weights",
+      "stored_bytes": 1728
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 4844
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile "liquidity_protection". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]
+~~~~

@@ -51,9 +51,9 @@ describe('Financial counterfactual and publication regression', () => {
   });
   it('dated debt repayment earns actual avoided interest, never principal savings', () => {
     const { snapshot } = fixture(); const debt = snapshot.debts[0];
-    const early = Calc.computeDebtInterestAvoided({ debt, extraPaymentDay0: 100, horizonDays: 90, referenceDateIso: '2026-11-03', paymentDateIso: '2026-11-03' });
-    const late = Calc.computeDebtInterestAvoided({ debt, extraPaymentDay0: 100, horizonDays: 90, referenceDateIso: '2026-11-03', paymentDateIso: '2026-12-03' });
-    expect(early.interestAvoidedF008).toBeGreaterThan(late.interestAvoidedF008); expect(early.interestAvoidedF008).toBeLessThan(100);
+    const early = Calc.computeDebtInterestAvoided({ debt, extraPaymentDay0: 100, horizonDays: 90, interestAccruing: true, referenceDateIso: '2026-11-03', paymentDateIso: '2026-11-03' });
+    const late = Calc.computeDebtInterestAvoided({ debt, extraPaymentDay0: 100, horizonDays: 90, interestAccruing: true, referenceDateIso: '2026-11-03', paymentDateIso: '2026-12-03' });
+    expect(early.interestAvoidedF008).toBeGreaterThan(late.interestAvoidedF008!); expect(early.interestAvoidedF008).toBeLessThan(100);
   });
   it('cash minimum payments stop after extra repayment pays off the debt', () => {
     const { snapshot, extras } = fixture(); const debt = snapshot.debts[0];

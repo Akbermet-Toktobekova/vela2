@@ -102,7 +102,8 @@ export class ActionChecker {
         );
         const hasShortfall =
           (shortfallRecord && shortfallRecord.shortfallAmountF019 > 0) ||
-          (!shortfallRecord && baseProj.startingLiquidCash < debt.minimumPayment);
+          (!shortfallRecord && Boolean(baseProj.missingInputs?.length) &&
+            baseProj.startingLiquidCash < debt.minimumPayment);
 
         if (!hasShortfall) {
           // A001: Make required card minimum
@@ -127,22 +128,27 @@ export class ActionChecker {
           });
         } else {
           // A005: Request card hardship options (cannot meet required minimum)
+          const usGuidance = snapshot.profile.country.trim().toUpperCase() === 'US';
           criticals.push({
             candidateId: `crit_A005_${debt.id}`,
             actionId: 'A005',
             actionType: 'FINANCIAL_ACTION',
-            title: `Contact ${debt.name} issuer for hardship payment options`,
-            description: `Required minimum of ${debt.currency} ${debt.minimumPayment} is due on ${debt.nextDueDate}, but available liquid funds are insufficient.`,
-            rationale: `CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.`,
+            title: usGuidance ? `Contact ${debt.name} issuer for hardship payment options` : `Contact ${debt.name} issuer about the upcoming minimum`,
+            description: `Required minimum of ${debt.currency} ${debt.minimumPayment} is due on ${debt.nextDueDate}.` +
+              (shortfallRecord ? ` The dated cash projection shows a ${snapshot.baseCurrency} ${shortfallRecord.shortfallAmountF019} shortfall.`
+                : ' The recorded available funds are below this minimum.'),
+            rationale: usGuidance
+              ? 'CFPB guidance (S004, R008) recommends contacting the card issuer when a required minimum payment cannot be met.'
+              : 'Ask the issuer what options are available before the due date. Terms depend on the issuer.',
             targetId: debt.id,
             sourceAccountId: null,
             destinationAccountId: null,
-            amount: Math.max(0, baseProj.startingLiquidCash),
+            amount: usGuidance ? Math.max(0, baseProj.startingLiquidCash) : null,
             currency: debt.currency,
             proposedTiming: refDate,
             supportingRuleIds: ['R008'],
-            supportingClaimIds: ['C017', 'C018'],
-            supportingSourceIds: ['S004'],
+            supportingClaimIds: usGuidance ? ['C017', 'C018'] : [],
+            supportingSourceIds: usGuidance ? ['S004'] : [],
             requiredPiInputs: ['issuer_contact', 'minimum_due', 'affordable_payment'],
             origin: 'CRITICAL_COVERAGE',
           });
@@ -698,7 +704,8 @@ export class ActionChecker {
    */
   static runCheckerPipeline(
     aiCandidates: CandidateAction[],
-    ctx: CheckerContext
+    ctx: CheckerContext,
+    allowCatalogFallback = true
   ): CheckerBatchOutput {
     const criticalDiscovered = this.discoverCriticalActions(ctx);
     const criticalCoverageAddedIds: string[] = [];
@@ -717,7 +724,7 @@ export class ActionChecker {
     let results = combined.map((c) => this.validateCandidate(c, ctx));
 
     // Check if any candidate is NEEDS_DATA and can be unlocked by a VERIFICATION_ACTION
-    const needsDataResults = results.filter((r) => r.status === 'NEEDS_DATA');
+    const needsDataResults = allowCatalogFallback ? results.filter((r) => r.status === 'NEEDS_DATA') : [];
     const validNow = results.filter((r) => r.status === 'VALID');
     let fallbackTriggered = false;
 
@@ -774,7 +781,7 @@ export class ActionChecker {
     }
 
     // If no valid candidates exist yet, also try deterministic catalog fallback (A007 emergency reserve or A014 subscription review)
-    if (validNow.length === 0) {
+    if (allowCatalogFallback && validNow.length === 0) {
       fallbackTriggered = true;
       const baseProj = SharedFinancialCalculator.projectNetCashTrajectory90d(
         ctx.snapshot,

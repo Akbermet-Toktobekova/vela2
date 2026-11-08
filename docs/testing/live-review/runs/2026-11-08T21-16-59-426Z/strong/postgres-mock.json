@@ -1,0 +1,144 @@
+{
+  "stage": "postgres-mock",
+  "status": "COMPLETED",
+  "input": {
+    "betaEvaluationId": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a",
+    "draft": "See ../../../PI-STORAGE.md."
+  },
+  "output": {
+    "simulated": true,
+    "pi.debts": [],
+    "analysis.stage_artifacts": [
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:fx",
+        "stage": "fx",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:classification",
+        "stage": "classification",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": "Analyzed 159 transactions (141 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:pattern-recognition",
+        "stage": "pattern-recognition",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": "Observed multiple outflows across various categories in account main using currency EUR between 2026-08-09 and 2026-11-01. Observed multiple inflows and outflows across various categories in account huf using currency HUF between 2026-08-07 and 2026-11-05. Observed account service charge fee outflows on the main account in EUR on 2026-08-09, 2026-09-10, and 2026-10-09. Observed fee outflows on the huf account in HUF on 2026-10-07 and 2026-09-10. Observed largest transactions and transfers on the main account in EUR between 2026-08-16 and 2026-11-01. Observed largest transactions and transfers on the huf account in HUF between 2026-08-13 and 2026-10-17."
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:behavior-agent",
+        "stage": "behavior-agent",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": "Multiple outflows occurred in the main account in EUR between 2026-08-09 and 2026-11-01. Multiple inflows and outflows occurred in the huf account in HUF between 2026-08-07 and 2026-11-05. Observed significant transactions in the main account, including an outflow of -1100 EUR on 2026-11-01 and an inflow of 4200 EUR on 2026-09-16. Certain utility and other obligations are scheduled before the anticipated salary income date, while the rent obligation is scheduled after."
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:financial-calculator",
+        "stage": "financial-calculator",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:debt-calculator",
+        "stage": "debt-calculator",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:debt-agent",
+        "stage": "debt-agent",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": "No debt records are present in this snapshot."
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:suggestion-generator",
+        "stage": "suggestion-generator",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": ""
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:catalog-selector",
+        "stage": "catalog-selector",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:checker",
+        "stage": "checker",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:critical-coverage",
+        "stage": "critical-coverage",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:ai-evaluation",
+        "stage": "ai-evaluation",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:weights",
+        "stage": "weights",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:impact-cand_A012_education",
+        "stage": "impact-cand_A012_education",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:scoring",
+        "stage": "scoring",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:robustness",
+        "stage": "robustness",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:decision-engine",
+        "stage": "decision-engine",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f"
+      },
+      {
+        "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a:explanation",
+        "stage": "explanation",
+        "input_snapshot_id": "snap_beta_c28320db-bd6b-4600-b627-b0f8730fad24_v3_a9c254963dbb370f",
+        "summary_text": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile \"goal_advancement\", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]"
+      }
+    ],
+    "analysis.conversation_memory": {
+      "inputHash": "c63e0d15640c8059a57c0fec86bac5463227f07b17d44a3e81282bcb082fcd23",
+      "promptVersion": "chat-memory.v2",
+      "status": "CURRENT",
+      "updatedAt": "2026-11-08T21:17:11.769Z",
+      "entries": [
+        {
+          "messageIds": [
+            "strong-context"
+          ],
+          "kind": "STATEMENT",
+          "text": "The user wants to understand their saved financial information."
+        },
+        {
+          "messageIds": [
+            "strong-context"
+          ],
+          "kind": "TENTATIVE_PLAN",
+          "text": "The user may review their budget later."
+        }
+      ],
+      "summaryText": "The user wants to understand their saved financial information. The user may review their budget later.",
+      "model": {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.5-flash-lite",
+        "liveCallUsed": true
+      }
+    },
+    "analysis.decisions": {
+      "id": "eval_6febd890-af1c-47ef-b21a-0d069fdb3e5a",
+      "status": "RECOMMENDATION_READY",
+      "selected_action_id": "A012"
+    }
+  },
+  "calls": []
+}

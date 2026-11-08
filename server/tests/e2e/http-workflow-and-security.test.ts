@@ -1,3 +1,4 @@
+import { mockCatalogFallbackClient } from './catalogFallbackFixture';
 import fs from 'node:fs';
 import { AddressInfo } from 'node:net';
 import os from 'node:os';
@@ -225,7 +226,7 @@ describe('FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite'
     const policy = loadPrototypePolicy();
     const store1 = new SQLiteStore(tmpDbPath);
     const fxService1 = new FrankfurterFXService({ policy, cacheStore: store1 });
-    const llmClient1 = new LLMClient({ mockMode: true });
+    const llmClient1 = mockCatalogFallbackClient();
     const orchestrator1 = new ReviewOrchestrator({
       store: store1,
       fxService: fxService1,
@@ -249,10 +250,11 @@ describe('FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite'
       // Step A: PUT /api/pi/:userId
       const snap = makeTestSnapshot(userId);
       // Explicit dated essentials substantiate the declared monthly total.
-      const essentials = {...snap.obligations[0],id:'obl_other_essentials',name:'Utilities and groceries',amount:400,dueDate:'2026-11-16',category:'other' as const};
+      snap.essentialCommitment = { ...snap.essentialCommitment!, estimatedMonthlyAmount: 2000 };
+      const essentials = {...snap.obligations[0],id:'obl_other_essentials',name:'Utilities and groceries',amount:1400,dueDate:'2026-11-16',category:'other' as const};
       snap.obligations.push(essentials);
       snap.upcomingUnpaidObligations.push(essentials);
-      snap.incomeSources = snap.incomeSources.map(i=>({...i,receivingAccountId:'acc_eur_main'}));
+      snap.incomeSources = snap.incomeSources.map(i=>({...i,receivingAccountId:'acc_eur_main', estimatedMonthlyAmount:3000, pattern:'regular' as const, frequency:'monthly' as const, nextExpectedDate:'2026-11-09'}));
       const putRes = await fetch(`${baseUrl1}/pi/${userId}`, {
         method: 'PUT',
         headers: {

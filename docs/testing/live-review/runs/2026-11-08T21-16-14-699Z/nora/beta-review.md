@@ -1,0 +1,1597 @@
+# 03 Nora · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **Review recurring subscription before cancellation**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 4
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "6006203f-0da1-4f7f-b9bf-43ebee3eb581",
+  "decision": {
+    "evaluationId": "eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+    "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+    "snapshotVersion": "4.0",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "priorityClass": "VERIFICATION_UNLOCK",
+    "selectedActionId": "A014",
+    "selectedActionType": "VERIFICATION_ACTION",
+    "candidate": {
+      "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+      "actionId": "A014",
+      "actionType": "VERIFICATION_ACTION",
+      "title": "Review recurring subscription before cancellation",
+      "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+      "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "targetId": "txn_stmt_1794172575117_u3h5_6",
+      "sourceAccountId": "main",
+      "destinationAccountId": null,
+      "amount": 10.99,
+      "currency": "EUR",
+      "proposedTiming": null,
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "requiredPiInputs": [
+        "transactions",
+        "merchant",
+        "frequency"
+      ],
+      "origin": "CATALOG_FALLBACK"
+    },
+    "title": "Review recurring subscription before cancellation",
+    "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+    "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: dated_essential_outflows, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+    "expectedEffectSummary": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+    "weightProfileId": "goal_advancement",
+    "weights": {
+      "resilience": 0.2,
+      "financial_benefit": 0.2,
+      "goal_progress": 0.6
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [
+      "S001"
+    ],
+    "ruleIds": [
+      "R010"
+    ],
+    "claimIds": [
+      "C004"
+    ],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+    "missingFields": [
+      "dated_essential_outflows",
+      "verified_debt_interest_terms",
+      "required_pi:monthly_fee",
+      "required_pi:exit_terms",
+      "subscription_usage_and_exit_terms_confirmation"
+    ],
+    "trace": {
+      "evaluationId": "eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+      "userId": "da584ca8-6994-45ef-bae4-061b789f0aa4",
+      "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T21:17:31.762Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A007_snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Add EUR 360 to your emergency reserve",
+            "description": "Earmark EUR 360 from uncommitted available cash (EUR 2405.01 safe after upcoming bills) into your accessible emergency cushion.",
+            "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": "savings",
+            "amount": 360,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2045.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A002_card",
+            "actionId": "A002",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Pay an extra EUR 850 toward Credit card",
+            "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+            "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+            "targetId": "card",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 850,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R001",
+              "R002",
+              "R006"
+            ],
+            "supportingClaimIds": [
+              "C014",
+              "C015"
+            ],
+            "supportingSourceIds": [
+              "S002",
+              "S003"
+            ],
+            "requiredPiInputs": [
+              "extra_amount",
+              "apr",
+              "balance",
+              "cash_flow"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_debt_interest_terms",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "extra_amount",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "apr",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "cash_flow",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1555.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A015_txn_stmt_1794172575117_u3h5_6",
+            "actionId": "A015",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+            "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+            "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+            "targetId": "txn_stmt_1794172575117_u3h5_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "merchant",
+              "monthly_fee",
+              "exit_terms"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "required_pi:monthly_fee",
+            "required_pi:exit_terms",
+            "subscription_usage_and_exit_terms_confirmation"
+          ],
+          "inputEvidence": [
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "monthly_fee",
+              "status": "MISSING"
+            },
+            {
+              "field": "exit_terms",
+              "status": "MISSING"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+            "actionId": "A014",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review recurring subscription before cancellation",
+            "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+            "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+            "targetId": "txn_stmt_1794172575117_u3h5_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": null,
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "transactions",
+              "merchant",
+              "frequency"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "transactions",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "frequency",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": [
+            "A015"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1794172575117_u3h5_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "stageArtifactIds": [
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pi",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:fx",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:classification",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pattern-recognition",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:behavior-agent",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:financial-calculator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-calculator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-agent",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:suggestion-generator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:catalog-selector",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:checker",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:critical-coverage",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:ai-evaluation",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:weights",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:decision-engine",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review the upcoming rent obligation due on 2026-11-06",
+            "description": "Review the rent obligation of 980 EUR due on 2026-11-06 to ensure funds are allocated.",
+            "rationale": "Verifying upcoming recurring bills helps maintain cash flow visibility.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "obligation-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "obligation-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The review step for the upcoming rent obligation due on 2026-11-06 of 980 EUR is fully consistent with obligation-1 and does not contradict any PI facts or applicable AS claims.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Interest accrual status for debt-1",
+            "description": "Does the latest statement confirm that interest is currently accruing?",
+            "rationale": "Clarifying interest accrual status for debt-1 is necessary for complete debt analysis.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "debt-1",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Interest accrual status for debt-1"
+            ],
+            "factIds": [
+              "debt-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Interest accrual status for debt-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Review the credit card minimum payment due on 2026-11-15",
+            "description": "Examine the credit card minimum payment of 55 EUR with an APR of 21.9% due on 2026-11-15.",
+            "rationale": "Checking upcoming debt obligations and APR ensures proper debt management.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "debt-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "debt-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The review step for the credit card minimum payment due on 2026-11-15 with an APR of 21.9% is consistent with debt-1 and does not contradict any PI facts or applicable AS claims.",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": "VERIFICATION_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "missingDataFields": [
+        "dated_essential_outflows",
+        "verified_debt_interest_terms",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+    }
+  },
+  "todayCard": {
+    "id": "rec_A014_eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+    "userId": "da584ca8-6994-45ef-bae4-061b789f0aa4",
+    "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+    "actionType": "review_recurring_subscription",
+    "title": "Review recurring subscription before cancellation",
+    "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+    "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: dated_essential_outflows, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+    "suggestedAmount": 10.99,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "txn_stmt_1794172575117_u3h5_6",
+    "sourceAccountId": "main",
+    "priority": "clarification",
+    "status": "proposed",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-08T21:17:31.791Z",
+    "updatedAt": "2026-11-08T21:17:31.791Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pi",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:fx",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:classification",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pattern-recognition",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:behavior-agent",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:financial-calculator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-calculator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-agent",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:suggestion-generator",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:catalog-selector",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:checker",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:critical-coverage",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:ai-evaluation",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:weights",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:decision-engine",
+        "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:explanation"
+      ],
+      "evaluationId": "eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+      "userId": "da584ca8-6994-45ef-bae4-061b789f0aa4",
+      "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T21:17:31.762Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A007_snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Add EUR 360 to your emergency reserve",
+            "description": "Earmark EUR 360 from uncommitted available cash (EUR 2405.01 safe after upcoming bills) into your accessible emergency cushion.",
+            "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": "savings",
+            "amount": 360,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2045.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A002_card",
+            "actionId": "A002",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Pay an extra EUR 850 toward Credit card",
+            "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+            "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+            "targetId": "card",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 850,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R001",
+              "R002",
+              "R006"
+            ],
+            "supportingClaimIds": [
+              "C014",
+              "C015"
+            ],
+            "supportingSourceIds": [
+              "S002",
+              "S003"
+            ],
+            "requiredPiInputs": [
+              "extra_amount",
+              "apr",
+              "balance",
+              "cash_flow"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_debt_interest_terms",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "extra_amount",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "apr",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "cash_flow",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1555.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A015_txn_stmt_1794172575117_u3h5_6",
+            "actionId": "A015",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+            "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+            "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+            "targetId": "txn_stmt_1794172575117_u3h5_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "merchant",
+              "monthly_fee",
+              "exit_terms"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "required_pi:monthly_fee",
+            "required_pi:exit_terms",
+            "subscription_usage_and_exit_terms_confirmation"
+          ],
+          "inputEvidence": [
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "monthly_fee",
+              "status": "MISSING"
+            },
+            {
+              "field": "exit_terms",
+              "status": "MISSING"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+            "actionId": "A014",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review recurring subscription before cancellation",
+            "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+            "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+            "targetId": "txn_stmt_1794172575117_u3h5_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": null,
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "transactions",
+              "merchant",
+              "frequency"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "transactions",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "frequency",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": [
+            "A015"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1794172575117_u3h5_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review the upcoming rent obligation due on 2026-11-06",
+            "description": "Review the rent obligation of 980 EUR due on 2026-11-06 to ensure funds are allocated.",
+            "rationale": "Verifying upcoming recurring bills helps maintain cash flow visibility.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "obligation-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "obligation-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The review step for the upcoming rent obligation due on 2026-11-06 of 980 EUR is fully consistent with obligation-1 and does not contradict any PI facts or applicable AS claims.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Interest accrual status for debt-1",
+            "description": "Does the latest statement confirm that interest is currently accruing?",
+            "rationale": "Clarifying interest accrual status for debt-1 is necessary for complete debt analysis.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "debt-1",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Interest accrual status for debt-1"
+            ],
+            "factIds": [
+              "debt-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Interest accrual status for debt-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Review the credit card minimum payment due on 2026-11-15",
+            "description": "Examine the credit card minimum payment of 55 EUR with an APR of 21.9% due on 2026-11-15.",
+            "rationale": "Checking upcoming debt obligations and APR ensures proper debt management.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "debt-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "debt-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The review step for the credit card minimum payment due on 2026-11-15 with an APR of 21.9% is consistent with debt-1 and does not contradict any PI facts or applicable AS claims.",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": "VERIFICATION_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "missingDataFields": [
+        "dated_essential_outflows",
+        "verified_debt_interest_terms",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+    },
+    "decision": {
+      "evaluationId": "eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+      "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+      "snapshotVersion": "4.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "selectedActionId": "A014",
+      "selectedActionType": "VERIFICATION_ACTION",
+      "candidate": {
+        "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1794172575117_u3h5_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "title": "Review recurring subscription before cancellation",
+      "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+      "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: dated_essential_outflows, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+      "expectedEffectSummary": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+      "weightProfileId": "goal_advancement",
+      "weights": {
+        "resilience": 0.2,
+        "financial_benefit": 0.2,
+        "goal_progress": 0.6
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [
+        "S001"
+      ],
+      "ruleIds": [
+        "R010"
+      ],
+      "claimIds": [
+        "C004"
+      ],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+      "missingFields": [
+        "dated_essential_outflows",
+        "verified_debt_interest_terms",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "trace": {
+        "evaluationId": "eval_e7309e80-33cb-43e5-877f-9a05d66b388e",
+        "userId": "da584ca8-6994-45ef-bae4-061b789f0aa4",
+        "snapshotId": "snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+        "snapshotVersion": "4.0",
+        "createdAt": "2026-11-08T21:17:31.762Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "VERIFICATION_UNLOCK",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "cand_A007_snap_beta_da584ca8-6994-45ef-bae4-061b789f0aa4_v4_08349aa6af1e7792",
+              "actionId": "A007",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Add EUR 360 to your emergency reserve",
+              "description": "Earmark EUR 360 from uncommitted available cash (EUR 2405.01 safe after upcoming bills) into your accessible emergency cushion.",
+              "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+              "targetId": "reserve",
+              "sourceAccountId": "main",
+              "destinationAccountId": "savings",
+              "amount": 360,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R003",
+                "R011"
+              ],
+              "supportingClaimIds": [
+                "C001",
+                "C002"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "liquid_balance",
+                "mandatory_outflows",
+                "amount"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "liquid_balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "mandatory_outflows",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "amount",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 2045.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A002_card",
+              "actionId": "A002",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Pay an extra EUR 850 toward Credit card",
+              "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+              "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+              "targetId": "card",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 850,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R001",
+                "R002",
+                "R006"
+              ],
+              "supportingClaimIds": [
+                "C014",
+                "C015"
+              ],
+              "supportingSourceIds": [
+                "S002",
+                "S003"
+              ],
+              "requiredPiInputs": [
+                "extra_amount",
+                "apr",
+                "balance",
+                "cash_flow"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "verified_debt_interest_terms",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "extra_amount",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "apr",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "cash_flow",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 1555.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A015_txn_stmt_1794172575117_u3h5_6",
+              "actionId": "A015",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+              "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+              "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+              "targetId": "txn_stmt_1794172575117_u3h5_6",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 10.99,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R010"
+              ],
+              "supportingClaimIds": [
+                "C004"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "merchant",
+                "monthly_fee",
+                "exit_terms"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "required_pi:monthly_fee",
+              "required_pi:exit_terms",
+              "subscription_usage_and_exit_terms_confirmation"
+            ],
+            "inputEvidence": [
+              {
+                "field": "merchant",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "monthly_fee",
+                "status": "MISSING"
+              },
+              {
+                "field": "exit_terms",
+                "status": "MISSING"
+              }
+            ],
+            "projectedMinCashAfterAction": 2405.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+              "actionId": "A014",
+              "actionType": "VERIFICATION_ACTION",
+              "title": "Review recurring subscription before cancellation",
+              "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+              "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+              "targetId": "txn_stmt_1794172575117_u3h5_6",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 10.99,
+              "currency": "EUR",
+              "proposedTiming": null,
+              "supportingRuleIds": [
+                "R010"
+              ],
+              "supportingClaimIds": [
+                "C004"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "transactions",
+                "merchant",
+                "frequency"
+              ],
+              "origin": "CATALOG_FALLBACK"
+            },
+            "status": "VALID",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "transactions",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "merchant",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "frequency",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 2405.01,
+            "unlocksActionIds": [
+              "A015"
+            ]
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": {
+          "candidateId": "verify_A014_txn_stmt_1794172575117_u3h5_6",
+          "actionId": "A014",
+          "actionType": "VERIFICATION_ACTION",
+          "title": "Review recurring subscription before cancellation",
+          "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+          "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+          "targetId": "txn_stmt_1794172575117_u3h5_6",
+          "sourceAccountId": "main",
+          "destinationAccountId": null,
+          "amount": 10.99,
+          "currency": "EUR",
+          "proposedTiming": null,
+          "supportingRuleIds": [
+            "R010"
+          ],
+          "supportingClaimIds": [
+            "C004"
+          ],
+          "supportingSourceIds": [
+            "S001"
+          ],
+          "requiredPiInputs": [
+            "transactions",
+            "merchant",
+            "frequency"
+          ],
+          "origin": "CATALOG_FALLBACK"
+        },
+        "stageArtifactIds": [
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pi",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:fx",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:classification",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pattern-recognition",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:behavior-agent",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:financial-calculator",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-calculator",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-agent",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:suggestion-generator",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:catalog-selector",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:checker",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:critical-coverage",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:ai-evaluation",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:weights",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:decision-engine",
+          "eval_e7309e80-33cb-43e5-877f-9a05d66b388e:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review the upcoming rent obligation due on 2026-11-06",
+              "description": "Review the rent obligation of 980 EUR due on 2026-11-06 to ensure funds are allocated.",
+              "rationale": "Verifying upcoming recurring bills helps maintain cash flow visibility.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "obligation-1",
+              "usefulness": "WEAK",
+              "usefulnessReason": "No matching open decision or information gap.",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "obligation-1"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The review step for the upcoming rent obligation due on 2026-11-06 of 980 EUR is fully consistent with obligation-1 and does not contradict any PI facts or applicable AS claims.",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Interest accrual status for debt-1",
+              "description": "Does the latest statement confirm that interest is currently accruing?",
+              "rationale": "Clarifying interest accrual status for debt-1 is necessary for complete debt analysis.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "MODEL",
+              "targetFactId": "debt-1",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Interest accrual status for debt-1"
+              ],
+              "factIds": [
+                "debt-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Interest accrual status for debt-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Review the credit card minimum payment due on 2026-11-15",
+              "description": "Examine the credit card minimum payment of 55 EUR with an APR of 21.9% due on 2026-11-15.",
+              "rationale": "Checking upcoming debt obligations and APR ensures proper debt management.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "debt-1",
+              "usefulness": "WEAK",
+              "usefulnessReason": "No matching open decision or information gap.",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "debt-1"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The review step for the credit card minimum payment due on 2026-11-15 with an APR of 21.9% is consistent with debt-1 and does not contradict any PI facts or applicable AS claims.",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "",
+          "fallbackReason": "NO_USEFUL_PRIMARY",
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": "VERIFICATION_ACTION",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "missingDataFields": [
+          "dated_essential_outflows",
+          "verified_debt_interest_terms",
+          "required_pi:monthly_fee",
+          "required_pi:exit_terms",
+          "subscription_usage_and_exit_terms_confirmation"
+        ],
+        "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+      }
+    }
+  },
+  "primaryProposals": [
+    {
+      "id": "primary-1",
+      "title": "Review the upcoming rent obligation due on 2026-11-06",
+      "description": "Review the rent obligation of 980 EUR due on 2026-11-06 to ensure funds are allocated.",
+      "rationale": "Verifying upcoming recurring bills helps maintain cash flow visibility.",
+      "actionId": null,
+      "intent": "REVIEW",
+      "origin": "MODEL",
+      "targetFactId": "obligation-1",
+      "usefulness": "WEAK",
+      "usefulnessReason": "No matching open decision or information gap.",
+      "prerequisites": [],
+      "missingInfo": [],
+      "factIds": [
+        "obligation-1"
+      ],
+      "claimIds": [],
+      "status": "VALID",
+      "reason": "The review step for the upcoming rent obligation due on 2026-11-06 of 980 EUR is fully consistent with obligation-1 and does not contradict any PI facts or applicable AS claims.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-2",
+      "title": "Interest accrual status for debt-1",
+      "description": "Does the latest statement confirm that interest is currently accruing?",
+      "rationale": "Clarifying interest accrual status for debt-1 is necessary for complete debt analysis.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "MODEL",
+      "targetFactId": "debt-1",
+      "usefulness": "NOT_ELIGIBLE",
+      "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+      "prerequisites": [],
+      "missingInfo": [
+        "Interest accrual status for debt-1"
+      ],
+      "factIds": [
+        "debt-1"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Interest accrual status for debt-1",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-3",
+      "title": "Review the credit card minimum payment due on 2026-11-15",
+      "description": "Examine the credit card minimum payment of 55 EUR with an APR of 21.9% due on 2026-11-15.",
+      "rationale": "Checking upcoming debt obligations and APR ensures proper debt management.",
+      "actionId": null,
+      "intent": "REVIEW",
+      "origin": "MODEL",
+      "targetFactId": "debt-1",
+      "usefulness": "WEAK",
+      "usefulnessReason": "No matching open decision or information gap.",
+      "prerequisites": [],
+      "missingInfo": [],
+      "factIds": [
+        "debt-1"
+      ],
+      "claimIds": [],
+      "status": "VALID",
+      "reason": "The review step for the credit card minimum payment due on 2026-11-15 with an APR of 21.9% is consistent with debt-1 and does not contradict any PI facts or applicable AS claims.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    }
+  ],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 136020
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 552
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 872
+    },
+    {
+      "doc_key": "chat-request:nora-context",
+      "stored_bytes": 1252
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 486772
+    },
+    {
+      "doc_key": "import:5192fffb-4e79-44ed-8b21-654ef7ac685a",
+      "stored_bytes": 4864
+    },
+    {
+      "doc_key": "import:5dcc1ceb-4729-4346-95ef-8ede6fdf2f8a",
+      "stored_bytes": 55096
+    },
+    {
+      "doc_key": "job-request:02a45eb2df53be9db82ed4f9a18d057b9e5f647ffdc7fbdc60eba0637702f550",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:4fecd3e3f1e1302a9ff7b238da09903ad7e9fe202816791ec8024b39d17e4fcd",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:a5d7885d22177e748db9a87f0477ac319fe5168f1cd5de1cb57a002738966f83",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:45cde40c-7702-4130-a3f0-69b8a1a63197",
+      "stored_bytes": 62416
+    },
+    {
+      "doc_key": "job:6006203f-0da1-4f7f-b9bf-43ebee3eb581",
+      "stored_bytes": 136460
+    },
+    {
+      "doc_key": "job:973f9336-f69b-4cff-bbdb-5a44bbc38e31",
+      "stored_bytes": 5652
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:ai-evaluation",
+      "stored_bytes": 4528
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:behavior-agent",
+      "stored_bytes": 3444
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:catalog-selector",
+      "stored_bytes": 5036
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:checker",
+      "stored_bytes": 18532
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:classification",
+      "stored_bytes": 43180
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:critical-coverage",
+      "stored_bytes": 1404
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-agent",
+      "stored_bytes": 2520
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:debt-calculator",
+      "stored_bytes": 1780
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:decision-engine",
+      "stored_bytes": 14056
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:explanation",
+      "stored_bytes": 2740
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:financial-calculator",
+      "stored_bytes": 18568
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:fx",
+      "stored_bytes": 1304
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pattern-recognition",
+      "stored_bytes": 26116
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:pi",
+      "stored_bytes": 1620
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:suggestion-generator",
+      "stored_bytes": 4232
+    },
+    {
+      "doc_key": "stage:eval_e7309e80-33cb-43e5-877f-9a05d66b388e:weights",
+      "stored_bytes": 1788
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 87752
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: dated_essential_outflows, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.
+~~~~

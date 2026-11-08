@@ -1,0 +1,1785 @@
+{
+  "stage": "run",
+  "output": {
+    "profile": "Nora Kovacs",
+    "asOf": "2026-11-05T12:00:00.000Z",
+    "mode": "deterministic"
+  }
+}
+{
+  "stage": "statement_preview",
+  "output": {
+    "file": "daily.csv",
+    "statement": {
+      "id": "stmt_1793882068752_gijn",
+      "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+      "accountId": "main",
+      "fileName": "daily.csv.csv",
+      "fileFormat": "csv",
+      "fileHash": "hash_acb4f636_4002",
+      "periodStart": "2026-08-03",
+      "periodEnd": "2026-10-28",
+      "currency": "EUR",
+      "transactionCount": 45,
+      "duplicateCountSkipped": 0,
+      "status": "needs_review",
+      "closingBalance": 3577.01,
+      "importedAt": "2026-11-05T12:34:28.752Z"
+    },
+    "status": "needs_review",
+    "parsedTransactions": 45,
+    "rejectedRows": []
+  }
+}
+{
+  "stage": "statement_preview",
+  "output": {
+    "file": "reserve.csv",
+    "statement": {
+      "id": "stmt_1793882068789_tc8w",
+      "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+      "accountId": "savings",
+      "fileName": "reserve.csv.csv",
+      "fileFormat": "csv",
+      "fileHash": "hash_bc62e127_326",
+      "periodStart": "2026-08-28",
+      "periodEnd": "2026-10-28",
+      "currency": "EUR",
+      "transactionCount": 3,
+      "duplicateCountSkipped": 0,
+      "status": "needs_review",
+      "closingBalance": 600,
+      "importedAt": "2026-11-05T12:34:28.789Z"
+    },
+    "status": "needs_review",
+    "parsedTransactions": 3,
+    "rejectedRows": []
+  }
+}
+{
+  "stage": "imported_state",
+  "output": {
+    "transactions": 48,
+    "balances": [
+      {
+        "id": "f04c0d6e-4e80-4842-aee9-51f630f5df85",
+        "accountId": "main",
+        "amount": 3577.01,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1793882068777_x5y4",
+        "createdAt": "2026-11-05T12:34:28.782Z"
+      },
+      {
+        "id": "2074e302-a4c7-4991-ab36-d7ac30c4255a",
+        "accountId": "savings",
+        "amount": 600,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1793882068822_yb0f",
+        "createdAt": "2026-11-05T12:34:28.824Z"
+      }
+    ],
+    "transferMatches": [
+      {
+        "id": "match_single_txn_stmt_1793882068777_x5y4_15",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_15",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1793882068777_x5y4_30",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_30",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1793882068777_x5y4_45",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_45",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_txn_stmt_1793882068777_x5y4_15_txn_stmt_1793882068822_yb0f_1",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_15",
+        "incomingTransactionId": "txn_stmt_1793882068822_yb0f_1",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1793882068777_x5y4_30_txn_stmt_1793882068822_yb0f_2",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_30",
+        "incomingTransactionId": "txn_stmt_1793882068822_yb0f_2",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1793882068777_x5y4_45_txn_stmt_1793882068822_yb0f_3",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "outgoingTransactionId": "txn_stmt_1793882068777_x5y4_45",
+        "incomingTransactionId": "txn_stmt_1793882068822_yb0f_3",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      }
+    ],
+    "confirmations": [
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_6",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_6",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-08-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_11",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_11",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-08-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068777_x5y4_15",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068777_x5y4_15",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_21",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_21",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-09-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_26",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_26",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-09-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068777_x5y4_30",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068777_x5y4_30",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_36",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_36",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-10-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882068777_x5y4_41",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882068777_x5y4_41",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-10-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068777_x5y4_45",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068777_x5y4_45",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068822_yb0f_1",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068822_yb0f_1",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068822_yb0f_2",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068822_yb0f_2",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882068822_yb0f_3",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882068822_yb0f_3",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      }
+    ]
+  }
+}
+{
+  "stage": "BehaviorAgent",
+  "output": {
+    "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+    "agentName": "BehaviorAgent",
+    "inputHash": "d2986bedae9c92d9912cfb10c76e717ffd8150fe8894805501f2adce62beae78",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "output": {
+      "categorizedCount": 48,
+      "recurringDetected": [
+        {
+          "merchant": "City Transit",
+          "monthlyAmount": 42,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_3"
+        },
+        {
+          "merchant": "Fiber Home",
+          "monthlyAmount": 32,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_5"
+        },
+        {
+          "merchant": "Sound Library",
+          "monthlyAmount": 10.99,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_6"
+        },
+        {
+          "merchant": "Corner Coffee",
+          "monthlyAmount": 14.7,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_9"
+        },
+        {
+          "merchant": "Maple Kitchen",
+          "monthlyAmount": 44.5,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_10"
+        },
+        {
+          "merchant": "Screen Library",
+          "monthlyAmount": 15.99,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_11"
+        },
+        {
+          "merchant": "Oak Pharmacy",
+          "monthlyAmount": 22.6,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882068777_x5y4_12"
+        }
+      ],
+      "proposedConfirmations": [
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_6",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_6",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-08-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_11",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_11",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-08-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068777_x5y4_15",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068777_x5y4_15",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-08-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_21",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_21",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-09-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_26",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_26",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-09-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068777_x5y4_30",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068777_x5y4_30",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-09-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_36",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_36",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-10-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_41",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_41",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-10-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068777_x5y4_45",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068777_x5y4_45",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-10-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068822_yb0f_1",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068822_yb0f_1",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-08-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068822_yb0f_2",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068822_yb0f_2",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-09-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882068822_yb0f_3",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882068822_yb0f_3",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-10-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_3",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_3",
+          "questionText": "We detected a recurring charge of EUR 42.00/month at City Transit. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 42.00/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_5",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_5",
+          "questionText": "We detected a recurring charge of EUR 32.00/month at Fiber Home. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 32.00/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_9",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_9",
+          "questionText": "We detected a recurring charge of EUR 14.70/month at Corner Coffee. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 14.70/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_10",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_10",
+          "questionText": "We detected a recurring charge of EUR 44.50/month at Maple Kitchen. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 44.50/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882068777_x5y4_12",
+          "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882068777_x5y4_12",
+          "questionText": "We detected a recurring charge of EUR 22.60/month at Oak Pharmacy. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 22.60/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        }
+      ],
+      "summaryText": "Analyzed 48 transactions (48 classified; user_confirmed preserved). Detected 7 recurring subscription candidate(s) (City Transit: EUR 42, Fiber Home: EUR 32, Sound Library: EUR 10.99, Corner Coffee: EUR 14.7, Maple Kitchen: EUR 44.5, Screen Library: EUR 15.99, Oak Pharmacy: EUR 22.6) requiring user confirmation before any cancellation proposal (R010).",
+      "updatedClassifications": {
+        "txn_stmt_1793882068777_x5y4_1": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_1",
+          "transactionId": "txn_stmt_1793882068777_x5y4_1",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_2": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_2",
+          "transactionId": "txn_stmt_1793882068777_x5y4_2",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_3": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_3",
+          "transactionId": "txn_stmt_1793882068777_x5y4_3",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_4": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_4",
+          "transactionId": "txn_stmt_1793882068777_x5y4_4",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: utility keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_5": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_5",
+          "transactionId": "txn_stmt_1793882068777_x5y4_5",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_6": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_6",
+          "transactionId": "txn_stmt_1793882068777_x5y4_6",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_7": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_7",
+          "transactionId": "txn_stmt_1793882068777_x5y4_7",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: debt repayment match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_8": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_8",
+          "transactionId": "txn_stmt_1793882068777_x5y4_8",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_9": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_9",
+          "transactionId": "txn_stmt_1793882068777_x5y4_9",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_10": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_10",
+          "transactionId": "txn_stmt_1793882068777_x5y4_10",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_11": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_11",
+          "transactionId": "txn_stmt_1793882068777_x5y4_11",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_12": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_12",
+          "transactionId": "txn_stmt_1793882068777_x5y4_12",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_13": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_13",
+          "transactionId": "txn_stmt_1793882068777_x5y4_13",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_14": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_14",
+          "transactionId": "txn_stmt_1793882068777_x5y4_14",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_15": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_15",
+          "transactionId": "txn_stmt_1793882068777_x5y4_15",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_16": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_16",
+          "transactionId": "txn_stmt_1793882068777_x5y4_16",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_17": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_17",
+          "transactionId": "txn_stmt_1793882068777_x5y4_17",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_18": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_18",
+          "transactionId": "txn_stmt_1793882068777_x5y4_18",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_19": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_19",
+          "transactionId": "txn_stmt_1793882068777_x5y4_19",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: utility keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_20": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_20",
+          "transactionId": "txn_stmt_1793882068777_x5y4_20",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_21": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_21",
+          "transactionId": "txn_stmt_1793882068777_x5y4_21",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_22": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_22",
+          "transactionId": "txn_stmt_1793882068777_x5y4_22",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: debt repayment match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_23": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_23",
+          "transactionId": "txn_stmt_1793882068777_x5y4_23",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_24": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_24",
+          "transactionId": "txn_stmt_1793882068777_x5y4_24",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_25": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_25",
+          "transactionId": "txn_stmt_1793882068777_x5y4_25",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_26": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_26",
+          "transactionId": "txn_stmt_1793882068777_x5y4_26",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_27": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_27",
+          "transactionId": "txn_stmt_1793882068777_x5y4_27",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_28": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_28",
+          "transactionId": "txn_stmt_1793882068777_x5y4_28",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_29": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_29",
+          "transactionId": "txn_stmt_1793882068777_x5y4_29",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_30": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_30",
+          "transactionId": "txn_stmt_1793882068777_x5y4_30",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_31": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_31",
+          "transactionId": "txn_stmt_1793882068777_x5y4_31",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_32": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_32",
+          "transactionId": "txn_stmt_1793882068777_x5y4_32",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_33": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_33",
+          "transactionId": "txn_stmt_1793882068777_x5y4_33",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_34": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_34",
+          "transactionId": "txn_stmt_1793882068777_x5y4_34",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: utility keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_35": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_35",
+          "transactionId": "txn_stmt_1793882068777_x5y4_35",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_36": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_36",
+          "transactionId": "txn_stmt_1793882068777_x5y4_36",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_37": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_37",
+          "transactionId": "txn_stmt_1793882068777_x5y4_37",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: debt repayment match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_38": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_38",
+          "transactionId": "txn_stmt_1793882068777_x5y4_38",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_39": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_39",
+          "transactionId": "txn_stmt_1793882068777_x5y4_39",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_40": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_40",
+          "transactionId": "txn_stmt_1793882068777_x5y4_40",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_41": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_41",
+          "transactionId": "txn_stmt_1793882068777_x5y4_41",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_42": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_42",
+          "transactionId": "txn_stmt_1793882068777_x5y4_42",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_43": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_43",
+          "transactionId": "txn_stmt_1793882068777_x5y4_43",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_44": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_44",
+          "transactionId": "txn_stmt_1793882068777_x5y4_44",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068777_x5y4_45": {
+          "id": "cls_txn_stmt_1793882068777_x5y4_45",
+          "transactionId": "txn_stmt_1793882068777_x5y4_45",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "low",
+          "status": "needs_review",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068822_yb0f_1": {
+          "id": "cls_txn_stmt_1793882068822_yb0f_1",
+          "transactionId": "txn_stmt_1793882068822_yb0f_1",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068822_yb0f_2": {
+          "id": "cls_txn_stmt_1793882068822_yb0f_2",
+          "transactionId": "txn_stmt_1793882068822_yb0f_2",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        },
+        "txn_stmt_1793882068822_yb0f_3": {
+          "id": "cls_txn_stmt_1793882068822_yb0f_3",
+          "transactionId": "txn_stmt_1793882068822_yb0f_3",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_mock_deterministic",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+          "updatedAt": "2026-11-05T12:34:28.967Z"
+        }
+      }
+    },
+    "createdAt": "2026-11-05T12:34:28.969Z"
+  }
+}
+{
+  "stage": "DebtAgent",
+  "output": {
+    "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+    "agentName": "DebtAgent",
+    "inputHash": "85c9a9e0e02e090f12a75e56db98e08974a5088a88da20e70f611d43d3a4eea6",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "output": {
+      "debtsAnalyzed": [
+        {
+          "debtId": "card",
+          "name": "Credit card",
+          "apr": 21.9,
+          "urgency": "high",
+          "interest90dBaseline": 41.82,
+          "interest12mBaseline": 126.43,
+          "payoffMonths": 18.32
+        }
+      ],
+      "highestPriorityDebtId": "card",
+      "summaryText": "Analyzed 1 debt(s) via F005–F010: Credit card [HIGH urgency, 21.9% APR, 90d baseline interest: EUR 41.82, 12m baseline interest: EUR 126.43, 18.3 mo payoff]. Highest priority debt: card."
+    },
+    "createdAt": "2026-11-05T12:34:28.993Z"
+  }
+}
+{
+  "stage": "analysis",
+  "output": {
+    "status": "PROVIDER_UNAVAILABLE",
+    "readiness": "state_b_clarification_needed",
+    "decisionStatus": "NEEDS_DATA",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "provenance": [
+      {
+        "provider": "deterministic_fallback",
+        "modelUsed": "mock_deterministic",
+        "liveCallUsed": false
+      },
+      {
+        "provider": "deterministic_fallback",
+        "modelUsed": "mock_deterministic",
+        "liveCallUsed": false
+      },
+      {
+        "provider": "deterministic_fallback",
+        "modelUsed": "mock_deterministic",
+        "liveCallUsed": false
+      }
+    ],
+    "freshness": {
+      "BehaviorAgent": {
+        "agentName": "BehaviorAgent",
+        "stale": true,
+        "inputChanged": true,
+        "policyChanged": true,
+        "expired": true,
+        "inputHash": "d2986bedae9c92d9912cfb10c76e717ffd8150fe8894805501f2adce62beae78",
+        "policyVersion": "prototype_policy_bundle_v1.2",
+        "cachedReused": false
+      },
+      "DebtAgent": {
+        "agentName": "DebtAgent",
+        "stale": true,
+        "inputChanged": true,
+        "policyChanged": true,
+        "expired": true,
+        "inputHash": "85c9a9e0e02e090f12a75e56db98e08974a5088a88da20e70f611d43d3a4eea6",
+        "policyVersion": "prototype_policy_bundle_v1.2",
+        "cachedReused": false
+      }
+    }
+  }
+}
+{
+  "stage": "decision_trace",
+  "output": {
+    "trace": {
+      "evaluationId": "eval_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_0_1793882068919",
+      "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+      "snapshotId": "snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-05T12:34:29.075Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.2",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Emergency reserve coverage M = 0.00 months is below entry threshold 1.00 months.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A007_snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Add EUR 360 to your emergency reserve",
+            "description": "Earmark EUR 360 from uncommitted available cash (EUR 3005.01 safe after upcoming bills) into your accessible emergency cushion.",
+            "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": "savings",
+            "amount": 360,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:liquid_balance",
+            "stale_account_balance",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "STALE"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2645.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A002_card",
+            "actionId": "A002",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Pay an extra EUR 850 toward Credit card",
+            "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+            "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+            "targetId": "card",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 850,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R001",
+              "R002",
+              "R006"
+            ],
+            "supportingClaimIds": [
+              "C014",
+              "C015"
+            ],
+            "supportingSourceIds": [
+              "S002",
+              "S003"
+            ],
+            "requiredPiInputs": [
+              "extra_amount",
+              "apr",
+              "balance",
+              "cash_flow"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:cash_flow",
+            "stale_account_balance",
+            "verified_debt_interest_terms",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "extra_amount",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "apr",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "cash_flow",
+              "status": "STALE"
+            }
+          ],
+          "projectedMinCashAfterAction": 2155.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A012_reserve",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 1500 toward \"Emergency reserve\"",
+            "description": "Allocate EUR 1500 from available cash toward your \"Emergency reserve\" goal (advancing progress from 0% to 50%).",
+            "rationale": "Advances verified savings goal \"Emergency reserve\" by 50.0 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 1500,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:available_cash",
+            "stale_account_balance",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "goal_target",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "goal_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "available_cash",
+              "status": "STALE"
+            }
+          ],
+          "projectedMinCashAfterAction": 1505.01,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "selectedActionType": null,
+      "decisionStatus": "NEEDS_DATA",
+      "decisionReason": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [
+        "fresh_account_balance",
+        "stale_pi:liquid_balance",
+        "stale_account_balance",
+        "dated_essential_outflows",
+        "stale_pi:cash_flow",
+        "verified_debt_interest_terms",
+        "stale_pi:available_cash"
+      ],
+      "clarificationQuestion": "Your primary account balance is older than the freshness threshold; could you confirm your current accessible balance?"
+    },
+    "decision": {
+      "evaluationId": "eval_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_0_1793882068919",
+      "snapshotId": "snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+      "snapshotVersion": "3.0",
+      "decisionStatus": "NEEDS_DATA",
+      "priorityClass": "NONE",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "title": "Clarification needed to unlock next step",
+      "description": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+      "reasoning": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+      "expectedEffectSummary": "Confirming missing details unlocks verified financial evaluation.",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.2",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "NEEDS_DATA",
+      "clarificationQuestion": "Your primary account balance is older than the freshness threshold; could you confirm your current accessible balance?",
+      "missingFields": [
+        "fresh_account_balance",
+        "stale_pi:liquid_balance",
+        "stale_account_balance",
+        "dated_essential_outflows",
+        "stale_pi:cash_flow",
+        "verified_debt_interest_terms",
+        "stale_pi:available_cash"
+      ],
+      "trace": {
+        "evaluationId": "eval_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_0_1793882068919",
+        "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+        "snapshotId": "snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-05T12:34:29.075Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.2",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Emergency reserve coverage M = 0.00 months is below entry threshold 1.00 months.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "cand_A007_snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+              "actionId": "A007",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Add EUR 360 to your emergency reserve",
+              "description": "Earmark EUR 360 from uncommitted available cash (EUR 3005.01 safe after upcoming bills) into your accessible emergency cushion.",
+              "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+              "targetId": "reserve",
+              "sourceAccountId": "main",
+              "destinationAccountId": "savings",
+              "amount": 360,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R003",
+                "R011"
+              ],
+              "supportingClaimIds": [
+                "C001",
+                "C002"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "liquid_balance",
+                "mandatory_outflows",
+                "amount"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "stale_pi:liquid_balance",
+              "stale_account_balance",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "liquid_balance",
+                "status": "STALE"
+              },
+              {
+                "field": "mandatory_outflows",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "amount",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 2645.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A002_card",
+              "actionId": "A002",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Pay an extra EUR 850 toward Credit card",
+              "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+              "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+              "targetId": "card",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 850,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R001",
+                "R002",
+                "R006"
+              ],
+              "supportingClaimIds": [
+                "C014",
+                "C015"
+              ],
+              "supportingSourceIds": [
+                "S002",
+                "S003"
+              ],
+              "requiredPiInputs": [
+                "extra_amount",
+                "apr",
+                "balance",
+                "cash_flow"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "stale_pi:cash_flow",
+              "stale_account_balance",
+              "verified_debt_interest_terms",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "extra_amount",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "apr",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "cash_flow",
+                "status": "STALE"
+              }
+            ],
+            "projectedMinCashAfterAction": 2155.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A012_reserve",
+              "actionId": "A012",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Contribute EUR 1500 toward \"Emergency reserve\"",
+              "description": "Allocate EUR 1500 from available cash toward your \"Emergency reserve\" goal (advancing progress from 0% to 50%).",
+              "rationale": "Advances verified savings goal \"Emergency reserve\" by 50.0 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+              "targetId": "reserve",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 1500,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R012"
+              ],
+              "supportingClaimIds": [
+                "C006"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "goal_target",
+                "goal_balance",
+                "available_cash"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "stale_pi:available_cash",
+              "stale_account_balance",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "goal_target",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "goal_balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "available_cash",
+                "status": "STALE"
+              }
+            ],
+            "projectedMinCashAfterAction": 1505.01,
+            "unlocksActionIds": []
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "selectedActionType": null,
+        "decisionStatus": "NEEDS_DATA",
+        "decisionReason": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [
+          "fresh_account_balance",
+          "stale_pi:liquid_balance",
+          "stale_account_balance",
+          "dated_essential_outflows",
+          "stale_pi:cash_flow",
+          "verified_debt_interest_terms",
+          "stale_pi:available_cash"
+        ],
+        "clarificationQuestion": "Your primary account balance is older than the freshness threshold; could you confirm your current accessible balance?"
+      }
+    }
+  }
+}
+{
+  "stage": "recommendation",
+  "output": {
+    "id": "rec_NONE_eval_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_0_1793882068919",
+    "userId": "84da8f8c-d7a7-4098-85de-7d4940be794d",
+    "snapshotId": "snap_beta_84da8f8c-d7a7-4098-85de-7d4940be794d_v3_7f032f7442a53aa8",
+    "actionType": "allocate_safety_cushion",
+    "title": "Clarification needed to unlock next step",
+    "description": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+    "reasoning": "Additional user data is required before a safe action can be recommended (fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, stale_pi:available_cash).",
+    "suggestedAmount": null,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": null,
+    "sourceAccountId": null,
+    "priority": "clarification",
+    "status": "proposed",
+    "readinessState": "state_b_clarification_needed",
+    "createdAt": "2026-11-05T12:34:29.080Z",
+    "updatedAt": "2026-11-05T12:34:29.080Z"
+  }
+}

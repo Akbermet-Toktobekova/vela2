@@ -1,0 +1,157 @@
+# 01 Debt · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [
+    {
+      "id": "card",
+      "userId": "a7dd4247-15f2-4e67-928f-6d9198880dd9",
+      "name": "Credit card",
+      "debtType": "credit_card",
+      "currency": "EUR",
+      "remainingBalance": 900,
+      "apr": 24,
+      "minimumPayment": 65,
+      "nextDueDate": "2026-11-08",
+      "paymentFrequency": "monthly",
+      "createdAt": "2026-11-05T12:00:00.000Z"
+    }
+  ],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "Analyzed 0 transactions (0 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "For the period of November 2026, the utility obligation date (2026-11-18) occurs before the salary income date (2026-11-25) in EUR currency."
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "For the period of November 2026, the utility obligation date (2026-11-18) occurs before the salary income date (2026-11-25) in EUR currency."
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "Debt 1: APR 24%, next due 2026-11-08, baseline interest EUR 46.99 over the analysis horizon, estimated payoff 16.37 months."
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "Only two distinct proposals are supported by the provided facts; no third proposal could be generated as there is insufficient data regarding other financial behaviors or long-term planning."
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729"
+    },
+    {
+      "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_a7dd4247-15f2-4e67-928f-6d9198880dd9_v2_d32cc2a958d33729",
+      "summary_text": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]"
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "97f09fc562036935db6b6467adc8937d7144c35f02741ca71bd4e6aeffb9ea56",
+    "promptVersion": "chat-memory.v1",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T15:23:19.338Z",
+    "entries": [
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "QUESTION",
+        "text": "The user is requesting to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget at a later time."
+      }
+    ],
+    "summaryText": "The user is requesting to understand their saved financial information. The user may review their budget at a later time.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.1-flash-lite",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_5c7c8638-6f02-4202-8680-87af6e088ddf",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": "A005"
+  }
+}
+~~~~

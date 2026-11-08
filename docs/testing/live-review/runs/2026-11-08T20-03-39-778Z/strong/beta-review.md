@@ -1,0 +1,685 @@
+# 02 Strong · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **No proactive action needed today**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 3
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "4d9908eb-a011-4dfc-aa44-933935b98518",
+  "decision": {
+    "evaluationId": "eval_a6188dea-46c9-412c-a216-5050f05b3544",
+    "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+    "snapshotVersion": "3.0",
+    "decisionStatus": "NO_RECOMMENDATION",
+    "priorityClass": "NONE",
+    "selectedActionId": null,
+    "selectedActionType": null,
+    "candidate": null,
+    "title": "No proactive action needed today",
+    "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+    "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+    "expectedEffectSummary": "Current obligations and liquidity buffers do not support a safe change today.",
+    "weightProfileId": "goal_advancement",
+    "weights": {
+      "resilience": 0.2,
+      "financial_benefit": 0.2,
+      "goal_progress": 0.6
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [],
+    "ruleIds": [],
+    "claimIds": [],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": null,
+    "missingFields": [],
+    "trace": {
+      "evaluationId": "eval_a6188dea-46c9-412c-a216-5050f05b3544",
+      "userId": "4558dd19-99b1-4dda-a9ec-0f6a9275184c",
+      "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-08T20:04:34.111Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "stageArtifactIds": [
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:pi",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:fx",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:classification",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:pattern-recognition",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:behavior-agent",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:financial-calculator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-calculator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-agent",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:suggestion-generator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:catalog-selector",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:checker",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:critical-coverage",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:ai-evaluation",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:weights",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:decision-engine",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Intended contribution to goal-1",
+            "description": "What amount, if any, do you intend to allocate toward this goal and when?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "goal-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Intended contribution to goal-1"
+            ],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Intended contribution to goal-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Preferred funding account for goal-1",
+            "description": "Which account and currency, if any, would you prefer to use for this goal?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "goal-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Preferred funding account for goal-1"
+            ],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Preferred funding account for goal-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "financial-metrics",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "The model did not return a valid three-proposal response.",
+        "fallbackReason": null,
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NO_RECOMMENDATION",
+      "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    }
+  },
+  "todayCard": {
+    "id": "rec_NONE_eval_a6188dea-46c9-412c-a216-5050f05b3544",
+    "userId": "4558dd19-99b1-4dda-a9ec-0f6a9275184c",
+    "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+    "actionType": "allocate_safety_cushion",
+    "title": "No proactive action needed today",
+    "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+    "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+    "suggestedAmount": null,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": null,
+    "sourceAccountId": null,
+    "priority": "suggested",
+    "status": "proposed",
+    "readinessState": "state_c_limited_data",
+    "createdAt": "2026-11-08T20:04:34.135Z",
+    "updatedAt": "2026-11-08T20:04:34.135Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:pi",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:fx",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:classification",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:pattern-recognition",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:behavior-agent",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:financial-calculator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-calculator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-agent",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:suggestion-generator",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:catalog-selector",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:checker",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:critical-coverage",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:ai-evaluation",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:weights",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:decision-engine",
+        "eval_a6188dea-46c9-412c-a216-5050f05b3544:explanation"
+      ],
+      "evaluationId": "eval_a6188dea-46c9-412c-a216-5050f05b3544",
+      "userId": "4558dd19-99b1-4dda-a9ec-0f6a9275184c",
+      "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-08T20:04:34.111Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Intended contribution to goal-1",
+            "description": "What amount, if any, do you intend to allocate toward this goal and when?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "goal-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Intended contribution to goal-1"
+            ],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Intended contribution to goal-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Preferred funding account for goal-1",
+            "description": "Which account and currency, if any, would you prefer to use for this goal?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "goal-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Preferred funding account for goal-1"
+            ],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Preferred funding account for goal-1",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "This information is missing from the supplied records.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "SYSTEM_CLARIFICATION",
+            "targetFactId": "financial-metrics",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "The model did not return a valid three-proposal response.",
+        "fallbackReason": null,
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NO_RECOMMENDATION",
+      "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    },
+    "decision": {
+      "evaluationId": "eval_a6188dea-46c9-412c-a216-5050f05b3544",
+      "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+      "snapshotVersion": "3.0",
+      "decisionStatus": "NO_RECOMMENDATION",
+      "priorityClass": "NONE",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "title": "No proactive action needed today",
+      "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "expectedEffectSummary": "Current obligations and liquidity buffers do not support a safe change today.",
+      "weightProfileId": "goal_advancement",
+      "weights": {
+        "resilience": 0.2,
+        "financial_benefit": 0.2,
+        "goal_progress": 0.6
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_a6188dea-46c9-412c-a216-5050f05b3544",
+        "userId": "4558dd19-99b1-4dda-a9ec-0f6a9275184c",
+        "snapshotId": "snap_beta_4558dd19-99b1-4dda-a9ec-0f6a9275184c_v3_3efd58a95133b65d",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-08T20:04:34.111Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "stageArtifactIds": [
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:pi",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:fx",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:classification",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:pattern-recognition",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:behavior-agent",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:financial-calculator",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-calculator",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-agent",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:suggestion-generator",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:catalog-selector",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:checker",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:critical-coverage",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:ai-evaluation",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:weights",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:decision-engine",
+          "eval_a6188dea-46c9-412c-a216-5050f05b3544:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Intended contribution to goal-1",
+              "description": "What amount, if any, do you intend to allocate toward this goal and when?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Intended contribution to goal-1"
+              ],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Intended contribution to goal-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Preferred funding account for goal-1",
+              "description": "Which account and currency, if any, would you prefer to use for this goal?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Preferred funding account for goal-1"
+              ],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Preferred funding account for goal-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Desired dedicated emergency reserve target",
+              "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "financial-metrics",
+              "prerequisites": [],
+              "missingInfo": [
+                "Desired dedicated emergency reserve target"
+              ],
+              "factIds": [
+                "financial-metrics",
+                "data-quality"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Desired dedicated emergency reserve target",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "The model did not return a valid three-proposal response.",
+          "fallbackReason": null,
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "NO_RECOMMENDATION",
+        "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    }
+  },
+  "primaryProposals": [
+    {
+      "id": "primary-1",
+      "title": "Intended contribution to goal-1",
+      "description": "What amount, if any, do you intend to allocate toward this goal and when?",
+      "rationale": "This information is missing from the supplied records.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "SYSTEM_CLARIFICATION",
+      "targetFactId": "goal-1",
+      "prerequisites": [],
+      "missingInfo": [
+        "Intended contribution to goal-1"
+      ],
+      "factIds": [
+        "goal-1"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Intended contribution to goal-1",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-2",
+      "title": "Preferred funding account for goal-1",
+      "description": "Which account and currency, if any, would you prefer to use for this goal?",
+      "rationale": "This information is missing from the supplied records.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "SYSTEM_CLARIFICATION",
+      "targetFactId": "goal-1",
+      "prerequisites": [],
+      "missingInfo": [
+        "Preferred funding account for goal-1"
+      ],
+      "factIds": [
+        "goal-1"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Preferred funding account for goal-1",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-3",
+      "title": "Desired dedicated emergency reserve target",
+      "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "rationale": "This information is missing from the supplied records.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "SYSTEM_CLARIFICATION",
+      "targetFactId": "financial-metrics",
+      "prerequisites": [],
+      "missingInfo": [
+        "Desired dedicated emergency reserve target"
+      ],
+      "factIds": [
+        "financial-metrics",
+        "data-quality"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Desired dedicated emergency reserve target",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    }
+  ],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 345400
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 996
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 876
+    },
+    {
+      "doc_key": "chat-request:strong-context",
+      "stored_bytes": 2080
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 1450064
+    },
+    {
+      "doc_key": "import:663dbe38-1f9c-4db6-bd88-f2c312b297e3",
+      "stored_bytes": 197072
+    },
+    {
+      "doc_key": "import:c38ca9f4-0d19-4b6d-95fe-aa72e66b98d0",
+      "stored_bytes": 88516
+    },
+    {
+      "doc_key": "job-request:465ad095f48d77ef7e21277c7876b60282d9b935d2ed035e49f7a500d6625833",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:5fa3e9bf96f72ccae958770a9456a83ac1356fd1431742b3173d8aedccd10314",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:eebc7341000131b57fc73e279f31b9550554bfb7a9c80f210611ddcaa7927366",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:4d9908eb-a011-4dfc-aa44-933935b98518",
+      "stored_bytes": 345844
+    },
+    {
+      "doc_key": "job:b0204278-e2b5-48f3-b300-1f1ec7957f66",
+      "stored_bytes": 104624
+    },
+    {
+      "doc_key": "job:c15864a5-a8b0-458e-9ed1-7fdc1bc7867c",
+      "stored_bytes": 233820
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:ai-evaluation",
+      "stored_bytes": 1596
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:behavior-agent",
+      "stored_bytes": 6508
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:catalog-selector",
+      "stored_bytes": 1656
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:checker",
+      "stored_bytes": 4316
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:classification",
+      "stored_bytes": 108504
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:critical-coverage",
+      "stored_bytes": 1404
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-agent",
+      "stored_bytes": 1636
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:debt-calculator",
+      "stored_bytes": 1336
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:decision-engine",
+      "stored_bytes": 4564
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:explanation",
+      "stored_bytes": 2036
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:financial-calculator",
+      "stored_bytes": 15976
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:fx",
+      "stored_bytes": 1540
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:pattern-recognition",
+      "stored_bytes": 71428
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:pi",
+      "stored_bytes": 1624
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:suggestion-generator",
+      "stored_bytes": 6164
+    },
+    {
+      "doc_key": "stage:eval_a6188dea-46c9-412c-a216-5050f05b3544:weights",
+      "stored_bytes": 1776
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 319356
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.
+~~~~

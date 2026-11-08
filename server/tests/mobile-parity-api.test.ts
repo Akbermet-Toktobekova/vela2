@@ -46,8 +46,12 @@ describe('Mobile parity owner-isolated operations',()=>{
  });
  it('makes clear-chat retries safe and owner-isolated',async()=>{
   const{request,register,store}=await setup();const a=await register('a@example.invalid'),b=await register('b@example.invalid');store.put(a.user.id,'chat',[{id:'old',content:'Old'}]);store.put(b.user.id,'chat',[{id:'b',content:'Other user'}]);
+  store.put(a.user.id,'chat-memory',{summary:'Old conversation context'});store.put(b.user.id,'chat-memory',{summary:'Other user context'});
   const first=await request('/chat','DELETE',{requestId:'same-operation'},a.token);expect(first.status).toBe(200);expect(first.body.messages).toEqual([]);store.put(a.user.id,'chat',[{id:'new',content:'New message after clear'}]);
+  expect(store.get(a.user.id,'chat-memory')).toBeNull();expect(store.get(b.user.id,'chat-memory')).toEqual({summary:'Other user context'});
+  store.put(a.user.id,'chat-memory',{summary:'New conversation context'});
   expect((await request('/chat','DELETE',{requestId:'same-operation'},a.token)).body.messages[0].id).toBe('new');expect((await request('/chat','GET',undefined,b.token)).body.messages[0].id).toBe('b');
+  expect(store.get(a.user.id,'chat-memory')).toEqual({summary:'New conversation context'});
  });
  it('does not replay pre-clear cached history when an old chat request is retried',async()=>{
   const provider=new LLMClient({mockMode:true});

@@ -1,13 +1,9 @@
-# Vela (FinAgent) — Правила для всех агентов (`AGENTS.md`)
+# Vela (FinAgent) — Agent instructions
 
-1. **Единственный источник истины:** `docs/SPEC.md`, `docs/coordination/DECISIONS.md` и канонические таблицы в `server/data/as/FinAgent_Normalized_Database.json`.
-2. **Три уровня данных (строго различать):**
-   - `DB_FACT` — неизменяемые записи из `FinAgent_Final_Database_Package.zip` (`S001–S024`, `C001–C033`, `R001–R018`, `F001–F020`, `A001–A026`). Запрещено менять их `status = 'PENDING_REVIEW'`, `PENDING_ORIGINAL_REOPEN` или `approved_for_production = 'NO'`.
-   - `PRODUCT_DECISION` — утверждённые архитектурные правила из `DECISIONS.md`.
-   - `PROTOTYPE_ONLY` (`PROTOTYPE_POLICY`) — предварительные инженерные параметры, хранящиеся **только** в централизованном версионированном конфиге `server/config/prototype-policy.json`. Запрещено хардкодить их в бизнес-логике или выдавать за эмпирически доказанные.
-3. **Запрет на выдумывание (`vela-no-invention`):** никаких новых action IDs, правил, источников, формул или скрытых порогов (вроде `K_F_min`). Если формула или входные данные не позволяют выполнить расчёт — явно возвращать `NEEDS_DATA` или фиксировать проблему.
-4. **Разделение ответственности:**
-   - Денежные метрики и эффекты `R / F / G` считает **только детерминированный код** (`SharedFinancialCalculator`, единственный владелец каждой формулы `F001–F015, F019, F020`).
-   - `AI Evaluation Call` (1 вызов на цикл) оценивает только 4 фактора контекстной сложности `T, S, D, O` в `[0, 1]` (или `UNKNOWN`), а код считает `c_C(a) = 0.25*T + 0.25*S + 0.25*D + 0.25*O` (`F016`).
-   - `Checker + Critical Coverage` (`A001, A005, A011, A020`) и `Decision Engine` (`F017, F018`) работают строго по контрактам `shared/contracts/`.
-5. **Владение файлами и сдача (`vela-team-protocol`, `vela-handoff`):** каждый агент редактирует только файлы своей задачи из `docs/coordination/BOARD.md` и прикладывает реальный вывод тестов. После объединения обязательны интеграционное ревью и проверка 14 сквозных E2E-сценариев.
+Project-authored code comments, documentation, prompts, reports, UI text and new commit messages must be in English. Collaborate with the user in Russian. Preserve original-language source evidence and user content and label translations separately. Preserve Git history.
+
+1. **Sources of truth:** Use the specification, recorded decisions, and canonical tables in server/data/as/FinAgent_Normalized_Database.json.
+2. **Data authority:** Preserve canonical DB_FACT records, including PENDING_REVIEW, PENDING_ORIGINAL_REOPEN and approved_for_production = NO. Record PRODUCT_DECISION in DECISIONS.md. Keep PROTOTYPE_ONLY parameters in server/config/prototype-policy.json and label them as preliminary.
+3. **No invention:** Do not invent action IDs, rules, sources, formulas or thresholds. Return NEEDS_DATA or document an issue when the required facts or formula are missing.
+4. **Responsibilities:** SharedFinancialCalculator owns deterministic financial formulas F001–F015, F019 and F020. AI Evaluation assesses only T, S, D and O in one batch per cycle. Code applies F016. Checker, Critical Coverage and Decision Engine follow shared contracts.
+5. **Ownership and handoff:** Follow the file ownership in BOARD.md and the vela-team-protocol and vela-handoff skills. Record real verification output and run integration checks and the 14 mandatory E2E scenarios.

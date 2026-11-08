@@ -1,0 +1,23 @@
+Starting Metro Bundler
+
+| (node:2840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+iOS Bundled 13177ms node_modules\expo\AppEntry.js (821 modules)
+Android Bundled 23680ms node_modules\expo\AppEntry.js (828 modules)
+
+› Assets (4):
+node_modules\@expo-google-fonts\manrope\400Regular\Manrope_400Regular.ttf (98KB)
+node_modules\@expo-google-fonts\manrope\500Medium\Manrope_500Medium.ttf (98KB)
+node_modules\@expo-google-fonts\manrope\600SemiBold\Manrope_600SemiBold.ttf (98KB)
+node_modules\@expo-google-fonts\manrope\700Bold\Manrope_700Bold.ttf (98KB)
+
+› ios bundles (1):
+_expo/static/js/ios/AppEntry-e93f9dbbdf00ffabba5c248c99b39401.hbc (2.1MB)
+
+› android bundles (1):
+_expo/static/js/android/AppEntry-31e1fe5bd998157f11d180cc145ed2df.hbc (2.1MB)
+
+› Files (1):
+metadata.json (760B)
+
+Exported: dist

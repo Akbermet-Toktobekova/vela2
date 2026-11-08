@@ -1,7 +1,7 @@
-import { GoogleGenAI } from '@google/genai';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { GoogleGenAI, type ThinkingLevel } from '@google/genai';
 import { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +23,10 @@ export interface LLMClientOptions {
   provider?: LLMProvider;
   geminiApiKey?: string;
   geminiPrimaryModel?: string;
+  geminiHttpOptions?: NonNullable<ConstructorParameters<typeof GoogleGenAI>[0]>['httpOptions'];
+  pinGeminiModel?: boolean;
+  geminiStreaming?: boolean;
+  geminiThinkingLevel?: ThinkingLevel;
   openaiApiKey?: string;
   openaiModel?: string;
   openaiBaseUrl?: string;
@@ -36,6 +40,7 @@ export interface LLMCallResult<T> {
   modelUsed: string;
   liveCallUsed: boolean;
   fallbackReason?: string;
+  responseCapture?: { model: string; rawText: string };
 }
 
 /**
@@ -99,11 +104,15 @@ export class LLMClient {
   private readonly openaiBaseUrl: string;
   private readonly mockMode: boolean;
   private readonly geminiModels: string[];
+  private readonly geminiStreaming: boolean;
+  private readonly geminiThinkingLevel?: ThinkingLevel;
   private readonly modelStates: Map<string, ModelRuntimeState> = new Map();
   private geminiClient: GoogleGenAI | null = null;
   private rotationCursor = 0;
 
   constructor(options?: LLMClientOptions) {
+    this.geminiStreaming = options?.geminiStreaming ?? false;
+    this.geminiThinkingLevel = options?.geminiThinkingLevel;
     const fileEnv = parseEnvFile(options?.envFilePath);
     const getEnv = (key: string): string => {
       const fromProc = process.env[key];
@@ -130,7 +139,7 @@ export class LLMClient {
     }
 
     const configuredPrimary =
-      options?.geminiPrimaryModel || getEnv('GEMINI_MODEL') || 'gemini-3.1-flash-lite';
+      options?.geminiPrimaryModel || getEnv('GEMINI_MODEL') || 'gemini-3.5-flash-lite';
 
     // Primary rotation between gemini-3.1-flash-lite and gemini-3.5-flash-lite,
     // plus preview / flash fallback aliases if an endpoint returns 404 for a model ID (D-002).
@@ -141,7 +150,9 @@ export class LLMClient {
       'gemini-3.1-flash-lite-preview',
       'gemini-2.5-flash',
     ];
-    this.geminiModels = Array.from(new Set(orderedCandidates.filter(Boolean)));
+    this.geminiModels = options?.pinGeminiModel || configuredPrimary.startsWith('gemma-') || configuredPrimary === 'gemini-3.5-flash-lite'
+      ? [configuredPrimary]
+      : Array.from(new Set(orderedCandidates.filter(Boolean)));
 
     for (const modelId of this.geminiModels) {
       this.modelStates.set(modelId, {
@@ -163,7 +174,7 @@ export class LLMClient {
     });
 
     if (this.geminiApiKey) {
-      this.geminiClient = new GoogleGenAI({ apiKey: this.geminiApiKey });
+      this.geminiClient = new GoogleGenAI({ apiKey: this.geminiApiKey, httpOptions: options?.geminiHttpOptions });
     }
   }
 
@@ -289,6 +300,7 @@ export class LLMClient {
     userPrompt: string;
     jsonMode: boolean;
     temperature?: number;
+    responseJsonSchema?: object;
   }): Promise<{ text: string; modelUsed: string }> {
     if (!this.geminiClient || !this.geminiApiKey) {
       throw new Error('GEMINI_API_KEY is not configured');
@@ -299,16 +311,24 @@ export class LLMClient {
 
     for (const modelId of candidates) {
       try {
-        const response = await this.geminiClient.models.generateContent({
+        const request = {
           model: modelId,
           contents: params.userPrompt,
           config: {
             systemInstruction: params.systemPrompt,
             temperature: params.temperature ?? 0.1,
             ...(params.jsonMode ? { responseMimeType: 'application/json' } : {}),
+            ...(params.responseJsonSchema ? { responseJsonSchema: params.responseJsonSchema } : {}),
+            ...(this.geminiThinkingLevel ? { thinkingConfig: { thinkingLevel: this.geminiThinkingLevel } } : {}),
           },
-        });
-        const text = response.text ?? '';
+        };
+        let text = '';
+        if (this.geminiStreaming) {
+          const stream = await this.geminiClient.models.generateContentStream(request);
+          for await (const chunk of stream) text += chunk.text ?? '';
+        } else {
+          text = (await this.geminiClient.models.generateContent(request)).text ?? '';
+        }
         if (!text.trim()) {
           throw new Error(`Empty response text from Gemini model ${modelId}`);
         }
@@ -383,6 +403,8 @@ export class LLMClient {
     fallback: () => T;
     forceLive?: boolean;
     temperature?: number;
+    responseJsonSchema?: object;
+    captureRawResponse?: boolean;
   }): Promise<LLMCallResult<T>> {
     const shouldUseMock = this.mockMode && !params.forceLive;
     if (shouldUseMock) {
@@ -395,6 +417,7 @@ export class LLMClient {
       };
     }
 
+    let responseCapture: LLMCallResult<T>['responseCapture'];
     try {
       const raw =
         this.provider === 'openai'
@@ -409,7 +432,9 @@ export class LLMClient {
               userPrompt: params.userPrompt,
               jsonMode: true,
               temperature: params.temperature,
+              responseJsonSchema: params.responseJsonSchema,
             });
+      if (params.captureRawResponse) responseCapture = { model: raw.modelUsed, rawText: raw.text };
 
       const cleaned = raw.text
         .trim()
@@ -424,6 +449,7 @@ export class LLMClient {
         provider: this.provider,
         modelUsed: raw.modelUsed,
         liveCallUsed: true,
+        ...(responseCapture ? { responseCapture } : {}),
       };
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
@@ -433,6 +459,7 @@ export class LLMClient {
         modelUsed: 'deterministic_fallback_after_error',
         liveCallUsed: false,
         fallbackReason: reason,
+        ...(responseCapture ? { responseCapture } : {}),
       };
     }
   }

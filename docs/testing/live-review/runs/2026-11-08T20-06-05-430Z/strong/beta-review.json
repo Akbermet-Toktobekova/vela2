@@ -1,0 +1,686 @@
+{
+  "stage": "beta-review",
+  "status": "COMPLETED",
+  "input": {
+    "request": "POST /api/beta/review",
+    "body": {
+      "forceRefresh": true
+    },
+    "version": 3
+  },
+  "output": {
+    "jobId": "ec1a4b90-7fc5-40a6-8842-dc1bb5dc78ac",
+    "decision": {
+      "evaluationId": "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+      "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+      "snapshotVersion": "3.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "NORMAL",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "sourceAdvice": {
+        "id": "primary-1",
+        "title": "Review recurring energy obligations",
+        "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+        "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "sources": []
+      },
+      "title": "Review recurring energy obligations",
+      "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+      "reasoning": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+      "expectedEffectSummary": "Review the relevant information in your profile before deciding on your next step.",
+      "weightProfileId": "goal_advancement",
+      "weights": {
+        "resilience": 0.2,
+        "financial_benefit": 0.2,
+        "goal_progress": 0.6
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+        "userId": "5cfb19d4-c0fe-4693-9360-c0ce7994aa65",
+        "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-08T20:08:25.281Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NORMAL",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "sourceAdvice": {
+          "id": "primary-1",
+          "title": "Review recurring energy obligations",
+          "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+          "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+          "sources": []
+        },
+        "stageArtifactIds": [
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pi",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:fx",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:classification",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pattern-recognition",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:behavior-agent",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:financial-calculator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-calculator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-agent",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:suggestion-generator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:catalog-selector",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:checker",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:critical-coverage",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:ai-evaluation",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:weights",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:decision-engine",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review recurring energy obligations",
+              "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+              "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "obligation-2",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "obligation-2"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes reviewing the upcoming monthly energy obligation (obligation-2) due on 2026-11-15, which is consistent with the supplied PI fact showing an unpaid energy obligation of 150 EUR due on that date.",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Review general savings goal details",
+              "description": "Review the current target amount and timeline set for the general savings goal.",
+              "rationale": "Evaluating existing savings targets helps align daily financial activities with long-term personal objectives.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes reviewing the general savings goal details (goal-1), which is consistent with the supplied PI fact detailing a general savings goal with a target of 6000 EUR and a deadline of 2027-06-30.",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Clarify intended contribution to goal-1",
+              "description": "Provide the intended contribution amount and timeline for the general savings goal.",
+              "rationale": "Knowing the specific intended contribution helps tailor planning precisely to personal financial targets.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "MODEL",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Intended contribution to goal-1"
+              ],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Intended contribution to goal-1",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "No further executable financial transfers or external data sources are needed for these foundational review and clarification steps.",
+          "fallbackReason": null,
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    },
+    "todayCard": {
+      "id": "rec_advice_eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+      "userId": "5cfb19d4-c0fe-4693-9360-c0ce7994aa65",
+      "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+      "actionType": "source_backed_advice",
+      "sourceAdvice": {
+        "id": "primary-1",
+        "title": "Review recurring energy obligations",
+        "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+        "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "sources": []
+      },
+      "title": "Review recurring energy obligations",
+      "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+      "reasoning": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+      "suggestedAmount": null,
+      "adjustedAmount": null,
+      "currency": "EUR",
+      "targetGoalId": null,
+      "sourceAccountId": null,
+      "priority": "suggested",
+      "status": "proposed",
+      "readinessState": "state_a_action_ready",
+      "createdAt": "2026-11-08T20:08:25.342Z",
+      "updatedAt": "2026-11-08T20:08:25.342Z"
+    },
+    "trace": {
+      "trace": {
+        "stageArtifactIds": [
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pi",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:fx",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:classification",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pattern-recognition",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:behavior-agent",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:financial-calculator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-calculator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-agent",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:suggestion-generator",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:catalog-selector",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:checker",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:critical-coverage",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:ai-evaluation",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:weights",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:decision-engine",
+          "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:explanation"
+        ],
+        "evaluationId": "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+        "userId": "5cfb19d4-c0fe-4693-9360-c0ce7994aa65",
+        "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-08T20:08:25.281Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NORMAL",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "sourceAdvice": {
+          "id": "primary-1",
+          "title": "Review recurring energy obligations",
+          "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+          "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+          "sources": []
+        },
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review recurring energy obligations",
+              "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+              "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "obligation-2",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "obligation-2"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes reviewing the upcoming monthly energy obligation (obligation-2) due on 2026-11-15, which is consistent with the supplied PI fact showing an unpaid energy obligation of 150 EUR due on that date.",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Review general savings goal details",
+              "description": "Review the current target amount and timeline set for the general savings goal.",
+              "rationale": "Evaluating existing savings targets helps align daily financial activities with long-term personal objectives.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes reviewing the general savings goal details (goal-1), which is consistent with the supplied PI fact detailing a general savings goal with a target of 6000 EUR and a deadline of 2027-06-30.",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Clarify intended contribution to goal-1",
+              "description": "Provide the intended contribution amount and timeline for the general savings goal.",
+              "rationale": "Knowing the specific intended contribution helps tailor planning precisely to personal financial targets.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "MODEL",
+              "targetFactId": "goal-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Intended contribution to goal-1"
+              ],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Intended contribution to goal-1",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "No further executable financial transfers or external data sources are needed for these foundational review and clarification steps.",
+          "fallbackReason": null,
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      },
+      "decision": {
+        "evaluationId": "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+        "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+        "snapshotVersion": "3.0",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "priorityClass": "NORMAL",
+        "selectedActionId": null,
+        "selectedActionType": null,
+        "candidate": null,
+        "sourceAdvice": {
+          "id": "primary-1",
+          "title": "Review recurring energy obligations",
+          "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+          "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+          "sources": []
+        },
+        "title": "Review recurring energy obligations",
+        "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+        "reasoning": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "expectedEffectSummary": "Review the relevant information in your profile before deciding on your next step.",
+        "weightProfileId": "goal_advancement",
+        "weights": {
+          "resilience": 0.2,
+          "financial_benefit": 0.2,
+          "goal_progress": 0.6
+        },
+        "values": null,
+        "rawImpacts": null,
+        "complexity": null,
+        "score": null,
+        "stability": null,
+        "policyVersion": "prototype_policy_bundle_v1.4",
+        "sourceIds": [],
+        "ruleIds": [],
+        "claimIds": [],
+        "dataQualityStatus": "PROTOTYPE_POLICY",
+        "clarificationQuestion": null,
+        "missingFields": [],
+        "trace": {
+          "evaluationId": "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e",
+          "userId": "5cfb19d4-c0fe-4693-9360-c0ce7994aa65",
+          "snapshotId": "snap_beta_5cfb19d4-c0fe-4693-9360-c0ce7994aa65_v3_3f07421bed3939f5",
+          "snapshotVersion": "3.0",
+          "createdAt": "2026-11-08T20:08:25.281Z",
+          "runtimeMode": "PROTOTYPE_MODE",
+          "policyBundleVersion": "prototype_policy_bundle_v1.4",
+          "priorityClass": "NORMAL",
+          "weightSelection": {
+            "profileId": "goal_advancement",
+            "previousProfileId": null,
+            "hysteresisApplied": false,
+            "weights": {
+              "R": 0.2,
+              "F": 0.2,
+              "G": 0.6
+            },
+            "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+            "policyVersion": "weight_policy_v1_prototype"
+          },
+          "validatedCandidates": [],
+          "scoredCandidates": [],
+          "robustness": null,
+          "selectedCandidate": null,
+          "sourceAdvice": {
+            "id": "primary-1",
+            "title": "Review recurring energy obligations",
+            "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+            "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+            "sources": []
+          },
+          "stageArtifactIds": [
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pi",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:fx",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:classification",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pattern-recognition",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:behavior-agent",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:financial-calculator",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-calculator",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-agent",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:suggestion-generator",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:catalog-selector",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:checker",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:critical-coverage",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:ai-evaluation",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:weights",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:decision-engine",
+            "eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:explanation"
+          ],
+          "primarySuggestions": {
+            "proposals": [
+              {
+                "id": "primary-1",
+                "title": "Review recurring energy obligations",
+                "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+                "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+                "actionId": null,
+                "intent": "REVIEW",
+                "origin": "MODEL",
+                "targetFactId": "obligation-2",
+                "prerequisites": [],
+                "missingInfo": [],
+                "factIds": [
+                  "obligation-2"
+                ],
+                "claimIds": [],
+                "status": "VALID",
+                "reason": "The step proposes reviewing the upcoming monthly energy obligation (obligation-2) due on 2026-11-15, which is consistent with the supplied PI fact showing an unpaid energy obligation of 150 EUR due on that date.",
+                "evidence": []
+              },
+              {
+                "id": "primary-2",
+                "title": "Review general savings goal details",
+                "description": "Review the current target amount and timeline set for the general savings goal.",
+                "rationale": "Evaluating existing savings targets helps align daily financial activities with long-term personal objectives.",
+                "actionId": null,
+                "intent": "REVIEW",
+                "origin": "MODEL",
+                "targetFactId": "goal-1",
+                "prerequisites": [],
+                "missingInfo": [],
+                "factIds": [
+                  "goal-1"
+                ],
+                "claimIds": [],
+                "status": "VALID",
+                "reason": "The step proposes reviewing the general savings goal details (goal-1), which is consistent with the supplied PI fact detailing a general savings goal with a target of 6000 EUR and a deadline of 2027-06-30.",
+                "evidence": []
+              },
+              {
+                "id": "primary-3",
+                "title": "Clarify intended contribution to goal-1",
+                "description": "Provide the intended contribution amount and timeline for the general savings goal.",
+                "rationale": "Knowing the specific intended contribution helps tailor planning precisely to personal financial targets.",
+                "actionId": null,
+                "intent": "CLARIFY",
+                "origin": "MODEL",
+                "targetFactId": "goal-1",
+                "prerequisites": [],
+                "missingInfo": [
+                  "Intended contribution to goal-1"
+                ],
+                "factIds": [
+                  "goal-1"
+                ],
+                "claimIds": [],
+                "status": "NEEDS_DATA",
+                "reason": "Missing: Intended contribution to goal-1",
+                "evidence": []
+              }
+            ],
+            "shortfallReason": "No further executable financial transfers or external data sources are needed for these foundational review and clarification steps.",
+            "fallbackReason": null,
+            "criticalCoverageAddedIds": []
+          },
+          "selectedActionType": null,
+          "decisionStatus": "RECOMMENDATION_READY",
+          "decisionReason": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+          "supportingSourceIds": [],
+          "supportingRuleIds": [],
+          "supportingClaimIds": [],
+          "missingDataFields": [],
+          "clarificationQuestion": null
+        }
+      }
+    },
+    "primaryProposals": [
+      {
+        "id": "primary-1",
+        "title": "Review recurring energy obligations",
+        "description": "Review the upcoming monthly energy obligation and ensure funds are ready for the November due date.",
+        "rationale": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+        "actionId": null,
+        "intent": "REVIEW",
+        "origin": "MODEL",
+        "targetFactId": "obligation-2",
+        "prerequisites": [],
+        "missingInfo": [],
+        "factIds": [
+          "obligation-2"
+        ],
+        "claimIds": [],
+        "status": "VALID",
+        "reason": "The step proposes reviewing the upcoming monthly energy obligation (obligation-2) due on 2026-11-15, which is consistent with the supplied PI fact showing an unpaid energy obligation of 150 EUR due on that date.",
+        "evidence": [],
+        "score": null,
+        "selected": true
+      },
+      {
+        "id": "primary-2",
+        "title": "Review general savings goal details",
+        "description": "Review the current target amount and timeline set for the general savings goal.",
+        "rationale": "Evaluating existing savings targets helps align daily financial activities with long-term personal objectives.",
+        "actionId": null,
+        "intent": "REVIEW",
+        "origin": "MODEL",
+        "targetFactId": "goal-1",
+        "prerequisites": [],
+        "missingInfo": [],
+        "factIds": [
+          "goal-1"
+        ],
+        "claimIds": [],
+        "status": "VALID",
+        "reason": "The step proposes reviewing the general savings goal details (goal-1), which is consistent with the supplied PI fact detailing a general savings goal with a target of 6000 EUR and a deadline of 2027-06-30.",
+        "evidence": [],
+        "score": null,
+        "selected": false
+      },
+      {
+        "id": "primary-3",
+        "title": "Clarify intended contribution to goal-1",
+        "description": "Provide the intended contribution amount and timeline for the general savings goal.",
+        "rationale": "Knowing the specific intended contribution helps tailor planning precisely to personal financial targets.",
+        "actionId": null,
+        "intent": "CLARIFY",
+        "origin": "MODEL",
+        "targetFactId": "goal-1",
+        "prerequisites": [],
+        "missingInfo": [
+          "Intended contribution to goal-1"
+        ],
+        "factIds": [
+          "goal-1"
+        ],
+        "claimIds": [],
+        "status": "NEEDS_DATA",
+        "reason": "Missing: Intended contribution to goal-1",
+        "evidence": [],
+        "score": null,
+        "selected": false
+      }
+    ],
+    "storageRows": [
+      {
+        "doc_key": "analysis",
+        "stored_bytes": 349224
+      },
+      {
+        "doc_key": "chat",
+        "stored_bytes": 1248
+      },
+      {
+        "doc_key": "chat-memory",
+        "stored_bytes": 876
+      },
+      {
+        "doc_key": "chat-request:strong-context",
+        "stored_bytes": 2580
+      },
+      {
+        "doc_key": "engine",
+        "stored_bytes": 1455500
+      },
+      {
+        "doc_key": "import:04261330-1b88-43f2-97f8-220529471440",
+        "stored_bytes": 197072
+      },
+      {
+        "doc_key": "import:41c20e6f-db3f-4002-a100-0bc26bb8db9a",
+        "stored_bytes": 88516
+      },
+      {
+        "doc_key": "job-request:a961bd8686ae9c5348226c1a931f258c1f5c9a61824bc612d949cd565567fca1",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job-request:b5b273548f09b3dda6ca81dd50efa71c1bbf747fd822dd82f554f95363edc1de",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job-request:b8c0e78c5dab8ad11d95dfb7dffe01e74c2ca9e02b377b5e0ca664e226c7844b",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job:ac12c194-1e5d-4ed6-98af-98d03c60bac9",
+        "stored_bytes": 104624
+      },
+      {
+        "doc_key": "job:ca3c51bb-c475-4f50-8bfb-b2ebd5ee8a48",
+        "stored_bytes": 233820
+      },
+      {
+        "doc_key": "job:ec1a4b90-7fc5-40a6-8842-dc1bb5dc78ac",
+        "stored_bytes": 349672
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:ai-evaluation",
+        "stored_bytes": 1596
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:behavior-agent",
+        "stored_bytes": 4676
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:catalog-selector",
+        "stored_bytes": 1656
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:checker",
+        "stored_bytes": 4884
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:classification",
+        "stored_bytes": 108680
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:critical-coverage",
+        "stored_bytes": 1404
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-agent",
+        "stored_bytes": 1636
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:debt-calculator",
+        "stored_bytes": 1336
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:decision-engine",
+        "stored_bytes": 5068
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:explanation",
+        "stored_bytes": 2100
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:financial-calculator",
+        "stored_bytes": 15976
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:fx",
+        "stored_bytes": 1540
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pattern-recognition",
+        "stored_bytes": 70584
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:pi",
+        "stored_bytes": 1624
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:suggestion-generator",
+        "stored_bytes": 4296
+      },
+      {
+        "doc_key": "stage:eval_3435dce0-4a4f-4e62-9e9b-e36153f62b3e:weights",
+        "stored_bytes": 1776
+      },
+      {
+        "doc_key": "state",
+        "stored_bytes": 320544
+      }
+    ]
+  },
+  "summary": "Checking upcoming obligations prevents missed payments and maintains clear visibility of immediate financial commitments.",
+  "calls": []
+}

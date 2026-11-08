@@ -1,0 +1,1387 @@
+# 02 Strong · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **Contribute EUR 4550 toward "Education"**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 3
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "059dbbfd-d9e3-4d6d-8a27-2b97dcced5ea",
+  "decision": {
+    "evaluationId": "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+    "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+    "snapshotVersion": "3.0",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "priorityClass": "NORMAL",
+    "selectedActionId": "A012",
+    "selectedActionType": "FINANCIAL_ACTION",
+    "candidate": {
+      "candidateId": "cand_A012_education",
+      "actionId": "A012",
+      "actionType": "FINANCIAL_ACTION",
+      "title": "Contribute EUR 4550 toward \"Education\"",
+      "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+      "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+      "targetId": "education",
+      "sourceAccountId": "main",
+      "destinationAccountId": null,
+      "amount": 4550,
+      "currency": "EUR",
+      "proposedTiming": "2026-11-05",
+      "supportingRuleIds": [
+        "R002",
+        "R012"
+      ],
+      "supportingClaimIds": [
+        "C006"
+      ],
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "requiredPiInputs": [
+        "goal_target",
+        "goal_balance",
+        "available_cash"
+      ],
+      "origin": "AI_SUGGESTION"
+    },
+    "title": "Contribute EUR 4550 toward \"Education\"",
+    "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+    "reasoning": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile \"goal_advancement\", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]",
+    "expectedEffectSummary": "Goal progress (90d F015): +75.8 percentage points",
+    "weightProfileId": "goal_advancement",
+    "weights": {
+      "resilience": 0.2,
+      "financial_benefit": 0.2,
+      "goal_progress": 0.6
+    },
+    "values": {
+      "resilience": 0,
+      "financial_benefit": 0,
+      "goal_progress": 1
+    },
+    "rawImpacts": {
+      "resilienceMonths": 0,
+      "financialBenefitCurrency": 0,
+      "goalProgressPctPoints": 75.83,
+      "annualizedSaving12m": null,
+      "debt12mInterestAvoided": null
+    },
+    "complexity": 0.1125,
+    "score": 0.58875,
+    "stability": 1,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [
+      "S001"
+    ],
+    "ruleIds": [
+      "R002",
+      "R012"
+    ],
+    "claimIds": [
+      "C006"
+    ],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": null,
+    "missingFields": [],
+    "trace": {
+      "evaluationId": "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+      "userId": "8cf630ac-8906-4043-8a9a-3ffc6512e0ea",
+      "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-08T15:42:54.753Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NORMAL",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 4550 toward \"Education\"",
+            "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+            "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "education",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 4550,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "goal_target",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "goal_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "available_cash",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 4559.39,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 4550 toward \"Education\"",
+            "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+            "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "education",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 4550,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "impact": {
+            "scenarioMetadata": {
+              "referenceDate": "2026-11-05",
+              "actionDate": "2026-11-05",
+              "currency": "EUR",
+              "policyVersion": "prototype_policy_bundle_v1.4",
+              "inputSnapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+              "terminalDate": "2027-02-03",
+              "cashUnit": "currency",
+              "resilienceUnit": "months",
+              "goalUnit": "fraction",
+              "assumptions": [
+                "Same dated confirmed income and mandatory obligations in both scenarios.",
+                "Debt uses simple daily interest on outstanding principal and verified dated minimum payments; no future borrowing.",
+                "Internal allocations change earmarks, not total liquid wealth."
+              ]
+            },
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "horizonDays": 90,
+            "status": "COMPUTED",
+            "missingInputs": [],
+            "rawImpacts": {
+              "beforeTerminalLiquidCash": 17609.39,
+              "afterTerminalLiquidCash": 17609.39,
+              "beforeTerminalDate": "2027-02-03",
+              "afterTerminalDate": "2027-02-03",
+              "deltaResilienceMonths": 0,
+              "deltaFinancialBenefitCurrency": 0,
+              "deltaGoalProgressFraction": 0.7583,
+              "beforeResilienceMonths": 0,
+              "afterResilienceMonths": 0,
+              "beforeCost90d": 0,
+              "afterCost90d": 0,
+              "beforeGoalProgress": 0,
+              "afterGoalProgress": 0.7583,
+              "annualizedRecurringSaving12m": null,
+              "debt12mCounterfactualInterestAvoided": null
+            },
+            "referenceScales": {
+              "K_R": 0.25,
+              "K_F": 75,
+              "K_G": 0.2
+            },
+            "normalizedValues": {
+              "v_R": 0,
+              "v_F": 0,
+              "v_G": 1
+            },
+            "saturationFlags": {
+              "R_clipped": false,
+              "F_clipped": false,
+              "G_clipped": true
+            },
+            "doubleCountingCheckPassed": true,
+            "normalizationPolicyVersion": "normalization_policy_v1_prototype"
+          },
+          "complexity": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "T": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_T=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "S": {
+              "score": 0.15,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_S=0.15"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "D": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_D=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "O": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_O=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "computedComplexity": 0.1125,
+            "usedCatalogFallback": true,
+            "hasUnknownComponents": true,
+            "uncertaintyScore": 1,
+            "policyVersion": "effort_rubric_v1_prototype",
+            "formulaRef": "F016"
+          },
+          "weightedBenefit": 0.6,
+          "complexityPenalty": 0.01125,
+          "finalScore": 0.58875,
+          "scoreBreakdown": {
+            "wR_vR": 0,
+            "wF_vF": 0,
+            "wG_vG": 0.6,
+            "lambdaC_cC": 0.01125
+          },
+          "rank": 1
+        }
+      ],
+      "robustness": {
+        "topCandidateId": "cand_A012_education",
+        "runnerUpCandidateId": null,
+        "baseScore": 0.58875,
+        "runnerUpScore": null,
+        "scoreMargin": 0.58875,
+        "isCloseDecision": false,
+        "stability": 1,
+        "winningScenarios": 200,
+        "simulationCount": 200,
+        "simulationSeed": 20261103,
+        "perturbationFraction": 0.1,
+        "meetsStabilityThreshold": true,
+        "lambdaSensitivity": [
+          {
+            "lambda_C": 0,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.6
+          },
+          {
+            "lambda_C": 0.05,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.594375
+          },
+          {
+            "lambda_C": 0.1,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.58875
+          },
+          {
+            "lambda_C": 0.15,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.583125
+          }
+        ],
+        "tieBreakerApplied": false,
+        "tieBreakerReason": null,
+        "instabilityReason": "NONE",
+        "policyVersion": "robustness_policy_v1_prototype",
+        "formulaRef": "F018"
+      },
+      "selectedCandidate": {
+        "candidateId": "cand_A012_education",
+        "actionId": "A012",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contribute EUR 4550 toward \"Education\"",
+        "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+        "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+        "targetId": "education",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 4550,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R002",
+          "R012"
+        ],
+        "supportingClaimIds": [
+          "C006"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "goal_target",
+          "goal_balance",
+          "available_cash"
+        ],
+        "origin": "AI_SUGGESTION"
+      },
+      "stageArtifactIds": [
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pi",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:fx",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:classification",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pattern-recognition",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:behavior-agent",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:financial-calculator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-calculator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-agent",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:suggestion-generator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:catalog-selector",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:checker",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:critical-coverage",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:ai-evaluation",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:weights",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:impact-cand_A012_education",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:scoring",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:robustness",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:decision-engine",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [],
+        "shortfallReason": "No applicable verified claim supports a specific action.",
+        "fallbackReason": "NO_PROPOSALS",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": "FINANCIAL_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). (Selected under goal_advancement profile with F017 score 0.5887 and F018 stability 100.0%).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R002",
+        "R012"
+      ],
+      "supportingClaimIds": [
+        "C006"
+      ],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    }
+  },
+  "todayCard": {
+    "id": "rec_A012_eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+    "userId": "8cf630ac-8906-4043-8a9a-3ffc6512e0ea",
+    "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+    "actionType": "allocate_safety_cushion",
+    "title": "Contribute EUR 4550 toward \"Education\"",
+    "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+    "reasoning": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile \"goal_advancement\", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]",
+    "suggestedAmount": 4550,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "education",
+    "sourceAccountId": "main",
+    "priority": "suggested",
+    "status": "proposed",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-08T15:42:54.873Z",
+    "updatedAt": "2026-11-08T15:42:54.873Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pi",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:fx",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:classification",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pattern-recognition",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:behavior-agent",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:financial-calculator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-calculator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-agent",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:suggestion-generator",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:catalog-selector",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:checker",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:critical-coverage",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:ai-evaluation",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:weights",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:impact-cand_A012_education",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:scoring",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:robustness",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:decision-engine",
+        "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:explanation"
+      ],
+      "evaluationId": "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+      "userId": "8cf630ac-8906-4043-8a9a-3ffc6512e0ea",
+      "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-08T15:42:54.753Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NORMAL",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 4550 toward \"Education\"",
+            "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+            "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "education",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 4550,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "goal_target",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "goal_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "available_cash",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 4559.39,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 4550 toward \"Education\"",
+            "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+            "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "education",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 4550,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "impact": {
+            "scenarioMetadata": {
+              "referenceDate": "2026-11-05",
+              "actionDate": "2026-11-05",
+              "currency": "EUR",
+              "policyVersion": "prototype_policy_bundle_v1.4",
+              "inputSnapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+              "terminalDate": "2027-02-03",
+              "cashUnit": "currency",
+              "resilienceUnit": "months",
+              "goalUnit": "fraction",
+              "assumptions": [
+                "Same dated confirmed income and mandatory obligations in both scenarios.",
+                "Debt uses simple daily interest on outstanding principal and verified dated minimum payments; no future borrowing.",
+                "Internal allocations change earmarks, not total liquid wealth."
+              ]
+            },
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "horizonDays": 90,
+            "status": "COMPUTED",
+            "missingInputs": [],
+            "rawImpacts": {
+              "beforeTerminalLiquidCash": 17609.39,
+              "afterTerminalLiquidCash": 17609.39,
+              "beforeTerminalDate": "2027-02-03",
+              "afterTerminalDate": "2027-02-03",
+              "deltaResilienceMonths": 0,
+              "deltaFinancialBenefitCurrency": 0,
+              "deltaGoalProgressFraction": 0.7583,
+              "beforeResilienceMonths": 0,
+              "afterResilienceMonths": 0,
+              "beforeCost90d": 0,
+              "afterCost90d": 0,
+              "beforeGoalProgress": 0,
+              "afterGoalProgress": 0.7583,
+              "annualizedRecurringSaving12m": null,
+              "debt12mCounterfactualInterestAvoided": null
+            },
+            "referenceScales": {
+              "K_R": 0.25,
+              "K_F": 75,
+              "K_G": 0.2
+            },
+            "normalizedValues": {
+              "v_R": 0,
+              "v_F": 0,
+              "v_G": 1
+            },
+            "saturationFlags": {
+              "R_clipped": false,
+              "F_clipped": false,
+              "G_clipped": true
+            },
+            "doubleCountingCheckPassed": true,
+            "normalizationPolicyVersion": "normalization_policy_v1_prototype"
+          },
+          "complexity": {
+            "candidateId": "cand_A012_education",
+            "actionId": "A012",
+            "T": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_T=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "S": {
+              "score": 0.15,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_S=0.15"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "D": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_D=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "O": {
+              "score": 0.1,
+              "status": "UNKNOWN",
+              "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+              "supportingFacts": [
+                "catalog_baseline_A012_O=0.1"
+              ],
+              "missingInfo": [
+                "valid_contextual_complexity_evaluation"
+              ]
+            },
+            "computedComplexity": 0.1125,
+            "usedCatalogFallback": true,
+            "hasUnknownComponents": true,
+            "uncertaintyScore": 1,
+            "policyVersion": "effort_rubric_v1_prototype",
+            "formulaRef": "F016"
+          },
+          "weightedBenefit": 0.6,
+          "complexityPenalty": 0.01125,
+          "finalScore": 0.58875,
+          "scoreBreakdown": {
+            "wR_vR": 0,
+            "wF_vF": 0,
+            "wG_vG": 0.6,
+            "lambdaC_cC": 0.01125
+          },
+          "rank": 1
+        }
+      ],
+      "robustness": {
+        "topCandidateId": "cand_A012_education",
+        "runnerUpCandidateId": null,
+        "baseScore": 0.58875,
+        "runnerUpScore": null,
+        "scoreMargin": 0.58875,
+        "isCloseDecision": false,
+        "stability": 1,
+        "winningScenarios": 200,
+        "simulationCount": 200,
+        "simulationSeed": 20261103,
+        "perturbationFraction": 0.1,
+        "meetsStabilityThreshold": true,
+        "lambdaSensitivity": [
+          {
+            "lambda_C": 0,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.6
+          },
+          {
+            "lambda_C": 0.05,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.594375
+          },
+          {
+            "lambda_C": 0.1,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.58875
+          },
+          {
+            "lambda_C": 0.15,
+            "winnerCandidateId": "cand_A012_education",
+            "winnerScore": 0.583125
+          }
+        ],
+        "tieBreakerApplied": false,
+        "tieBreakerReason": null,
+        "instabilityReason": "NONE",
+        "policyVersion": "robustness_policy_v1_prototype",
+        "formulaRef": "F018"
+      },
+      "selectedCandidate": {
+        "candidateId": "cand_A012_education",
+        "actionId": "A012",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contribute EUR 4550 toward \"Education\"",
+        "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+        "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+        "targetId": "education",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 4550,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R002",
+          "R012"
+        ],
+        "supportingClaimIds": [
+          "C006"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "goal_target",
+          "goal_balance",
+          "available_cash"
+        ],
+        "origin": "AI_SUGGESTION"
+      },
+      "primarySuggestions": {
+        "proposals": [],
+        "shortfallReason": "No applicable verified claim supports a specific action.",
+        "fallbackReason": "NO_PROPOSALS",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": "FINANCIAL_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). (Selected under goal_advancement profile with F017 score 0.5887 and F018 stability 100.0%).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R002",
+        "R012"
+      ],
+      "supportingClaimIds": [
+        "C006"
+      ],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    },
+    "decision": {
+      "evaluationId": "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+      "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+      "snapshotVersion": "3.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "NORMAL",
+      "selectedActionId": "A012",
+      "selectedActionType": "FINANCIAL_ACTION",
+      "candidate": {
+        "candidateId": "cand_A012_education",
+        "actionId": "A012",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contribute EUR 4550 toward \"Education\"",
+        "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+        "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+        "targetId": "education",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 4550,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R002",
+          "R012"
+        ],
+        "supportingClaimIds": [
+          "C006"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "goal_target",
+          "goal_balance",
+          "available_cash"
+        ],
+        "origin": "AI_SUGGESTION"
+      },
+      "title": "Contribute EUR 4550 toward \"Education\"",
+      "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+      "reasoning": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile \"goal_advancement\", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]",
+      "expectedEffectSummary": "Goal progress (90d F015): +75.8 percentage points",
+      "weightProfileId": "goal_advancement",
+      "weights": {
+        "resilience": 0.2,
+        "financial_benefit": 0.2,
+        "goal_progress": 0.6
+      },
+      "values": {
+        "resilience": 0,
+        "financial_benefit": 0,
+        "goal_progress": 1
+      },
+      "rawImpacts": {
+        "resilienceMonths": 0,
+        "financialBenefitCurrency": 0,
+        "goalProgressPctPoints": 75.83,
+        "annualizedSaving12m": null,
+        "debt12mInterestAvoided": null
+      },
+      "complexity": 0.1125,
+      "score": 0.58875,
+      "stability": 1,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [
+        "S001"
+      ],
+      "ruleIds": [
+        "R002",
+        "R012"
+      ],
+      "claimIds": [
+        "C006"
+      ],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4",
+        "userId": "8cf630ac-8906-4043-8a9a-3ffc6512e0ea",
+        "snapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-08T15:42:54.753Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NORMAL",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "cand_A012_education",
+              "actionId": "A012",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Contribute EUR 4550 toward \"Education\"",
+              "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+              "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+              "targetId": "education",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 4550,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R012"
+              ],
+              "supportingClaimIds": [
+                "C006"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "goal_target",
+                "goal_balance",
+                "available_cash"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "VALID",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "goal_target",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "goal_balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "available_cash",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 4559.39,
+            "unlocksActionIds": []
+          }
+        ],
+        "scoredCandidates": [
+          {
+            "candidate": {
+              "candidateId": "cand_A012_education",
+              "actionId": "A012",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Contribute EUR 4550 toward \"Education\"",
+              "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+              "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+              "targetId": "education",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 4550,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R012"
+              ],
+              "supportingClaimIds": [
+                "C006"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "goal_target",
+                "goal_balance",
+                "available_cash"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "impact": {
+              "scenarioMetadata": {
+                "referenceDate": "2026-11-05",
+                "actionDate": "2026-11-05",
+                "currency": "EUR",
+                "policyVersion": "prototype_policy_bundle_v1.4",
+                "inputSnapshotId": "snap_beta_8cf630ac-8906-4043-8a9a-3ffc6512e0ea_v3_b08c0ba2e6d0d3be",
+                "terminalDate": "2027-02-03",
+                "cashUnit": "currency",
+                "resilienceUnit": "months",
+                "goalUnit": "fraction",
+                "assumptions": [
+                  "Same dated confirmed income and mandatory obligations in both scenarios.",
+                  "Debt uses simple daily interest on outstanding principal and verified dated minimum payments; no future borrowing.",
+                  "Internal allocations change earmarks, not total liquid wealth."
+                ]
+              },
+              "candidateId": "cand_A012_education",
+              "actionId": "A012",
+              "horizonDays": 90,
+              "status": "COMPUTED",
+              "missingInputs": [],
+              "rawImpacts": {
+                "beforeTerminalLiquidCash": 17609.39,
+                "afterTerminalLiquidCash": 17609.39,
+                "beforeTerminalDate": "2027-02-03",
+                "afterTerminalDate": "2027-02-03",
+                "deltaResilienceMonths": 0,
+                "deltaFinancialBenefitCurrency": 0,
+                "deltaGoalProgressFraction": 0.7583,
+                "beforeResilienceMonths": 0,
+                "afterResilienceMonths": 0,
+                "beforeCost90d": 0,
+                "afterCost90d": 0,
+                "beforeGoalProgress": 0,
+                "afterGoalProgress": 0.7583,
+                "annualizedRecurringSaving12m": null,
+                "debt12mCounterfactualInterestAvoided": null
+              },
+              "referenceScales": {
+                "K_R": 0.25,
+                "K_F": 75,
+                "K_G": 0.2
+              },
+              "normalizedValues": {
+                "v_R": 0,
+                "v_F": 0,
+                "v_G": 1
+              },
+              "saturationFlags": {
+                "R_clipped": false,
+                "F_clipped": false,
+                "G_clipped": true
+              },
+              "doubleCountingCheckPassed": true,
+              "normalizationPolicyVersion": "normalization_policy_v1_prototype"
+            },
+            "complexity": {
+              "candidateId": "cand_A012_education",
+              "actionId": "A012",
+              "T": {
+                "score": 0.1,
+                "status": "UNKNOWN",
+                "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+                "supportingFacts": [
+                  "catalog_baseline_A012_T=0.1"
+                ],
+                "missingInfo": [
+                  "valid_contextual_complexity_evaluation"
+                ]
+              },
+              "S": {
+                "score": 0.15,
+                "status": "UNKNOWN",
+                "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+                "supportingFacts": [
+                  "catalog_baseline_A012_S=0.15"
+                ],
+                "missingInfo": [
+                  "valid_contextual_complexity_evaluation"
+                ]
+              },
+              "D": {
+                "score": 0.1,
+                "status": "UNKNOWN",
+                "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+                "supportingFacts": [
+                  "catalog_baseline_A012_D=0.1"
+                ],
+                "missingInfo": [
+                  "valid_contextual_complexity_evaluation"
+                ]
+              },
+              "O": {
+                "score": 0.1,
+                "status": "UNKNOWN",
+                "rationale": "AI factor unavailable: missing or invalid structured factor. Deterministic code must use the catalog baseline with uncertainty.",
+                "supportingFacts": [
+                  "catalog_baseline_A012_O=0.1"
+                ],
+                "missingInfo": [
+                  "valid_contextual_complexity_evaluation"
+                ]
+              },
+              "computedComplexity": 0.1125,
+              "usedCatalogFallback": true,
+              "hasUnknownComponents": true,
+              "uncertaintyScore": 1,
+              "policyVersion": "effort_rubric_v1_prototype",
+              "formulaRef": "F016"
+            },
+            "weightedBenefit": 0.6,
+            "complexityPenalty": 0.01125,
+            "finalScore": 0.58875,
+            "scoreBreakdown": {
+              "wR_vR": 0,
+              "wF_vF": 0,
+              "wG_vG": 0.6,
+              "lambdaC_cC": 0.01125
+            },
+            "rank": 1
+          }
+        ],
+        "robustness": {
+          "topCandidateId": "cand_A012_education",
+          "runnerUpCandidateId": null,
+          "baseScore": 0.58875,
+          "runnerUpScore": null,
+          "scoreMargin": 0.58875,
+          "isCloseDecision": false,
+          "stability": 1,
+          "winningScenarios": 200,
+          "simulationCount": 200,
+          "simulationSeed": 20261103,
+          "perturbationFraction": 0.1,
+          "meetsStabilityThreshold": true,
+          "lambdaSensitivity": [
+            {
+              "lambda_C": 0,
+              "winnerCandidateId": "cand_A012_education",
+              "winnerScore": 0.6
+            },
+            {
+              "lambda_C": 0.05,
+              "winnerCandidateId": "cand_A012_education",
+              "winnerScore": 0.594375
+            },
+            {
+              "lambda_C": 0.1,
+              "winnerCandidateId": "cand_A012_education",
+              "winnerScore": 0.58875
+            },
+            {
+              "lambda_C": 0.15,
+              "winnerCandidateId": "cand_A012_education",
+              "winnerScore": 0.583125
+            }
+          ],
+          "tieBreakerApplied": false,
+          "tieBreakerReason": null,
+          "instabilityReason": "NONE",
+          "policyVersion": "robustness_policy_v1_prototype",
+          "formulaRef": "F018"
+        },
+        "selectedCandidate": {
+          "candidateId": "cand_A012_education",
+          "actionId": "A012",
+          "actionType": "FINANCIAL_ACTION",
+          "title": "Contribute EUR 4550 toward \"Education\"",
+          "description": "Allocate EUR 4550 from available cash toward your \"Education\" goal (advancing progress from 0% to 76%).",
+          "rationale": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+          "targetId": "education",
+          "sourceAccountId": "main",
+          "destinationAccountId": null,
+          "amount": 4550,
+          "currency": "EUR",
+          "proposedTiming": "2026-11-05",
+          "supportingRuleIds": [
+            "R002",
+            "R012"
+          ],
+          "supportingClaimIds": [
+            "C006"
+          ],
+          "supportingSourceIds": [
+            "S001"
+          ],
+          "requiredPiInputs": [
+            "goal_target",
+            "goal_balance",
+            "available_cash"
+          ],
+          "origin": "AI_SUGGESTION"
+        },
+        "stageArtifactIds": [
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pi",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:fx",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:classification",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pattern-recognition",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:behavior-agent",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:financial-calculator",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-calculator",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-agent",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:suggestion-generator",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:catalog-selector",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:checker",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:critical-coverage",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:ai-evaluation",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:weights",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:impact-cand_A012_education",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:scoring",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:robustness",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:decision-engine",
+          "eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [],
+          "shortfallReason": "No applicable verified claim supports a specific action.",
+          "fallbackReason": "NO_PROPOSALS",
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": "FINANCIAL_ACTION",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). (Selected under goal_advancement profile with F017 score 0.5887 and F018 stability 100.0%).",
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "supportingRuleIds": [
+          "R002",
+          "R012"
+        ],
+        "supportingClaimIds": [
+          "C006"
+        ],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    }
+  },
+  "primaryProposals": [],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 360604
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 844
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 900
+    },
+    {
+      "doc_key": "chat-request:strong-context",
+      "stored_bytes": 1772
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 1481540
+    },
+    {
+      "doc_key": "import:7eb6fa8b-2f78-4751-8dde-52f95d01ca08",
+      "stored_bytes": 197072
+    },
+    {
+      "doc_key": "import:b40545f4-1724-43e4-bcf2-0d79b08ecefa",
+      "stored_bytes": 88516
+    },
+    {
+      "doc_key": "job-request:19cec8f2d457cdffc74a8fc25186cccdc426af2e0b8157ffd3fe551cf5cbbd01",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:b02536b2d117136e48f84cf1f9d6aae76c6e95d18a853b145ca80a96e2824f4e",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:f4ac3eca6619469a4343ce006e3f6080a11a4f6f07636dd296ce62cd84f3a0f9",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:059dbbfd-d9e3-4d6d-8a27-2b97dcced5ea",
+      "stored_bytes": 361052
+    },
+    {
+      "doc_key": "job:1305e400-736c-4193-aaac-0c7c6e068427",
+      "stored_bytes": 233820
+    },
+    {
+      "doc_key": "job:3db85fdc-3489-48be-9da8-d7476630614b",
+      "stored_bytes": 104624
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:ai-evaluation",
+      "stored_bytes": 4496
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:behavior-agent",
+      "stored_bytes": 5504
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:catalog-selector",
+      "stored_bytes": 2732
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:checker",
+      "stored_bytes": 5092
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:classification",
+      "stored_bytes": 108116
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:critical-coverage",
+      "stored_bytes": 1404
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-agent",
+      "stored_bytes": 1636
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:debt-calculator",
+      "stored_bytes": 1336
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:decision-engine",
+      "stored_bytes": 14964
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:explanation",
+      "stored_bytes": 2616
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:financial-calculator",
+      "stored_bytes": 15976
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:fx",
+      "stored_bytes": 1540
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:impact-cand_A012_education",
+      "stored_bytes": 3520
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pattern-recognition",
+      "stored_bytes": 72648
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:pi",
+      "stored_bytes": 1624
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:robustness",
+      "stored_bytes": 2396
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:scoring",
+      "stored_bytes": 6728
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:suggestion-generator",
+      "stored_bytes": 2460
+    },
+    {
+      "doc_key": "stage:eval_6452e795-07b6-4792-bfb6-1728b9e7c9f4:weights",
+      "stored_bytes": 1776
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 319472
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+Advances verified savings goal "Education" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile "goal_advancement", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]
+~~~~

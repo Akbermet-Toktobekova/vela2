@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela1/server
+
+(node:20360) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/source-advice.test.ts (23 tests) 2411ms
+
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  21:51:59
+   Duration  4.77s (transform 805ms, setup 0ms, collect 1.50s, tests 2.41s, environment 0ms, prepare 257ms)
+

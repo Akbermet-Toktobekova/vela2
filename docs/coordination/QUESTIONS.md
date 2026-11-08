@@ -1,14 +1,16 @@
-# Очередь вопросов к пользователю (`QUESTIONS.md`)
+# Questions for the user
 
-> Все вопросы из фазы планирования закрыты и перенесены в `docs/coordination/DECISIONS.md` (`D-001`…`D-010`). Новые вопросы, если возникнет реальное противоречие в формулах или правилах базы, фиксируются здесь.
+> Initial planning questions were resolved in DECISIONS.md (D-001–D-010). Record new questions here when a formula or canonical rule requires a product decision.
 
 ## Q-011 — Immediate access scope (resolved 2026-11-04)
 
 Context: HTTP access/security for steps1–7, D-010; authentication is currently a client-asserted user ID.
 Why: no approved identity provider/session model exists, so selecting one would invent product architecture.
-Question: «Какой вход нужен в ближайшем MVP? Сейчас пользователь может подменить свой ID.»
+Question: What access model should the immediate MVP use, given that a client can currently assert another user ID?
 Options: local computer-only prototype with external access blocked now and real authentication later; or real user accounts with an explicitly chosen authentication provider.
 User answer verbatim: «Локальный прототип на моём компьютере — закрыть внешний доступ сейчас, полноценный вход позже».
+English translation of the answer: “Keep the prototype local to my computer for now. Block external access now and add full sign-in later.”
+
 Recorded as D-011. Real multi-user authentication is deferred, not claimed fixed by network restriction.
 
 ## Q-012 — Locale for ambiguous statement amounts (no guess; review required)
@@ -22,8 +24,10 @@ Current safe behavior: retain a row warning/needs_review and withhold ambiguous 
 
 Context: D-010, sensitive persisted PI/traces/feedback/chat; remove the shared built-in prototype key without losing existing data.
 Options: automatic Windows per-user protection (migration requires the protected key), or explicit environment key with user-managed backup.
-Question: «Как хранить ключ шифрования локальной базы вместо общего встроенного ключа? Это влияет на перенос и восстановление данных.»
+Question: How should the local database encryption key be stored? This determines database migration and recovery behavior.
 User answer verbatim: «Автоматически защищать ключ средствами Windows для моей учётной записи; при переносе базы потребуется перенос ключа».
+English translation of the answer: “Protect the key automatically for my Windows account. Moving the database requires moving the key.”
+
 Recorded as D-012. Existing records must migrate transactionally without deleting data; wrong/unavailable keys must fail closed.
 
 
@@ -31,3 +35,9 @@ Recorded as D-012. Existing records must migrate transactionally without deletin
 Context: Step5E, F018/D-009. No approved previous-recommendation retention/financial-risk equivalence policy exists.
 Question: If F018 reports UNSTABLE_ASSUMPTIONS, should a freshly revalidated previous action be retained, or should publication remain withheld?
 Options: retain only after explicit freshness/safety/equivalence criteria are approved; keep current conservative NO_RECOMMENDATION with clarification. Until a policy is approved, retention is PENDING_USER_DECISION and the implemented outcome is non-publishable. This does not block the restricted local MVP or request a new financial threshold.
+
+## Q-015 — Primary Checker and catalog fallback
+
+Context: Stages 4 and 5, D-015 and D-020. Whether a missing prerequisite triggers catalog selection affects which actions may be considered. Whether AS silence blocks a safe review affects which advisory suggestions may reach Today.
+
+Questions: Should the catalog run after three REJECTED drafts or whenever no draft is VALID? Should a safe, PI-grounded REVIEW with no contradiction and no direct AS support be NEEDS_DATA or VALID? The user's selections are recorded in D-021.

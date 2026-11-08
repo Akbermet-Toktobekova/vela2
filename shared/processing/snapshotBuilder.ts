@@ -204,88 +204,22 @@ export function buildFinancialSnapshot(
     }
   }
 
-  // 4. Observed Transactions Analytics (in baseCurrency or primary imported currency)
-  const observedInflowsByCurrency: Record<string, number> = {};
-  let observedSpendingTotal = 0;
-  let observedIncomeTotal = 0;
-  let observedSubscriptionsTotal = 0;
-  let observedInternalTransfersTotal = 0;
-  let observedDebtPaymentsTotal = 0;
-  let observedWorkMovementsTotal = 0;
-
-  const spendingByCategory: Record<SpendingCategory, number> = {
-    rent_housing: 0,
-    utilities_energy: 0,
-    internet_telecom: 0,
-    groceries_food: 0,
-    dining_coffee: 0,
-    transport: 0,
-    subscriptions: 0,
-    shopping: 0,
-    health: 0,
-    education: 0,
-    work_expense: 0,
-    income: 0,
-    transfer: 0,
-    other: 0,
-  };
-
-  for (const txn of state.transactions) {
-    const cls = classificationsMap[txn.id];
-    const econType = cls ? cls.economicType : txn.amount >= 0 ? 'income' : 'expense';
-    const cat = cls ? cls.category : txn.amount >= 0 ? 'income' : 'other';
-
-    if (econType === 'internal_transfer' || econType === 'savings_allocation') {
-      observedInternalTransfersTotal += Math.abs(txn.amount);
-      continue; // Never count internal transfers as income or spending!
-    }
-
-    if (econType === 'work_business_movement') {
-      observedWorkMovementsTotal += Math.abs(txn.amount);
-      continue; // Keep work disbursements separate from personal lifestyle spending
-    }
-
-    if (econType === 'debt_payment') {
-      observedDebtPaymentsTotal += Math.abs(txn.amount);
-      continue;
-    }
-
-    if (econType === 'income') {
-      observedInflowsByCurrency[txn.currency] =
-        (observedInflowsByCurrency[txn.currency] || 0) + Math.abs(txn.amount);
-      if (txn.currency === baseCurrency) {
-        observedIncomeTotal += Math.abs(txn.amount);
-      }
-    } else if (econType === 'refund') {
-      if (txn.currency === baseCurrency) {
-        observedSpendingTotal = Math.max(0, observedSpendingTotal - Math.abs(txn.amount));
-      }
-    } else if (econType === 'expense' || econType === 'interest_fee' || econType === 'cash_withdrawal') {
-      const absAmt = Math.abs(txn.amount);
-      if (txn.currency === baseCurrency) {
-        observedSpendingTotal += absAmt;
-        spendingByCategory[cat] = (spendingByCategory[cat] || 0) + absAmt;
-        if (cat === 'subscriptions') {
-          observedSubscriptionsTotal += absAmt;
-        }
-      }
-    }
-  }
+  const analytics = computeObservedAnalytics(state.transactions, classificationsMap, baseCurrency);
 
   // 5. Safety Cushion & Emergency Coverage
   const safetyCushionGoal =
-    state.goals.find((g) => g.goalType === 'emergency_cushion') || state.goals[0] || null;
+    state.goals.find((g) => g.goalType === 'emergency_cushion') || null;
 
   const safetyCushionAllocated = safetyCushionGoal
     ? state.goalAllocations
-        .filter((ga) => ga.goalId === safetyCushionGoal.id)
+        .filter((ga) => ga.goalId === safetyCushionGoal.id && ga.currency === baseCurrency)
         .reduce((sum, ga) => sum + ga.amount, 0)
     : 0;
 
   let emergencyCoverageMonths: number | null = null;
   let emergencyCoverageDays: number | null = null;
 
-  const essentialMonthly = state.expenseCommitment?.estimatedMonthlyAmount || null;
+  const essentialMonthly = state.expenseCommitment?.currency === baseCurrency ? state.expenseCommitment.estimatedMonthlyAmount : null;
   if (essentialMonthly !== null && essentialMonthly > 0) {
     emergencyCoverageMonths = Number((safetyCushionAllocated / essentialMonthly).toFixed(2));
     emergencyCoverageDays = Number(((safetyCushionAllocated / essentialMonthly) * 30).toFixed(1));
@@ -371,7 +305,6 @@ export function buildFinancialSnapshot(
     primaryCurrencySummary,
     incomeSources: state.incomes,
     declaredMonthlyIncomeByCurrency,
-    observedInflowsByCurrency,
     essentialCommitment: state.expenseCommitment,
     obligations: state.obligations,
     upcomingUnpaidObligations,
@@ -389,13 +322,6 @@ export function buildFinancialSnapshot(
     transferMatches: state.transferMatches,
     confirmations: state.confirmations,
     unresolvedConfirmations,
-    observedSpendingTotal,
-    observedIncomeTotal,
-    observedSubscriptionsTotal,
-    observedInternalTransfersTotal,
-    observedDebtPaymentsTotal,
-    observedWorkMovementsTotal,
-    spendingByCategory,
     dataQuality: {
       totalAccounts: state.accounts.length,
       accountsWithBalance,
@@ -408,8 +334,106 @@ export function buildFinancialSnapshot(
       coverageStatus,
       missingFields,
     },
+    ...analytics,
     readinessState,
     readinessReason,
   };
 }
 
+export function formatCurrency(
+  amount: number,
+  currency: string = 'EUR',
+  withDecimals: boolean = false
+): string {
+  const cur = (currency || 'EUR').toUpperCase();
+  const isZeroDecimal = cur === 'HUF' || cur === 'KGS' || cur === 'JPY';
+  const showDecimals = isZeroDecimal ? false : withDecimals || amount % 1 !== 0;
+
+  const formattedNumber = Math.abs(amount).toLocaleString('en-US', {
+    minimumFractionDigits: showDecimals ? 2 : 0,
+    maximumFractionDigits: showDecimals ? 2 : 0,
+  });
+
+  const sign = amount < 0 ? '-' : '';
+  if (cur === 'EUR') return `${sign}€${formattedNumber}`;
+  if (cur === 'USD') return `${sign}$${formattedNumber}`;
+  if (cur === 'GBP') return `${sign}£${formattedNumber}`;
+  return `${sign}${formattedNumber} ${cur}`;
+}
+
+
+export function computeObservedAnalytics(
+  transactions: FinancialSnapshot['transactions'],
+  classificationsMap: FinancialSnapshot['classifications'],
+  baseCurrency: string,
+) {
+  // 4. Observed Transactions Analytics (in baseCurrency or primary imported currency)
+  const observedInflowsByCurrency: Record<string, number> = {};
+  let observedSpendingTotal = 0;
+  let observedIncomeTotal = 0;
+  let observedSubscriptionsTotal = 0;
+  let observedInternalTransfersTotal = 0;
+  let observedDebtPaymentsTotal = 0;
+  let observedWorkMovementsTotal = 0;
+
+  const spendingByCategory: Record<SpendingCategory, number> = {
+    rent_housing: 0,
+    utilities_energy: 0,
+    internet_telecom: 0,
+    groceries_food: 0,
+    dining_coffee: 0,
+    transport: 0,
+    subscriptions: 0,
+    shopping: 0,
+    health: 0,
+    education: 0,
+    work_expense: 0,
+    income: 0,
+    transfer: 0,
+    other: 0,
+  };
+
+  for (const txn of transactions) {
+    const cls = classificationsMap[txn.id];
+    const econType = cls ? cls.economicType : txn.amount >= 0 ? 'income' : 'expense';
+    const cat = cls ? cls.category : txn.amount >= 0 ? 'income' : 'other';
+
+    if (econType === 'internal_transfer' || econType === 'savings_allocation') {
+      if (txn.currency === baseCurrency && txn.amount < 0) observedInternalTransfersTotal += Math.abs(txn.amount);
+      continue; // Never count internal transfers as income or spending!
+    }
+
+    if (econType === 'work_business_movement') {
+      if (txn.currency === baseCurrency) observedWorkMovementsTotal += Math.abs(txn.amount);
+      continue; // Keep work disbursements separate from personal lifestyle spending
+    }
+
+    if (econType === 'debt_payment') {
+      if (txn.currency === baseCurrency) observedDebtPaymentsTotal += Math.abs(txn.amount);
+      continue;
+    }
+
+    if (econType === 'income') {
+      observedInflowsByCurrency[txn.currency] =
+        (observedInflowsByCurrency[txn.currency] || 0) + Math.abs(txn.amount);
+      if (txn.currency === baseCurrency) {
+        observedIncomeTotal += Math.abs(txn.amount);
+      }
+    } else if (econType === 'refund') {
+      if (txn.currency === baseCurrency) {
+        observedSpendingTotal = Math.max(0, observedSpendingTotal - Math.abs(txn.amount));
+      }
+    } else if (econType === 'expense' || econType === 'interest_fee' || econType === 'cash_withdrawal') {
+      const absAmt = Math.abs(txn.amount);
+      if (txn.currency === baseCurrency) {
+        observedSpendingTotal += absAmt;
+        spendingByCategory[cat] = (spendingByCategory[cat] || 0) + absAmt;
+        if (cat === 'subscriptions') {
+          observedSubscriptionsTotal += absAmt;
+        }
+      }
+    }
+  }
+
+  return { observedInflowsByCurrency, observedSpendingTotal, observedIncomeTotal, observedSubscriptionsTotal, observedInternalTransfersTotal, observedDebtPaymentsTotal, observedWorkMovementsTotal, spendingByCategory };
+}

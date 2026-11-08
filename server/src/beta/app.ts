@@ -11,7 +11,7 @@ BetaRegistrationSchema,
 import { FindingResponseSchema } from "../../../shared/contracts/findings";
 import { LLMClient } from "../ai/llmClient";
 import { BetaActionHistory } from "./actionHistory";
-import { BetaAnalysis } from "./analysis";
+import { BetaAnalysis, type BetaAnalysisOptions } from "./analysis";
 import { BetaAuth } from "./auth";
 import { BetaError,BetaFinancial } from "./financial";
 import { BetaFindings,CategorySuggestionsSchema } from "./findings";
@@ -27,6 +27,7 @@ export function createBetaApp(
     resetBaseUrl?: string;
     llmClient?: LLMClient;
     autoReview?: boolean;
+    analysisOptions?: BetaAnalysisOptions;
   } = {},
 ) {
   const store =
@@ -46,7 +47,7 @@ export function createBetaApp(
     });
   const financial = new BetaFinancial(store);
   const jobs = new BetaJobs(store);
-  const analysis = new BetaAnalysis(store, financial, options.llmClient);
+  const analysis = new BetaAnalysis(store, financial, options.llmClient, options.analysisOptions);
   const imports = new BetaImports(store, financial);
   const findings = new BetaFindings(store, financial);
   const actionHistory = new BetaActionHistory(store, financial);
@@ -280,7 +281,7 @@ export function createBetaApp(
       (c) => c.subjectId !== q.params.id,
     );
     const result = { ...current, state, version: current.version + 1 };
-    store.put(q.user.id, "state", result);
+    financial.persist(q.user.id, result);
     store.remove(q.user.id, "analysis");
     jobs.cancelUser(q.user.id);
     schedule(q.user);
@@ -433,7 +434,8 @@ export function createBetaApp(
     const {requestId} = z.object({requestId: z.string().min(1).max(200)}).parse(q.body);
     const key = "clear-chat:" + requestId;
     if (!store.get(q.user.id, key)) {
-      store.put(q.user.id, "chat", []);
+      analysis.deleteChat(q.user);
+      schedule(q.user);
       store.put(q.user.id, "chat-generation", Number(store.get(q.user.id, "chat-generation") || 0) + 1);
       store.put(q.user.id, key, {completed: true});
     }
@@ -444,7 +446,9 @@ export function createBetaApp(
   );
   route("post", "/chat", async (q, r) => {
     const v = BetaChatSchema.parse(q.body);
-    r.json(await analysis.chat(q.user, v.message, v.requestId));
+    const result = await analysis.chat(q.user, v.message, v.requestId);
+    schedule(q.user);
+    r.json(result);
   });
   route("post", "/goals/:id/allocate", () => {
     throw new BetaError(

@@ -89,13 +89,16 @@ export class ImpactCalculator {
         const payment = candidate.actionId === 'A002' ? candidate.amount || 0 : 0;
         if (candidate.currency !== debt.currency) missing.add('action_debt_currency_match');
         const debtImpact = Calculator.computeDebtInterestAvoided({ debt, extraPaymentDay0: actionInHorizon ? payment : 0, horizonDays, referenceDateIso: reference, paymentDateIso: actionDate, interestAccruing: terms.interestAccruing });
-        raw.beforeCost90d = convert(debtImpact.baselineInterest, debt.currency);
-        raw.afterCost90d = convert(debtImpact.afterActionInterest, debt.currency);
+        for (const field of debtImpact.missingInputs) missing.add('debt_' + field);
+        if (debtImpact.baselineInterest !== null && debtImpact.afterActionInterest !== null) {
+          raw.beforeCost90d = convert(debtImpact.baselineInterest, debt.currency);
+          raw.afterCost90d = convert(debtImpact.afterActionInterest, debt.currency);
+        }
         const annualEnd = new Date(reference + 'T00:00:00Z');
         annualEnd.setUTCMonth(annualEnd.getUTCMonth() + policy.horizonAndFreshness.debtExplanationHorizonMonths);
         const annualDays = Math.round((annualEnd.getTime() - Date.parse(reference + 'T00:00:00Z')) / 86400000);
         const annual = Calculator.computeDebtInterestAvoided({ debt, extraPaymentDay0: payment, horizonDays: annualDays, referenceDateIso: reference, paymentDateIso: actionDate, interestAccruing: terms.interestAccruing });
-        raw.debt12mCounterfactualInterestAvoided = convert(annual.interestAvoidedF008, debt.currency);
+        raw.debt12mCounterfactualInterestAvoided = annual.interestAvoidedF008 === null ? null : convert(annual.interestAvoidedF008, debt.currency);
       }
     }
     if (candidate.actionId === 'A015' && candidate.targetId) {
@@ -109,6 +112,7 @@ export class ImpactCalculator {
       if (!dates) missing.add('verified_subscription_billing_dates');
       if (fee === undefined) missing.add('verified_subscription_exit_fee');
       if (replacement === undefined) missing.add('verified_subscription_replacement_cost');
+      if (replacement && (!obligation || obligation.recurrence !== 'monthly')) missing.add('verified_monthly_replacement_billing_alignment');
       if (target && dates && fee !== undefined && replacement !== undefined) {
         const applicable = dates.filter(date => date >= reference && date >= actionDate && date <= end.date);
         const scheduled = obligation ? Calculator.getScheduledOccurrenceDates(obligation.dueDate, obligation.recurrence, reference, horizonDays).filter(date => date >= actionDate) : applicable;

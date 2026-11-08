@@ -329,7 +329,6 @@ function PdfImportReview({
 
 export default function App() {
   const [base, setBase] = useState(process.env.EXPO_PUBLIC_API_URL || "");
-  const [baseDraft, setBaseDraft] = useState(base);
   const [token, setToken] = useState<string | null>(null);
   const activeSession = useRef<string | null>(null);
   const [user, setUser] = useState<BetaUser | null>(null);
@@ -352,7 +351,6 @@ export default function App() {
   const [resetToken, setResetToken] = useState("");
 
   const [documentsOpen, setDocumentsOpen] = useState(false);
-  const [connectionOpen, setConnectionOpen] = useState(!base);
   const [tab, setTab] = useState("Today");
   const [settingsSectionOpen,setSettingsSectionOpen]=useState(false);
   useEffect(() => { authScroll.current?.scrollTo({y: 0, animated: false}); }, [tab, documentsOpen]);
@@ -534,13 +532,15 @@ export default function App() {
   useEffect(() => {
     void (async () => {
       try {
-        const address =
-          (await AsyncStorage.getItem("vela.beta.api")) ||
-          process.env.EXPO_PUBLIC_API_URL ||
-          "";
+        const storedAddress = await AsyncStorage.getItem("vela.beta.api");
+        const configuredAddress = (process.env.EXPO_PUBLIC_API_URL || "").trim().replace(/\/$/, "");
+        const address = configuredAddress || storedAddress || "";
+        // Sessions are bound to their original endpoint.
+        const endpointChanged = !!storedAddress && storedAddress !== address;
+        if (endpointChanged) await writeSession(null);
+        if (address) await AsyncStorage.setItem("vela.beta.api", address);
         setBase(address);
-        setBaseDraft(address);
-        const session = await readSession();
+        const session = endpointChanged ? null : await readSession();
         if (session && address) {
           activeSession.current = session;
           setToken(session);
@@ -776,7 +776,7 @@ export default function App() {
     await run(async () => {
       try {
       const health = await api<any>(base, "/health", null);
-      if (health.runtime !== "authenticated-beta") throw new Error("This address is not the Vela account server. Check Connection settings.");
+      if (health.runtime !== "authenticated-beta") throw new Error("Vela is temporarily unavailable. Please try again later.");
       if (mode === "forgot") {
         await request("/auth/forgot-password", "POST", { email });
         setNotice("If this account exists, a recovery link will be sent.");
@@ -1483,69 +1483,7 @@ export default function App() {
                       </>
                     )}
                   </View>
-                  <TouchableOpacity
-                    accessibilityRole="button"
-                    onPress={() => setConnectionOpen((v) => !v)}
-                  >
-                    <Text style={s.serviceLink}>
-                      {connectionOpen
-                        ? "Hide connection settings"
-                        : "Advanced connection settings"}
-                    </Text>
-                  </TouchableOpacity>
-                  {connectionOpen && (
-                    <View style={s.card}>
-                      <Text style={s.h2}>Connection</Text>
-                      <Text style={s.muted}>
-                        {base
-                          ? "Server address configured."
-                          : "Ask the host for the HTTPS API address. A localhost address does not work from another phone."}
-                      </Text>
-                      <Input
-                        label="Server address"
-                        value={baseDraft}
-                        onChange={setBaseDraft}
-                      />
-                      <Button
-                        secondary
-                        title="Save server address"
-                        onPress={() =>
-                          void run(async () => {
-                            const normalized = baseDraft.trim().replace(/\/$/, "");
-                            const url = new URL(normalized);
-                            if (!["https:", "http:"].includes(url.protocol))
-                              throw new Error("Use an HTTPS server address.");
-                            if (
-                              url.protocol !== "https:" &&
-                              !["localhost", "127.0.0.1"].includes(url.hostname)
-                            )
-                              throw new Error(
-                                "Remote connections require HTTPS.",
-                              );
-                            const health = await api<any>(normalized, "/health", null);
-                            if (health.runtime !== "authenticated-beta") throw new Error("This is not the Vela account server.");
-                            if (base !== normalized) {
-                              // A session belongs to its server; never forward it to a newly selected endpoint.
-                              activeSession.current = null;
-                              await writeSession(null);
-                              setToken(null); setUser(null); setEnv(null); setMessages([]);
-                              setJob(null); setImportJob(null); setPreview(null); setEditor(null); setDraft(null);
-                              feedbackRequests.current.clear(); chatClearRequest.current = null; reviewStartRequest.current = null;
-                              profileNameDirty.current = false;
-                              setMode("login"); setAuthError("");
-                            }
-                            setBase(normalized);
-                            await AsyncStorage.setItem(
-                              "vela.beta.api",
-                              normalized,
-                            );
-                            setNotice("Connected to Vela. Server address saved.");
-                            setConnectionOpen(false);
-                          })
-                        }
-                      />
-                    </View>
-                  )}
+
                 </>
               ) : null}
 

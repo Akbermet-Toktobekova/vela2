@@ -1,0 +1,6 @@
+---
+description: Vela project language and evidence conventions
+alwaysApply: true
+---
+
+Write project-authored documentation, code comments, prompts, reports, UI text and new commit messages in English. Collaborate with the user in Russian. Preserve original-language evidence and user content, label translations separately, and preserve Git history.

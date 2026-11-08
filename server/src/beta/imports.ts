@@ -213,7 +213,7 @@ export class BetaImports {
    for (const parsed of outcomes) {
     if(parsed.statement.status==='failed'&&parsed.statement.duplicateCountSkipped===0)throw new BetaError('IMPORT_FAILED','No transactions can be imported.');
     if (pdf && !parsed.transactions.length) continue;
-    parsed.transactions=parsed.transactions.map(transaction=>({...transaction,rawRow:{...transaction.rawRow,__source_file:record.preview.fileName,__source_sheet:transaction.rawRow.__source_sheet||record.preview.sheetName||'',__source_row:transaction.rawRow.__source_row||transaction.rawRow['pdf line']||String(Number(transaction.id.split('_').at(-1))+1),...(pdf?{__source_page:transaction.rawRow['pdf page']}: {})}}));
+    parsed.transactions=parsed.transactions.map(transaction=>({...transaction,rawRow:{...transaction.rawRow,__source_file:record.preview.fileName,__source_hash:record.originalHash,__source_sheet:transaction.rawRow.__source_sheet||record.preview.sheetName||'',__source_row:transaction.rawRow['pdf line']||transaction.rawRow.__source_row||String(Number(transaction.id.split('_').at(-1))+1),...(pdf?{__source_page:transaction.rawRow['pdf page']}: {})}}));
     parsed.statement.fileName=record.preview.fileName;
     if (!pdf) parsed.statement.fileFormat=record.preview.statement?.fileFormat||'csv';
     parsed.classifications=new BetaFindings(this.store,this.financial).applyMerchantPreferences(user.id,parsed.transactions,parsed.classifications);
@@ -225,7 +225,7 @@ export class BetaImports {
    if (saved.length) {
     const reconciled=reconcileTransfersAndConfirmations({userId:user.id,accounts:state.accounts,transactions:state.transactions,classifications:state.classifications,existingMatches:state.transferMatches,existingConfirmations:state.confirmations});
     state.transferMatches=reconciled.transferMatches;state.confirmations=reconciled.confirmations;state.classifications=reconciled.updatedClassifications;
-    this.store.put(user.id,'state',result);this.store.remove(user.id,'analysis');this.store.remove(user.id,'analysis-private');
+    this.financial.persist(user.id,result);this.store.remove(user.id,'analysis');this.store.remove(user.id,'analysis-private');
    }
    if (pdf) {
     record.preview=pdf.preview;
@@ -235,7 +235,10 @@ export class BetaImports {
     record.confirmedStatementId=saved[0].id;
     record.preview.statement=saved[0];
    }
-   record.preview.confirmed=true;record.preview.status='confirmed';this.store.put(user.id,`import:${id}`,record);this.store.database.exec('COMMIT');return result;
+   record.preview.confirmed=true;record.preview.status='confirmed';
+   record.original = '';
+   record.csv = null;
+   record.pdf = undefined;this.store.put(user.id,`import:${id}`,record);this.store.database.exec('COMMIT');return result;
   }catch(error){this.store.database.exec('ROLLBACK');throw error;}
  }
  deleteImport(user:User,id:string,expectedVersion:number):BetaState {
@@ -250,7 +253,7 @@ export class BetaImports {
     state.classifications=state.classifications.filter(c=>!transactionIds.has(c.transactionId));state.transferMatches=state.transferMatches.filter(m=>!matchIds.has(m.id));
     state.confirmations=state.confirmations.filter(c=>!transactionIds.has(c.subjectId)&&!matchIds.has(c.subjectId));state.balances=state.balances.filter(b=>!statementIds.has(b.sourceId??''));
    }
-   state.recommendations=[];const result={...current,version:current.version+1,state};this.store.put(user.id,'state',result);this.store.remove(user.id,`import:${id}`);this.store.remove(user.id,'analysis');this.store.remove(user.id,'analysis-private');this.store.database.exec('COMMIT');return result;
+   state.recommendations=[];const result={...current,version:current.version+1,state};this.financial.persist(user.id,result);this.store.remove(user.id,`import:${id}`);this.store.remove(user.id,'analysis');this.store.remove(user.id,'analysis-private');this.store.database.exec('COMMIT');return result;
   }catch(error){this.store.database.exec('ROLLBACK');throw error;}
  }}
 

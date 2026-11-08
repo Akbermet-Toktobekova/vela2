@@ -1,6 +1,6 @@
 {
   "policyMeta": {
-    "policyBundleVersion": "prototype_policy_bundle_v1.2",
+    "policyBundleVersion": "prototype_policy_bundle_v1.4",
     "status": "PROTOTYPE_ONLY",
     "empiricallyValidated": false,
     "evidenceGapRefs": [

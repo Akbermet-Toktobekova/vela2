@@ -1,48 +1,54 @@
-import { CalculatorContextExtras } from '@shared/calculator';
+import { randomUUID } from 'node:crypto';
+import { AnalysisArtifactSchema, type AnalysisArtifact, type ChatMemory } from '@shared/contracts/pipeline';
+import { prompts, promptFingerprint } from '../ai/prompts';
+import { TransactionClassifier } from '../analyzer/transactionClassifier';
+import { analyzePatterns, interpretBehavior } from '../analyzer/patternAgent';
+import { calculateFinancialMetrics } from '../analyzer/financialMetrics';
 import {
-ActionType,
-CandidateAction,
-CheckFailure,
-ComplexityComponent,
-ComplexityFactorScore,
-DecisionTrace,
-PrototypePolicyBundle,
-RecommendationDecision,
-RecommendationDecisionSchema,
-ValidationResult,
-WeightProfileId
+  ActionType,
+  CandidateAction,
+  CheckFailure,
+  ComplexityComponent,
+  ComplexityFactorScore,
+  DecisionTrace,
+  PrototypePolicyBundle,
+  RecommendationDecision,
+  RecommendationDecisionSchema,
+  ValidationResult,
+  WeightProfileId,
 } from '@shared/contracts';
 import {
-ActionFeedback,
-FinancialSnapshot,
-GoalAllocation,
-ReadinessState,
-RecommendationRecord,
+  ActionFeedback,
+  FinancialSnapshot,
+  GoalAllocation,
+  ReadinessState,
+  RecommendationRecord,
 } from '@shared/pi/types';
-import { buildFinancialSnapshot } from '../../../shared/processing/snapshotBuilder';
-import type { PIDatabaseSeed } from '../../../shared/profile/seed';
-import { AssistantAgent } from '../ai/assistantAgent';
-import { AIEvaluationService } from '../ai/evaluationCall';
-import { LLMClient } from '../ai/llmClient';
-import { BehaviorAgent,BehaviorAnalysisResult } from '../analyzer/behaviorAgent';
-import { DebtAgent,DebtAnalysisOutput } from '../analyzer/debtAgent';
-import { ASCatalogRepository } from '../catalog/asCatalogRepository';
-import { ActionChecker,CheckerBatchOutput,CheckerContext } from '../checker/actionChecker';
+import { CalculatorContextExtras } from '@shared/calculator';
 import { loadPrototypePolicy } from '../config/policyLoader';
+import { ASCatalogRepository } from '../catalog/asCatalogRepository';
+import { ActionChecker, CheckerBatchOutput, CheckerContext } from '../checker/actionChecker';
+import { SecurityService } from '../security/securityService';
+import { FrankfurterFXService } from '../fx/frankfurterService';
+import {
+  AgentResultRow,
+  SavePIStateInput,
+  EngineRepository as BaseEngineRepository,
+  StoredPIStateEnvelope,
+} from './engineTypes';
+import { LLMClient } from '../ai/llmClient';
+import { DebtAgent, calculateDebtReport } from '../analyzer/debtAgent';
+import { SuggestionGenerator } from '../suggestion/suggestionGenerator';
+import { evaluatePrimarySuggestions } from '../suggestion/primarySuggestions';
+import { AIEvaluationService } from '../ai/evaluationCall';
+import { AssistantAgent } from '../ai/assistantAgent';
 import { DecisionEngine } from '../decision/decisionEngine';
 import { ImpactCalculator } from '../decision/impactCalculator';
-import { FrankfurterFXService } from '../fx/frankfurterService';
-import { SecurityService } from '../security/securityService';
-import { SuggestionGenerator } from '../suggestion/suggestionGenerator';
-import {
-AgentResultRow,
-EngineRepository,
-SavePIStateInput,
-StoredPIStateEnvelope,
-} from './engineTypes';
+import { buildFinancialSnapshot, computeObservedAnalytics } from '../../../shared/processing/snapshotBuilder';
+import type { PIDatabaseSeed } from '../../../shared/profile/seed';
 
 export interface AgentStalenessCheck {
-  agentName: 'BehaviorAgent' | 'DebtAgent';
+  agentName: 'BehaviorAgent' | 'DebtAgent' | 'TransactionClassifier' | 'PatternAgent';
   stale: boolean;
   inputChanged: boolean;
   policyChanged: boolean;
@@ -59,6 +65,7 @@ export interface ReviewCycleOptions {
   piUpdate?: SavePIStateInput | FinancialSnapshot;
   forceRefresh?: boolean;
   referenceNowIso?: string;
+  onStage?: (artifact: AnalysisArtifact, input: unknown) => void;
   onBeforePublish?: () => Promise<void> | void;
 }
 
@@ -102,7 +109,12 @@ export interface SubmitFeedbackResult {
   reviewMessage?: string;
 }
 
-export type { EngineRepository } from './engineTypes';
+export type EngineRepository = Pick<BaseEngineRepository,
+  'runInTransaction' | 'getPIState' | 'savePIState' | 'getLatestSnapshotVersion' | 'getAgentResult' | 'saveAgentResult' | 'createEvaluationRun' | 'updateEvaluationRunStatus' | 'getLatestEvaluationRun' | 'saveDecisionTrace' | 'getDecisionTrace' | 'getLatestWeightProfileId' | 'saveRecommendation' | 'getRecommendationById' | 'getLatestRecommendationBundle' | 'listRecommendationsForUser' | 'listPendingFinancialCommitments' | 'recordActionFeedback' | 'listActionFeedbackForUser' | 'saveAssistantMessage' | 'listAssistantMessages' | 'getCachedFXRate' | 'upsertFXRate'> & {
+  getConversationContextVersion?(auth: string, target: string): string;
+  getConversationMemory?(auth: string, target: string): ChatMemory | null;
+  saveStageArtifacts?(auth: string, target: string, artifacts: AnalysisArtifact[]): void;
+};
 
 export interface ReviewOrchestratorOptions {
   store: EngineRepository;
@@ -193,7 +205,7 @@ export class ReviewOrchestrator {
    * Stale(y) = InputChanged(y) OR PolicyChanged(y) OR Expired(y)
    */
   public static computeAgentStaleness(params: {
-    agentName: 'BehaviorAgent' | 'DebtAgent';
+    agentName: 'BehaviorAgent' | 'DebtAgent' | 'TransactionClassifier' | 'PatternAgent';
     currentInputHash: string;
     currentPolicyVersion: string;
     cachedResult: AgentResultRow | null;
@@ -294,6 +306,28 @@ export class ReviewOrchestrator {
       pendingFinancialCommitments: this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId),
     };
 
+    const readMemory = () => this.store.getConversationMemory?.(authenticatedUserId, targetUserId) ?? null;
+    const memory = readMemory();
+    const chatVersion = this.store.getConversationContextVersion?.(authenticatedUserId, targetUserId);
+    const modelCalls: { prompt: string; provenance: AnalysisArtifact['models'][number] }[] = [];
+    const llmClient = new Proxy(this.llmClient, {
+      get(target, key, receiver) {
+        if (key !== 'generateStructured' && key !== 'generateText') return Reflect.get(target, key, receiver);
+        return async (request: { systemPrompt: string }) => {
+          const invoke = target[key].bind(target) as (value: unknown) => Promise<AnalysisArtifact['models'][number]>;
+          const response = await invoke(request);
+          modelCalls.push({ prompt: request.systemPrompt, provenance: {
+            provider: response.provider, modelUsed: response.modelUsed, liveCallUsed: response.liveCallUsed, fallbackReason: response.fallbackReason,
+          } });
+          return response;
+        };
+      },
+    });
+    const runInputHash = SecurityService.computeCanonicalHash({
+      modelConfiguration: this.llmClient.getQuotaAndModelStatus?.().candidateModels ?? [], source: piEnvelope.inputHash, day: workingExtras.referenceDateIso,
+      prompts: promptFingerprint, chatVersion, memory: memory && [memory.inputHash, memory.status, memory.updatedAt],
+    });
+
     // Duplicate run suppression for the same unchanged snapshot version + event + policy
     if (!forceRefresh && eventType !== 'feedback_decline' && workingExtras.pendingFinancialCommitments!.length === 0) {
       const latestRun = this.store.getLatestEvaluationRun(authenticatedUserId, targetUserId);
@@ -305,9 +339,8 @@ export class ReviewOrchestrator {
       if (
         latestRun &&
         latestRun.status === 'COMPLETED' &&
-        latestRun.createdAt.slice(0, 10) === evaluationNowIso.slice(0, 10) &&
         latestRun.snapshotVersion === startingSnapshotVersion &&
-        latestRun.inputHash === piEnvelope.inputHash &&
+        latestRun.inputHash === runInputHash &&
         latestRun.policyVersion === policyBundleVersion &&
         latestRun.eventType === eventType &&
         latestPublished &&
@@ -360,13 +393,48 @@ export class ReviewOrchestrator {
       }
     }
 
-    const evaluationId = `eval_${targetUserId}_v${startingSnapshotVersion.replace(/\./g, '_')}_${Date.now()}`;
+    const evaluationId = 'eval_' + randomUUID();
+    const artifacts: AnalysisArtifact[] = [];
+    const stageInputs: Record<string, string[]> = {
+      fx: ['pi'], classification: ['pi'], 'pattern-recognition': ['classification'],
+      'behavior-agent': ['classification', 'pattern-recognition'], 'financial-calculator': ['fx', 'classification'],
+      'debt-calculator': ['pi'], 'debt-agent': ['debt-calculator'],
+      'suggestion-generator': ['behavior-agent', 'pattern-recognition', 'financial-calculator', 'debt-agent'],
+      'catalog-selector': ['suggestion-generator', 'financial-calculator'], checker: ['suggestion-generator', 'catalog-selector', 'financial-calculator'],
+      'critical-coverage': ['financial-calculator'], 'ai-evaluation': ['checker', 'critical-coverage'],
+      weights: ['financial-calculator'], impact: ['checker', 'financial-calculator'],
+      scoring: ['ai-evaluation', 'weights', 'impact'], robustness: ['scoring'],
+      'decision-engine': ['checker', 'critical-coverage', 'weights', 'scoring', 'robustness'], explanation: ['decision-engine'],
+    };
+    const record = (stage: string, input: unknown, output: unknown, details: Partial<Pick<AnalysisArtifact,
+      'summaryText' | 'promptVersion' | 'models' | 'status' | 'missingInputs' | 'evidenceIds'>> = {}) => {
+      const prompt = Object.values(prompts).find(item => item.version === details.promptVersion);
+      const models = details.models ?? modelCalls.filter(call => prompt && call.prompt.startsWith(prompt.text)).map(call => call.provenance);
+      const status = details.status ?? (models.some(model => !model.liveCallUsed) ? 'PARTIAL' : 'COMPLETED');
+      const inputs = stageInputs[stage.startsWith('impact-') ? 'impact' : stage] ?? [];
+      const upstream = artifacts.filter(item => inputs.some(name => item.stage === name || item.stage.startsWith(name + '-')));
+      const artifact = AnalysisArtifactSchema.parse({
+        schemaVersion: 1, id: evaluationId + ':' + stage, userId: targetUserId, runId: evaluationId,
+        stage, snapshotId: workingSnapshot.id, snapshotVersion: startingSnapshotVersion,
+        inputHash: SecurityService.computeCanonicalHash(input),
+        dependencies: { pi: startingSnapshotVersion, policy: policyBundleVersion, prompts: promptFingerprint,
+          ...Object.fromEntries(upstream.map(item => [item.stage, item.inputHash])) },
+        referenceDate: workingExtras.referenceDateIso, executedAt: new Date().toISOString(),
+        policyVersion: policyBundleVersion, missingInputs: [], evidenceIds: [],
+        upstreamIds: upstream.map(prior => prior.id), ...details, models, status, output,
+      });
+      artifacts.push(artifact);
+      options.onStage?.(structuredClone(artifact), structuredClone(input));
+    };
+    record('pi', { snapshotId: workingSnapshot.id, version: startingSnapshotVersion }, {
+      readiness: workingSnapshot.dataQuality, inputHash: piEnvelope.inputHash,
+    });
     this.store.createEvaluationRun(authenticatedUserId, targetUserId, {
       evaluationId,
       snapshotId: workingSnapshot.id,
       snapshotVersion: startingSnapshotVersion,
       eventType,
-      inputHash: piEnvelope.inputHash,
+      inputHash: runInputHash,
       policyVersion: policyBundleVersion,
       status: 'IN_PROGRESS',
     });
@@ -375,140 +443,85 @@ export class ReviewOrchestrator {
     // STEP 2: Financial Analyzer (FX Service + BehaviorAgent + DebtAgent + Calculator)
     // ------------------------------------------------------------------------
     // 2A. Fetch or resolve FX rates for all currencies in snapshot
-    const allCurrencies = new Set<string>([
-      workingSnapshot.baseCurrency || 'EUR',
-      ...(workingSnapshot.dataQuality?.currencies || []),
-      ...workingSnapshot.accountSummaries.map((a) => a.account.currency),
-      ...workingSnapshot.debts.map((d) => d.currency),
-      ...workingSnapshot.obligations.map((o) => o.currency),
-      ...workingSnapshot.goals.map((g) => g.currency),
-    ]);
-    const foreignSymbols = Array.from(allCurrencies).filter(
-      (c) => c && c.toUpperCase() !== (workingSnapshot.baseCurrency || 'EUR').toUpperCase()
-    );
-
-    if (foreignSymbols.length > 0) {
-      const fetchedFx = await this.fxService.getLatestRates(
-        workingSnapshot.baseCurrency || 'EUR',
-        foreignSymbols,
-        { referenceNowIso: evaluationNowIso }
-      );
-      // Preserve explicitly passed fixture fxRates if already present on workingExtras, else populate
-      workingExtras.fxRates = {
-        ...fetchedFx,
-        ...(workingExtras.fxRates || {}),
-      };
-    }
-
-    // 2B. Minimize PI before any LLM calls (R015, S019)
+    const fx = await this.resolveReviewFx(workingSnapshot, workingExtras, evaluationNowIso);
+    workingExtras.fxRates = fx.rates;
+    record('fx', { foreignSymbols: fx.foreignSymbols, date: evaluationNowIso, baseCurrency: workingSnapshot.baseCurrency }, fx.rates);
     const minimizedSnapshot = SecurityService.minimizePIForLLM(workingSnapshot);
 
-    // 2C. BehaviorAgent with Step 1 Stale(y) check
-    const behaviorInputHash = SecurityService.computeCanonicalHash({
-      baseCurrency: workingSnapshot.baseCurrency,
-      transactions: workingSnapshot.transactions.map((t) => ({
-        id: t.id,
-        date: t.date,
-        amount: t.amount,
-        currency: t.currency,
-        description: t.description,
-        counterparty: t.counterparty,
-      })),
-      classifications: workingSnapshot.classifications,
+    const cachedAnalysis = async <T>(agentName: AgentStalenessCheck['agentName'], input: unknown, calculate: () => Promise<T>) => {
+      const inputHash = SecurityService.computeCanonicalHash({ input, models: this.llmClient.getQuotaAndModelStatus?.().candidateModels ?? [] });
+      const cached = this.store.getAgentResult<T>(authenticatedUserId, targetUserId, agentName);
+      const freshness = ReviewOrchestrator.computeAgentStaleness({
+        agentName, currentInputHash: inputHash, currentPolicyVersion: policyBundleVersion,
+        cachedResult: cached, maxAgeHours: policy.horizonAndFreshness.staleBalanceThresholdDays * 24,
+        referenceNowIso: evaluationNowIso,
+      });
+      if (!freshness.stale && !forceRefresh && cached) return { output: cached.output, freshness };
+      const output = await calculate();
+      this.store.saveAgentResult(authenticatedUserId, targetUserId, agentName, inputHash, policyBundleVersion, output);
+      return { output, freshness };
+    };
+
+    const classificationInput = {
+      prompt: prompts.classification.version, transactions: minimizedSnapshot.transactions,
+      matches: workingSnapshot.transferMatches,
       confirmations: workingSnapshot.confirmations,
+      confirmed: Object.fromEntries(Object.entries(workingSnapshot.classifications).filter(([, row]) => row.status === 'user_confirmed')),
+    };
+    const classification = await cachedAnalysis('TransactionClassifier', classificationInput, () =>
+      TransactionClassifier.classify({ snapshot: minimizedSnapshot, llmClient }));
+    const classified = classification.output;
+    record('classification', { snapshot: minimizedSnapshot }, classified, {
+      promptVersion: prompts.classification.version, models: classified.models,
+      summaryText: classified.summaryText, evidenceIds: classified.processedIds, missingInputs: classified.unresolvedIds,
+      status: classification.freshness.cachedReused ? 'CACHED' : classified.unresolvedIds.length ? 'PARTIAL' : 'COMPLETED',
+    });
+    for (const [txId, row] of Object.entries(classified.updatedClassifications)) {
+      if (workingSnapshot.classifications[txId]?.status !== 'user_confirmed') workingSnapshot.classifications[txId] = row;
+    }
+    for (const confirmation of classified.proposedConfirmations) {
+      if (!workingSnapshot.confirmations.some(row => row.id === confirmation.id)) workingSnapshot.confirmations.push(confirmation);
+    }
+    workingSnapshot.unresolvedConfirmations = workingSnapshot.confirmations.filter(row => row.userResponse === null);
+    Object.assign(workingSnapshot, computeObservedAnalytics(workingSnapshot.transactions, workingSnapshot.classifications, workingSnapshot.baseCurrency));
+
+    const classifiedSnapshot = SecurityService.minimizePIForLLM(workingSnapshot);
+    const patternInput = {
+      prompt: prompts.pattern.version, date: workingExtras.referenceDateIso, transactions: classifiedSnapshot.transactions,
+      classifications: classifiedSnapshot.classifications, transferMatches: classifiedSnapshot.transferMatches,
+      statements: classifiedSnapshot.statements, income: classifiedSnapshot.incomeSources, obligations: classifiedSnapshot.upcomingUnpaidObligations,
+    };
+    const pattern = await cachedAnalysis('PatternAgent', patternInput, () =>
+      analyzePatterns(classifiedSnapshot, workingExtras.referenceDateIso!, llmClient));
+    record('pattern-recognition', { snapshot: classifiedSnapshot, referenceDate: workingExtras.referenceDateIso }, pattern.output, {
+      promptVersion: prompts.pattern.version, models: pattern.output.models, summaryText: pattern.output.summaryText,
+      evidenceIds: pattern.output.evidence.map(row => row.id), status: pattern.freshness.cachedReused ? 'CACHED' : 'COMPLETED',
+    });
+    const behaviorInput = { prompt: prompts.behavior.version, pattern: pattern.output, goals: classifiedSnapshot.goals };
+    const behavior = await cachedAnalysis('BehaviorAgent', behaviorInput, async () => ({
+      ...await interpretBehavior(classifiedSnapshot, pattern.output, llmClient),
+      categorizedCount: classified.categorizedCount, recurringDetected: classified.recurringDetected,
+    }));
+    const behaviorStaleness = behavior.freshness;
+    record('behavior-agent', { snapshot: classifiedSnapshot, pattern: pattern.output, classification: { categorizedCount: classified.categorizedCount, recurringDetected: classified.recurringDetected } }, behavior.output, {
+      promptVersion: prompts.behavior.version, models: behavior.output.models, summaryText: behavior.output.summaryText,
+      status: behaviorStaleness.cachedReused ? 'CACHED' : 'COMPLETED',
     });
 
-    const cachedBehaviorRow = this.store.getAgentResult<BehaviorAnalysisResult>(
-      authenticatedUserId,
-      targetUserId,
-      'BehaviorAgent'
-    );
-    const behaviorStaleness = ReviewOrchestrator.computeAgentStaleness({
-      agentName: 'BehaviorAgent',
-      currentInputHash: behaviorInputHash,
-      currentPolicyVersion: policyBundleVersion,
-      cachedResult: cachedBehaviorRow,
-      maxAgeHours: policy.horizonAndFreshness.staleBalanceThresholdDays * 24,
-      referenceNowIso,
+    const metrics = calculateFinancialMetrics(workingSnapshot, workingExtras);
+    record('financial-calculator', { snapshot: workingSnapshot, extras: workingExtras }, metrics, { missingInputs: metrics.cashflow.missingInputs ?? [] });
+    const debtCalculations = calculateDebtReport(classifiedSnapshot, workingExtras);
+    record('debt-calculator', { snapshot: classifiedSnapshot, extras: workingExtras }, debtCalculations,
+      { missingInputs: debtCalculations.flatMap(item => item.missingInputs) });
+    const debtInput = { prompt: prompts.debt.version, calculations: debtCalculations };
+    const debt = await cachedAnalysis('DebtAgent', debtInput, () => DebtAgent.analyzeDebts({
+      snapshot: classifiedSnapshot, calculated: debtCalculations, llmClient,
+    }));
+    const debtStaleness = debt.freshness;
+    record('debt-agent', { snapshot: classifiedSnapshot, calculated: debtCalculations }, debt.output, {
+      promptVersion: prompts.debt.version, summaryText: debt.output.summaryText, models: debt.output.models,
+      status: debtStaleness.cachedReused ? 'CACHED' : 'COMPLETED',
     });
-
-    let behaviorOutput: BehaviorAnalysisResult;
-    if (!behaviorStaleness.stale && !forceRefresh && cachedBehaviorRow) {
-      behaviorOutput = cachedBehaviorRow.output;
-    } else {
-      const analyzed = await BehaviorAgent.analyzeTransactions({
-        snapshot: minimizedSnapshot,
-        llmClient: this.llmClient,
-      });
-      behaviorOutput = {
-        ...analyzed,
-        updatedClassifications: minimizedSnapshot.classifications,
-      };
-      this.store.saveAgentResult(
-        authenticatedUserId,
-        targetUserId,
-        'BehaviorAgent',
-        behaviorInputHash,
-        policyBundleVersion,
-        behaviorOutput
-      );
-    }
-
-    // Apply BehaviorAgent classifications (never overwriting user_confirmed) and confirmations
-    if (behaviorOutput.updatedClassifications) {
-      for (const [txId, cls] of Object.entries(behaviorOutput.updatedClassifications)) {
-        if (workingSnapshot.classifications[txId]?.status === 'user_confirmed') continue;
-        workingSnapshot.classifications[txId] = cls;
-      }
-    }
-    if (Array.isArray(behaviorOutput.proposedConfirmations)) {
-      for (const conf of behaviorOutput.proposedConfirmations) {
-        if (!workingSnapshot.confirmations.some((c) => c.id === conf.id)) {
-          workingSnapshot.confirmations.push(conf);
-        }
-      }
-      workingSnapshot.unresolvedConfirmations = workingSnapshot.confirmations.filter(
-        (c) => c.userResponse === null
-      );
-    }
-
-    // 2D. DebtAgent with Step 1 Stale(y) check
-    const debtInputHash = SecurityService.computeCanonicalHash({
-      baseCurrency: workingSnapshot.baseCurrency,
-      debts: workingSnapshot.debts,
-      debtTerms: workingExtras.debtTerms || {},
-      referenceDateIso: workingExtras.referenceDateIso,
-    });
-
-    const cachedDebtRow = this.store.getAgentResult<DebtAnalysisOutput>(
-      authenticatedUserId,
-      targetUserId,
-      'DebtAgent'
-    );
-    const debtStaleness = ReviewOrchestrator.computeAgentStaleness({
-      agentName: 'DebtAgent',
-      currentInputHash: debtInputHash,
-      currentPolicyVersion: policyBundleVersion,
-      cachedResult: cachedDebtRow,
-      maxAgeHours: policy.horizonAndFreshness.staleBalanceThresholdDays * 24,
-      referenceNowIso,
-    });
-
-    if (debtStaleness.stale || forceRefresh || !cachedDebtRow) {
-      const debtOutput = await DebtAgent.analyzeDebts({
-        snapshot: minimizedSnapshot,
-        calculatorExtras: workingExtras,
-        llmClient: this.llmClient,
-      });
-      this.store.saveAgentResult(
-        authenticatedUserId,
-        targetUserId,
-        'DebtAgent',
-        debtInputHash,
-        policyBundleVersion,
-        debtOutput
-      );
-    }
 
     // ------------------------------------------------------------------------
     // STEP 3: AI Suggestion Generator (using minimized PI snapshot)
@@ -519,13 +532,13 @@ export class ReviewOrchestrator {
     );
     const minimizedForSuggestions = SecurityService.minimizePIForLLM(workingSnapshot);
 
-    const aiCandidates = await SuggestionGenerator.generateCandidates({
+    const catalogParams = {
       snapshot: minimizedForSuggestions,
       policy,
       calculatorExtras: workingExtras,
       existingRecommendations,
-      llmClient: this.llmClient,
-    });
+      llmClient,
+    };
 
     // ------------------------------------------------------------------------
     // STEP 4: Checker + Critical Action Coverage
@@ -557,11 +570,49 @@ export class ReviewOrchestrator {
       verifiedUkDpcAgreement: piEnvelope.verifiedUkDpcAgreement,
     };
 
-    const checkerOutput = ActionChecker.runCheckerPipeline(aiCandidates, checkerCtx);
+    const context = {
+      memory,
+      analysis: [
+        { id: 'financial-metrics', value: {
+          currency: metrics.currency, referenceDate: metrics.referenceDate,
+          liquidExpenseCoverageMonths: metrics.liquidExpenseCoverageMonths,
+          emergencyReserveAllocated: metrics.emergencyReserveAllocated,
+          emergencyReserveCoverageMonths: metrics.emergencyReserveCoverageMonths,
+          optionalActionCash: metrics.optionalActionCash,
+          missingInputs: metrics.cashflow.missingInputs,
+        } },
+        { id: 'pattern-findings', value: { findings: pattern.output.findings, summary: pattern.output.summaryText, authority: 'INTERPRETATION_ONLY' } },
+        { id: 'behavior-findings', value: { findings: behavior.output.findings, summary: behavior.output.summaryText, authority: 'INTERPRETATION_ONLY' } },
+        { id: 'debt-analysis', value: { debts: debt.output.debtsAnalyzed, summary: debt.output.summaryText } },
+      ],
+    };
+    let drafts: import('../suggestion/primarySuggestions').PrimaryDraftResult = null;
+    const primaryParams = { snapshot: minimizedForSuggestions, history: existingRecommendations, context,
+      checker: checkerCtx, llm: llmClient,
+    };
+    const primary = await evaluatePrimarySuggestions({
+      ...primaryParams, onDraftsGenerated: result => { drafts = result; },
+    });
+    const { llm: _llm, ...primaryInput } = primaryParams;
+    const { llmClient: _provider, ...catalogInput } = catalogParams;
+    record('suggestion-generator', primaryInput, drafts, {
+      promptVersion: prompts.primary.version, summaryText: primary.shortfallReason,
+    });
+    const fallback = primary.fallbackReason ? await SuggestionGenerator.generateCandidates(catalogParams) : [];
+    record('catalog-selector', { trigger: primary.fallbackReason, catalogInput }, fallback, {
+      status: primary.fallbackReason ? 'COMPLETED' : 'SKIPPED', promptVersion: prompts.catalog.version,
+    });
+    const checkerOutput = ActionChecker.runCheckerPipeline(
+      [...primary.candidates, ...fallback],
+      checkerCtx,
+      primary.fallbackReason !== null,
+    );
 
     // ------------------------------------------------------------------------
     // STEP 5: Single AI Evaluation Call (T, S, D, O) + Decision Engine (5A–5E)
     // ------------------------------------------------------------------------
+    record('checker', { primaryInput, catalogInput, drafts, fallback }, { ...checkerOutput, primary: primary.proposals }, { promptVersion: prompts.checker.version });
+    record('critical-coverage', checkerCtx, ActionChecker.discoverCriticalActions(checkerCtx));
     const validValidationResults = [
       ...checkerOutput.validCriticalCandidates,
       ...checkerOutput.validFinancialCandidates,
@@ -574,9 +625,10 @@ export class ReviewOrchestrator {
       snapshot: minimizedForSuggestions,
       validCandidates,
       policy,
-      llmClient: this.llmClient,
+      llmClient,
     });
 
+    record('ai-evaluation', { snapshot: minimizedForSuggestions, validCandidates, policy }, aiComplexityMap, { promptVersion: prompts.complexity.version, status: validCandidates.length ? 'COMPLETED' : 'SKIPPED' });
     const previousWeightProfileId = this.store.getLatestWeightProfileId(
       authenticatedUserId,
       targetUserId
@@ -591,7 +643,7 @@ export class ReviewOrchestrator {
         ? latestActiveBundle.decision.selectedActionId
         : null;
 
-    const rawDecision = await this.executeDecisionEngine({
+    const catalogDecision = await this.executeDecisionEngine({
       evaluationId,
       userId: targetUserId,
       snapshot: workingSnapshot,
@@ -601,12 +653,16 @@ export class ReviewOrchestrator {
       previousWeightProfileId,
       calculatorExtras: workingExtras,
       activeRecommendationActionId,
+      onStage: record,
     });
 
     // ------------------------------------------------------------------------
     // STEP 6: Assistant Explanation Generator + Stale Snapshot Publication Guard
     // ------------------------------------------------------------------------
+    const { decision: rawDecision, advice } = applySourceAdvice(catalogDecision, primary.advice, primary.clarification);
+    record('decision-engine', { snapshot: workingSnapshot, checkerOutput, policy, knowledgeDb: checkerCtx.knowledgeDb, calculatorExtras: workingExtras, previousProfileId: previousWeightProfileId, aiComplexityByCandidateId: aiComplexityMap, evaluationId, sourceAdvice: primary.advice, primaryClarification: primary.clarification }, rawDecision);
     const explanation = AssistantAgent.generateExplanation(rawDecision, workingSnapshot);
+    record('explanation', { decision: rawDecision, snapshot: workingSnapshot }, explanation, { summaryText: explanation.reasoning });
     const enrichedDecision: RecommendationDecision = RecommendationDecisionSchema.parse({
       ...rawDecision,
       snapshotId: workingSnapshot.id,
@@ -617,6 +673,27 @@ export class ReviewOrchestrator {
       expectedEffectSummary: explanation.expectedEffectSummary,
       trace: {
         ...rawDecision.trace,
+        ...(advice ? {
+          sourceAdvice: advice,
+          selectedCandidate: null,
+          robustness: null,
+          selectedActionType: null,
+          priorityClass: rawDecision.priorityClass,
+          decisionStatus: rawDecision.decisionStatus,
+          decisionReason: rawDecision.reasoning,
+          supportingSourceIds: rawDecision.sourceIds,
+          supportingClaimIds: rawDecision.claimIds,
+          supportingRuleIds: [],
+          missingDataFields: [],
+          clarificationQuestion: null,
+        } : {}),
+        stageArtifactIds: artifacts.map(artifact => artifact.id),
+        primarySuggestions: {
+          shortfallReason: primary.shortfallReason,
+          proposals: primary.proposals,
+          fallbackReason: primary.fallbackReason,
+          criticalCoverageAddedIds: checkerOutput.criticalCoverageAddedIds,
+        },
         snapshotId: workingSnapshot.id,
         snapshotVersion: startingSnapshotVersion,
       },
@@ -625,6 +702,12 @@ export class ReviewOrchestrator {
     // Optional test hook to simulate concurrent PI snapshot mutation during evaluation
     if (onBeforePublish) {
       await onBeforePublish();
+    }
+
+    if (this.store.getConversationContextVersion?.(authenticatedUserId, targetUserId) !== chatVersion ||
+        SecurityService.computeCanonicalHash(readMemory()) !== SecurityService.computeCanonicalHash(memory)) {
+      this.store.updateEvaluationRunStatus(authenticatedUserId, targetUserId, evaluationId, 'SUPERSEDED_BY_NEWER_SNAPSHOT');
+      throw new Error('Conversation context changed during evaluation.');
     }
 
     // Stale snapshot publication guard: check if user's latest snapshotVersion in SQLiteStore advanced
@@ -677,24 +760,27 @@ export class ReviewOrchestrator {
       workingSnapshot,
       enrichedDecision
     );
-    this.store.saveDecisionTrace(
-      authenticatedUserId,
-      targetUserId,
-      enrichedDecision.trace,
-      enrichedDecision
-    );
-    this.store.saveRecommendation(
-      authenticatedUserId,
-      targetUserId,
-      recommendationRecord,
-      enrichedDecision
-    );
-    this.store.updateEvaluationRunStatus(
-      authenticatedUserId,
-      targetUserId,
-      evaluationId,
-      'COMPLETED'
-    );
+    this.store.runInTransaction(() => {
+      this.store.saveStageArtifacts?.(authenticatedUserId, targetUserId, artifacts);
+      this.store.saveDecisionTrace(
+        authenticatedUserId,
+        targetUserId,
+        enrichedDecision.trace,
+        enrichedDecision
+      );
+      this.store.saveRecommendation(
+        authenticatedUserId,
+        targetUserId,
+        recommendationRecord,
+        enrichedDecision
+      );
+      this.store.updateEvaluationRunStatus(
+        authenticatedUserId,
+        targetUserId,
+        evaluationId,
+        'COMPLETED'
+      );
+    });
 
     return {
       evaluationId,
@@ -711,6 +797,40 @@ export class ReviewOrchestrator {
         DebtAgent: debtStaleness,
       },
     };
+  }
+
+  private async resolveReviewFx(snapshot: FinancialSnapshot, extras: CalculatorContextExtras, referenceNowIso: string) {
+    const allCurrencies = new Set<string>([
+      snapshot.baseCurrency || 'EUR',
+      ...(snapshot.dataQuality?.currencies || []),
+      ...snapshot.accountSummaries.map((a) => a.account.currency),
+      ...snapshot.debts.map((d) => d.currency),
+      ...snapshot.obligations.map((o) => o.currency),
+      ...snapshot.goals.map((g) => g.currency),
+    ]);
+    const foreignSymbols = Array.from(allCurrencies).filter(
+      (c) => c && c.toUpperCase() !== (snapshot.baseCurrency || 'EUR').toUpperCase()
+    );
+
+    const base = snapshot.baseCurrency || 'EUR';
+    const historical = referenceNowIso.slice(0, 10) < new Date().toISOString().slice(0, 10);
+    const rates = { ...extras.fxRates };
+    const evaluate = (rate: NonNullable<CalculatorContextExtras['fxRates']>[string]) =>
+      historical ? this.fxService.evaluateHistoricalQuote(rate, referenceNowIso)
+        : this.fxService.evaluateFreshnessStatus(rate, referenceNowIso);
+    const refresh = foreignSymbols.filter(symbol => {
+      const rate = rates[symbol];
+      if (rate?.base === base && rate.target === symbol && evaluate(rate) === 'OK') return false;
+      delete rates[symbol];
+      return true;
+    });
+    if (refresh.length) {
+      const fetched = historical
+        ? await this.fxService.getHistoricalRates(referenceNowIso, base, refresh, { referenceNowIso })
+        : await this.fxService.getLatestRates(base, refresh, { referenceNowIso });
+      Object.assign(rates, fetched);
+    }
+    return { foreignSymbols, rates };
   }
 
   /**
@@ -775,20 +895,43 @@ export class ReviewOrchestrator {
       conflict('STALE_RECOMMENDATION', 'Financial information has changed. Reload Today before responding.');
     }
 
-    if (action === 'accept') {
+    if (decision.sourceAdvice && (action === 'adjust' || adjustedAmount !== null)) {
+      conflict('INVALID_FEEDBACK_TRANSITION', 'Source-backed advice has no financial amount to adjust.');
+    }
+    const calculatorExtras: CalculatorContextExtras = {
+      ...piEnvelope.calculatorExtras,
+      pendingFinancialCommitments: this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId, recommendation.id),
+    };
+    if (action !== 'decline' && decision.selectedActionType === 'FINANCIAL_ACTION' && decision.candidate?.amount !== null) {
+      const valuation = calculatorExtras.referenceDateIso && calculatorExtras.referenceDateIso !== nowIso.slice(0, 10)
+        ? calculatorExtras.referenceDateIso : nowIso;
+      const fx = await this.resolveReviewFx(piEnvelope.snapshot, calculatorExtras, valuation);
+      calculatorExtras.fxRates = fx.rates;
+      const current = this.store.getRecommendationById(authenticatedUserId, targetUserId, recommendation.id);
+      if (current?.recommendation.status !== recommendation.status ||
+          current.recommendation.updatedAt !== recommendation.updatedAt ||
+          this.store.getLatestSnapshotVersion(authenticatedUserId, targetUserId) !== piEnvelope.version ||
+          this.store.getLatestRecommendationBundle(authenticatedUserId, targetUserId)?.recommendation.id !== recommendation.id) {
+        conflict('STALE_RECOMMENDATION', 'Financial information has changed. Reload Today before responding.');
+      }
+      calculatorExtras.pendingFinancialCommitments = this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId, recommendation.id);
+    }
+    if (action === 'accept' && !decision.sourceAdvice) {
       if (decision.decisionStatus !== 'RECOMMENDATION_READY' || !decision.candidate) {
         conflict('ACCEPTANCE_REVALIDATION_FAILED', 'There is no publishable action to accept.');
       }
       const validation = ActionChecker.validateCandidate(
         { ...decision.candidate!, amount: recommendation.adjustedAmount ?? recommendation.suggestedAmount },
         { snapshot: piEnvelope.snapshot, policy,
-          calculatorExtras: { ...piEnvelope.calculatorExtras,
-            pendingFinancialCommitments: this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId, recommendation.id) },
+          calculatorExtras,
           userConfirmedUnusedSubscriptionIds: piEnvelope.userConfirmedUnusedSubscriptionIds,
           verifiedCancellationTermsByTargetId: piEnvelope.verifiedCancellationTermsByTargetId,
           verifiedAccountFeeSchedules: piEnvelope.verifiedAccountFeeSchedules,
           verifiedUkDpcAgreement: piEnvelope.verifiedUkDpcAgreement });
-      if (validation.status !== 'VALID') conflict('ACCEPTANCE_REVALIDATION_FAILED', 'The action requires fresh validation before acceptance.');
+      if (validation.status !== 'VALID') {
+        const missing = validation.missingFields.join(', ');
+        conflict('ACCEPTANCE_REVALIDATION_FAILED', missing ? 'Confirm these inputs before accepting: ' + missing : 'The action requires fresh validation before acceptance.');
+      }
     }
 
     // 1. ACCEPT: sets status to 'accepted' WITHOUT deducting bank balances or marking completed
@@ -870,8 +1013,7 @@ export class ReviewOrchestrator {
         snapshot: piEnvelope.snapshot,
         policy,
         knowledgeDb: ASCatalogRepository.load(),
-        calculatorExtras: { ...piEnvelope.calculatorExtras,
-          pendingFinancialCommitments: this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId, recommendation.id) },
+        calculatorExtras,
         existingRecommendations,
         userConfirmedUnusedSubscriptionIds: piEnvelope.userConfirmedUnusedSubscriptionIds,
         verifiedCancellationTermsByTargetId: piEnvelope.verifiedCancellationTermsByTargetId,
@@ -997,6 +1139,24 @@ export class ReviewOrchestrator {
       };
     }
 
+    if (decision.sourceAdvice) {
+      const completed: RecommendationRecord = { ...recommendation, status: 'completed', updatedAt: nowIso };
+      const feedbackRecord = this.store.runInTransaction(() => {
+        this.store.saveRecommendation(authenticatedUserId, targetUserId, completed, decision);
+        return this.store.recordActionFeedback(authenticatedUserId, targetUserId, {
+          id: `fb_${Date.now()}_complete`,
+          recommendationId: recommendation.id,
+          actionId: null,
+          snapshotId: recommendation.snapshotId,
+          action: 'complete',
+          amount: null,
+          note: note || 'User confirmed completion of source-backed advice.',
+          timestamp: nowIso,
+        });
+      });
+      return { status: 'COMPLETED', accepted: true, recommendation: completed, decision, feedbackRecord };
+    }
+
     // 4. COMPLETE: records 'completed' and updates goal allocation / PI state when confirmed by user
     const finalAmount =
       recommendation.adjustedAmount ??
@@ -1023,8 +1183,7 @@ export class ReviewOrchestrator {
       { ...decision.candidate!, amount: finalAmount },
       {
         snapshot: piEnvelope.snapshot, policy, knowledgeDb: ASCatalogRepository.load(),
-        calculatorExtras: { ...piEnvelope.calculatorExtras,
-          pendingFinancialCommitments: this.store.listPendingFinancialCommitments(authenticatedUserId, targetUserId, recommendation.id) },
+        calculatorExtras,
         existingRecommendations: this.store.listRecommendationsForUser(authenticatedUserId, targetUserId)
           .filter((record) => record.id !== recommendation.id),
         userConfirmedUnusedSubscriptionIds: piEnvelope.userConfirmedUnusedSubscriptionIds,
@@ -1197,7 +1356,7 @@ export class ReviewOrchestrator {
     decision: RecommendationDecision
   ): RecommendationRecord {
     const nowIso = new Date().toISOString();
-    const actId = decision.selectedActionId || 'NONE';
+    const actId = decision.selectedActionId || (decision.sourceAdvice ? 'advice' : 'NONE');
     const priority: RecommendationRecord['priority'] =
       decision.priorityClass === 'CRITICAL'
         ? 'priority'
@@ -1210,7 +1369,12 @@ export class ReviewOrchestrator {
       id: `rec_${actId}_${decision.evaluationId}`,
       userId,
       snapshotId: snapshot.id,
-      actionType: mapActionIdToLegacyActionType(decision.selectedActionId, decision.selectedActionType),
+      actionType: decision.sourceAdvice ? 'source_backed_advice'
+        : mapActionIdToLegacyActionType(decision.selectedActionId, decision.selectedActionType),
+      ...(decision.sourceAdvice ? { sourceAdvice: decision.sourceAdvice } : {}),
+      ...(decision.decisionStatus === 'NEEDS_DATA' && decision.clarificationQuestion ? {
+        clarification: { question: decision.clarificationQuestion, route: decision.clarificationRoute },
+      } : {}),
       title: decision.title,
       description: decision.description,
       reasoning: decision.reasoning,
@@ -1240,6 +1404,7 @@ export class ReviewOrchestrator {
     previousWeightProfileId: WeightProfileId | null;
     calculatorExtras?: CalculatorContextExtras;
     activeRecommendationActionId: string | null;
+    onStage?: (stage: string, input: unknown, output: unknown) => void;
   }): Promise<RecommendationDecision> {
     return DecisionEngine.runDecisionEngine({
       evaluationId: params.evaluationId,
@@ -1250,7 +1415,69 @@ export class ReviewOrchestrator {
       calculatorExtras: params.calculatorExtras,
       previousProfileId: params.previousWeightProfileId,
       aiComplexityByCandidateId: params.aiComplexityMap,
+      onStage: params.onStage,
     });
   }
 }
-
+export function applySourceAdvice(
+  catalogDecision: RecommendationDecision,
+  sourceAdvice: NonNullable<RecommendationDecision['sourceAdvice']>[],
+  clarification?: { question: string; missingInfo: string; route?: 'accounts' },
+) {
+  const advice = catalogDecision.priorityClass !== 'CRITICAL' &&
+      !(catalogDecision.decisionStatus === 'RECOMMENDATION_READY' && catalogDecision.selectedActionType === 'FINANCIAL_ACTION')
+      ? sourceAdvice[0] : undefined;
+  const missingFx = catalogDecision.missingFields.filter(field => field.startsWith('verified_fx_rate_'));
+  if (!advice && catalogDecision.decisionStatus !== 'RECOMMENDATION_READY' && missingFx.length) {
+    const currencies = [...new Set(missingFx.map(field => field.slice('verified_fx_rate_'.length)))];
+    clarification = {
+      question: `Verified FX rates for ${currencies.join(', ')} are unavailable or stale. Refresh rates before calculating a monetary action.`,
+      missingInfo: missingFx[0],
+    };
+  }
+  const decision: RecommendationDecision = advice ? {
+      ...catalogDecision,
+      decisionStatus: 'RECOMMENDATION_READY',
+      priorityClass: 'NORMAL',
+      selectedActionId: null,
+      selectedActionType: null,
+      candidate: null,
+      sourceAdvice: advice,
+      title: advice.title,
+      description: advice.description,
+      reasoning: advice.rationale,
+      expectedEffectSummary: advice.sources.length
+        ? 'Review the cited guidance before deciding on your next step.'
+        : 'Review the relevant information in your profile before deciding on your next step.',
+      values: null,
+      rawImpacts: null,
+      complexity: null,
+      score: null,
+      stability: null,
+      sourceIds: [...new Set(advice.sources.map(source => source.sourceId))],
+      ruleIds: [],
+      claimIds: advice.sources.map(source => source.claimId),
+      dataQualityStatus: 'PROTOTYPE_POLICY',
+      clarificationQuestion: null,
+      missingFields: [],
+  } : clarification && catalogDecision.decisionStatus !== 'RECOMMENDATION_READY' ? {
+    ...catalogDecision,
+    decisionStatus: 'NEEDS_DATA' as const,
+    title: 'Confirm financial information',
+    description: clarification.question,
+    reasoning: 'This information is needed before choosing a useful next action.',
+    expectedEffectSummary: '',
+    dataQualityStatus: catalogDecision.dataQualityStatus === 'FX_WARNING' ? 'FX_WARNING' as const : 'NEEDS_DATA' as const,
+    clarificationQuestion: clarification.question,
+    clarificationRoute: clarification.route,
+    missingFields: [...new Set([...catalogDecision.missingFields, clarification.missingInfo])],
+    trace: {
+      ...catalogDecision.trace,
+      decisionStatus: 'NEEDS_DATA' as const,
+      decisionReason: clarification.question,
+      clarificationQuestion: clarification.question,
+      missingDataFields: [...new Set([...catalogDecision.missingFields, clarification.missingInfo])],
+    },
+  } : catalogDecision;
+  return { decision, advice };
+}

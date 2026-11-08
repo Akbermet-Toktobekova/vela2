@@ -1,30 +1,29 @@
-# Vela beta — текущий запуск и проверка
+# Vela beta launch and verification
 
-Дата: 2026-11-05. Это интеграционная версия, а не завершённая production-приёмка.
+Historical checkpoint dated 2026-11-05. The addresses below were temporary integration-test addresses. Use the current tunnel output for a new session.
 
-## Открыть на телефоне
+## Open on a phone
 
-1. В совместимом Expo Go откройте `exp://c-dizbalanser-4xqnru-mw3fdg6zc9x62bp6.on.expo.app` или QR из docs/coordination/evidence/beta/expo-qr.png.
-2. Сервер уже указан: https://dean-stadium-extract-manuals.trycloudflare.com/api/beta . Его не нужно заменять на localhost.
-3. Введите имя, email и пароль из 12–128 символов. Код подтверждения не требуется. Для первого теста используйте синтетический email вида test@example.com.
-4. Пройдите семь шагов: профиль, приоритеты, счета, доход, обязательства/долги, документы. Неизвестные суммы оставляйте пустыми.
-5. Загрузите CSV/Excel/текстовый PDF, проверьте предпросмотр и подтвердите. Для неоднозначной таблицы PDF потребуется явное исправление CSV; сканы не поддерживаются.
-6. Разрешите AI-обработку, если хотите запустить анализ/чат. Отказ не мешает хранить записи. Наличие статуса COMPLETED задачи не равно успешному AI-вызову: смотрите статус провайдера в результате анализа.
-7. Закройте и снова откройте Expo: аккаунт должен восстановиться. Проверьте выход и повторный вход.
+1. Open `exp://c-dizbalanser-4xqnru-mw3fdg6zc9x62bp6.on.expo.app` in a compatible Expo Go client, or use the QR image at docs/coordination/evidence/beta/expo-qr.png.
+2. The configured server at that checkpoint was https://dean-stadium-extract-manuals.trycloudflare.com/api/beta . A phone requires the reachable API address.
+3. Enter a name, email and 12–128 character password. Registration has no verification code. Use a synthetic email such as test@example.com for testing.
+4. Complete onboarding for the profile, priorities, accounts, income, obligations/debts and documents. Leave unknown amounts empty.
+5. Upload CSV, Excel or text PDF, inspect the preview and confirm it. Ambiguous PDF tables require explicit CSV correction. Scans require a separate OCR capability.
+6. Enable AI processing to use analysis or chat. Records can be stored without consent. Inspect provider provenance separately from the job's COMPLETED state.
+7. Close and reopen Expo to verify session restoration. Verify logout and sign-in again.
 
-Ссылки временные; компьютер, API, Cloudflare tunnel и Expo должны оставаться запущенными. После перезапуска туннелей адреса могут измениться. Перезапуск: server/npm run beta; Cloudflare cloudflared tunnel --url http://127.0.0.1:3002 --no-autoupdate; обновите expo-mobile-app/.env.local; expo-mobile-app/npm run friends.
+The computer, API, Cloudflare tunnel and Expo must be running. Addresses can change after restart. Run `npm run beta` from server, `cloudflared tunnel --url http://127.0.0.1:3002 --no-autoupdate`, update expo-mobile-app/.env.local, and run `npm run friends` from expo-mobile-app.
 
-## Ограничения текущей проверки
+## Historical acceptance limitations
 
-- Настоящий SMTP-отправитель отсутствует. Ссылка восстановления протестирована с тестовым отправителем, реальная доставка не работает до настройки server/.env.beta.local.
-- Прямые финансовые рекомендации и действия над ними заблокированы до утверждения политики для реальных данных. Чат выбирает проверенные факты из профиля, а не генерирует свободные финансовые советы.
-- Физический Android/iPhone пока не пройден; встроенный браузерный контроль в текущей сессии отключён в Work settings. Автотесты и сборки не заменяют проверку клавиатуры, файлового выбора и SecureStore на телефоне.
-- Операционные доработки остаются: плановая ротация резервных копий, изоляция парсеров в отдельном процессе и полная нагрузочная/безопасностная приёмка.
-- Экспорт и удаление активных данных доступны; ранее отдельно созданные offline-backup не удаляются автоматически.
+- SMTP delivery required a real sender configured in server/.env.beta.local. Password reset had been checked with an injected test sender.
+- The original checkpoint gated financial recommendations. Later D-014 allows experimental recommendations after separate user opt-in. AI consent is still required.
+- Physical Android/iPhone acceptance remained outstanding. Browser control was disabled in Work settings during that checkpoint. Keyboard, file-picker and SecureStore require physical-device verification.
+- Scheduled backup rotation, parser process isolation and full load/security acceptance remained outstanding.
+- Active-data export and deletion were available. Separately created offline backups require their own retention handling.
 
-## Данные для прогона
+## Test data and defect reports
 
-Базовый синтетический набор: user-inputs/synthetic/ui-zero/. Для нынешней даты сдвиньте будущие даты вручную, используйте реальные текущие даты ввода. Старый docs/testing/UI-ZERO-GUIDE-RU.md описывает прежний интерфейс и не является инструкцией приёмки новой нативной беты.
+Use user-inputs/synthetic/ui-zero/. For a new test date, move future income, payment and goal dates relative to the review date. Use current dates for manually entered balance observations. UI-ZERO-GUIDE-RU.md describes the earlier interface and is retained as historical guidance.
 
-Зафиксируйте для дефекта: телефон/ОС/Expo Go, экран, точный синтетический ввод, ожидаемый и фактический результат, скриншот. Не присылайте пароли и реальные выписки в чат.
-
+For a defect record the device, OS, Expo Go version, screen, exact synthetic input, expected and actual results, and screenshot. Keep passwords and real statements out of the report.

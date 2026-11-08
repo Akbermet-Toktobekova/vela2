@@ -24,6 +24,7 @@ import { ScoringEngine } from './scoringEngine';
 import { WeightCalculator } from './weightCalculator';
 
 export interface RunDecisionEngineParams {
+  onStage?: (stage: string, input: unknown, output: unknown) => void;
   evaluationId?: string;
   snapshot: FinancialSnapshot;
   checkerOutput: CheckerBatchOutput;
@@ -121,12 +122,14 @@ export class DecisionEngine {
     const hasFxWarning = liq.fxWarningCurrencies.length > 0;
 
     // Always compute Step 5B weight profile selection for trace completeness
-    const weightSelection = WeightCalculator.selectWeightProfile({
+    const weightInput = {
       snapshot,
       policy,
       previousProfileId,
       calculatorExtras,
-    });
+    };
+    const weightSelection = WeightCalculator.selectWeightProfile(weightInput);
+    params.onStage?.('weights', weightInput, weightSelection);
 
     // ========================================================================
     // STEP 5A: CRITICAL PRIORITY POLICY (Bypasses normal W/V tradeoff ranking)
@@ -152,7 +155,8 @@ export class DecisionEngine {
       const selectedValidation = sortedCriticals[0];
       const chosen = selectedValidation.candidate;
       const catEntry = db.catalogActions.find((a) => a.action_id === chosen.actionId);
-      const actionSources = ASCatalogRepository.getSourcesForAction(chosen.actionId).map(
+      const neutralIssuerContact = chosen.actionId === 'A005' && snapshot.profile.country.trim().toUpperCase() !== 'US';
+      const actionSources = neutralIssuerContact ? [] : ASCatalogRepository.getSourcesForAction(chosen.actionId).map(
         (s) => s.source_id
       );
 
@@ -163,7 +167,7 @@ export class DecisionEngine {
       );
       const claimIds = mergeUniqueStrings(
         chosen.supportingClaimIds,
-        catEntry?.supporting_claim_ids_list
+        neutralIssuerContact ? [] : catEntry?.supporting_claim_ids_list
       );
 
       const decisionReason = chosen.rationale || `Critical priority action ${chosen.actionId} selected via Step 5A priority policy.`;
@@ -351,12 +355,14 @@ export class DecisionEngine {
         const cand = valRes.candidate;
         const catEntry = db.catalogActions.find((a) => a.action_id === cand.actionId);
 
-        const impact = ImpactCalculator.evaluateFinancialImpact({
+        const impactInput = {
           candidate: cand,
           snapshot,
           policy,
           calculatorExtras,
-        });
+        };
+        const impact = ImpactCalculator.evaluateFinancialImpact(impactInput);
+        params.onStage?.('impact-' + cand.candidateId, impactInput, impact);
 
         if (impact.status !== 'COMPUTED') {
           impactMissingInputs.push(...impact.missingInputs);
@@ -453,14 +459,16 @@ export class DecisionEngine {
       }
 
       // Step 5D: Score candidates via F017
-      const scoredCandidates: ScoredCandidate[] = ScoringEngine.scoreCandidates({
+      const scoringInput = {
         candidates: evaluatedItems,
         weightSelection,
         policy,
-      });
+      };
+      const scoredCandidates: ScoredCandidate[] = ScoringEngine.scoreCandidates(scoringInput);
+      params.onStage?.('scoring', scoringInput, scoredCandidates);
 
       // Step 5E: Evaluate Robustness via F018 (200 seeded simulations + close-decision tie-breaker)
-      const robustness = RobustnessEngine.evaluateRobustness({
+      const robustnessInput = {
         scoredCandidates,
         weightSelection,
         policy,
@@ -472,7 +480,9 @@ export class DecisionEngine {
           scoredCandidates.some(
             (sc) => sc.complexity.hasUnknownComponents || sc.complexity.usedCatalogFallback
           ),
-      });
+      };
+      const robustness = RobustnessEngine.evaluateRobustness(robustnessInput);
+      params.onStage?.('robustness', robustnessInput, robustness);
 
       // Re-order scoredCandidates if tie-breaker promoted a close runner-up to topCandidateId
       const winningScored =
@@ -491,7 +501,8 @@ export class DecisionEngine {
 
       const chosen = winningScored.candidate;
       const catEntry = db.catalogActions.find((a) => a.action_id === chosen.actionId);
-      const actionSources = ASCatalogRepository.getSourcesForAction(chosen.actionId).map(
+      const fromPrimary = chosen.candidateId.startsWith('primary_');
+      const actionSources = fromPrimary ? [] : ASCatalogRepository.getSourcesForAction(chosen.actionId).map(
         (s) => s.source_id
       );
 
@@ -502,7 +513,7 @@ export class DecisionEngine {
       );
       const claimIds = mergeUniqueStrings(
         chosen.supportingClaimIds,
-        catEntry?.supporting_claim_ids_list
+        fromPrimary ? [] : catEntry?.supporting_claim_ids_list
       );
 
       const raw = winningScored.impact.rawImpacts;

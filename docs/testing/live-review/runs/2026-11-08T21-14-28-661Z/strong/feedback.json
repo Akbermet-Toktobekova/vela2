@@ -1,0 +1,17 @@
+{
+  "stage": "feedback",
+  "status": "COMPLETED",
+  "input": {
+    "recommendationId": "rec_NONE_eval_95f9ffdb-78a6-4e77-9203-6de620e442a7",
+    "action": "accept",
+    "expectedVersion": 4,
+    "requestId": "strong-accept"
+  },
+  "output": {
+    "error": {
+      "code": "ACCEPTANCE_REVALIDATION_FAILED",
+      "message": "There is no publishable action to accept."
+    }
+  },
+  "calls": []
+}

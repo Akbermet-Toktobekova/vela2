@@ -529,6 +529,7 @@ export function parseStatementCSVContent(params: {
     headers.forEach((h, idx) => {
       rawRow[h] = row[idx] || '';
     });
+    rawRow.__source_row = String(sourceLines[i].rowNumber);
 
     const txn: TransactionRecord = {
       id: `txn_${stmtId}_${i}`,

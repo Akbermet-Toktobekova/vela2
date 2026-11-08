@@ -20,7 +20,7 @@ function normalizeWeights(raw: { R: number; F: number; G: number }): {
 } {
   const sum = raw.R + raw.F + raw.G;
   if (!(sum > 0)) {
-    return { R: 0.34, F: 0.33, G: 0.33 };
+    throw new Error('Invalid weight profile: total weight must be positive.');
   }
   const R = Number((raw.R / sum).toFixed(4));
   const F = Number((raw.F / sum).toFixed(4));
@@ -30,60 +30,20 @@ function normalizeWeights(raw: { R: number; F: number; G: number }): {
 
 export class WeightCalculator {
   /**
-   * Computes emergency coverage months M (F002) for Step 5B profile selection.
-   * Respects explicit snapshot overrides, dedicated emergency cushion reserve,
-   * and F001 unrestricted liquid funds when no dedicated emergency goal exists.
+   * Computes F002 total-liquid expense coverage for profile selection.
+   * Convert essential expenses to base currency and require current FX.
    */
   static computeEffectiveCoverageMonths(
     snapshot: FinancialSnapshot,
     calculatorExtras?: CalculatorContextExtras
   ): number | null {
-    const essentialMonthly = snapshot.essentialCommitment?.estimatedMonthlyAmount ?? null;
+    const essentials = snapshot.essentialCommitment;
     const liq = SharedFinancialCalculator.computeLiquidEmergencyFunds(snapshot, calculatorExtras);
-
-    if (essentialMonthly === null || !(essentialMonthly > 0)) {
-      return snapshot.emergencyCoverageMonths !== null && snapshot.emergencyCoverageMonths >= 0
-        ? snapshot.emergencyCoverageMonths
-        : null;
-    }
-
-    const defaultSnapshotMonths = Number(
-      ((snapshot.safetyCushionAllocated || 0) / essentialMonthly).toFixed(2)
-    );
-
-    // 1. If snapshot.emergencyCoverageMonths was explicitly overridden by caller/scenario
-    if (
-      snapshot.emergencyCoverageMonths !== null &&
-      snapshot.emergencyCoverageMonths >= 0 &&
-      Math.abs(snapshot.emergencyCoverageMonths - defaultSnapshotMonths) > 0.005
-    ) {
-      return snapshot.emergencyCoverageMonths;
-    }
-
-    // 2. If user has dedicated emergency reserve or safetyCushionAllocated > 0
-    const reserveAmount = Math.max(
-      liq.dedicatedEmergencyReserve,
-      snapshot.safetyCushionAllocated || 0
-    );
-    if (reserveAmount > 0) {
-      return SharedFinancialCalculator.computeEmergencyMonthsCoverage(
-        reserveAmount,
-        essentialMonthly
-      );
-    }
-
-    // 3. If user has no emergency_cushion goal at all, use F001 unrestricted liquid cash
-    const hasCushionGoal = snapshot.goals.some((g) => g.goalType === 'emergency_cushion');
-    if (!hasCushionGoal) {
-      const unrestrictedLiquid =
-        liq.dedicatedEmergencyReserve + Math.max(0, liq.uncommittedLiquidCash);
-      return SharedFinancialCalculator.computeEmergencyMonthsCoverage(
-        unrestrictedLiquid,
-        essentialMonthly
-      );
-    }
-
-    return SharedFinancialCalculator.computeEmergencyMonthsCoverage(0, essentialMonthly);
+    if (!essentials || essentials.estimatedMonthlyAmount === null || liq.fxWarningCurrencies.length) return null;
+    const converted = SharedFinancialCalculator.convertToBaseCurrency(
+      essentials.estimatedMonthlyAmount, essentials.currency, snapshot.baseCurrency, calculatorExtras?.fxRates);
+    if (converted.fxStatus !== 'OK') return null;
+    return SharedFinancialCalculator.computeEmergencyMonthsCoverage(liq.totalLiquidAccessible, converted.converted);
   }
 
   /**
@@ -100,7 +60,7 @@ export class WeightCalculator {
     const weightPolicy = policy.weightPolicy;
     const enterBelow = weightPolicy.hysteresis.liquidityEnterBelowMonths;
     const exitAtOrAbove = weightPolicy.hysteresis.liquidityExitAtOrAboveMonths;
-    const refDate = (calculatorExtras?.referenceDateIso || '2026-11-03').slice(0, 10);
+    const refDate = (calculatorExtras?.referenceDateIso || snapshot.createdAt).slice(0, 10);
     const horizonDays = policy.horizonAndFreshness.simulationHorizonDays;
 
     const coverageMonths = this.computeEffectiveCoverageMonths(snapshot, calculatorExtras);
@@ -126,7 +86,7 @@ export class WeightCalculator {
         previousProfileId,
         hysteresisApplied: false,
         weights,
-        triggerReason: `Emergency reserve coverage M = ${coverageMonths.toFixed(2)} months is below entry threshold ${enterBelow.toFixed(2)} months.`,
+        triggerReason: `Liquid expense coverage M = ${coverageMonths.toFixed(2)} months is below entry threshold ${enterBelow.toFixed(2)} months.`,
         policyVersion: weightPolicy.version,
       });
     }
@@ -154,7 +114,7 @@ export class WeightCalculator {
       }
 
       const terms = calculatorExtras?.debtTerms?.[d.id];
-      const interestAccruing = terms?.interestAccruing !== false;
+      const interestAccruing = terms?.interestAccruing === true;
       let imminentPromoExpiry = false;
       if (terms?.promoEndDate) {
         const daysToPromoEnd = diffDaysIso(refDate, terms.promoEndDate);
@@ -185,8 +145,10 @@ export class WeightCalculator {
         base,
         calculatorExtras?.fxRates
       );
-      const targetInBase = targetConv.converted ?? g.targetAmount;
+      if (targetConv.converted === null || targetConv.fxStatus !== 'OK') return false;
+      const targetInBase = targetConv.converted;
 
+      let missingFx = false;
       const allocatedInBase = snapshot.goalAllocations
         .filter((ga) => ga.goalId === g.id)
         .reduce((sum, ga) => {
@@ -196,10 +158,11 @@ export class WeightCalculator {
             base,
             calculatorExtras?.fxRates
           );
-          return sum + (c.converted ?? ga.amount);
+          if (c.converted === null || c.fxStatus !== 'OK') { missingFx = true; return sum; }
+          return sum + c.converted;
         }, 0);
 
-      return allocatedInBase < targetInBase;
+      return !missingFx && allocatedInBase < targetInBase;
     });
 
     if (activeUnfulfilledGoal) {

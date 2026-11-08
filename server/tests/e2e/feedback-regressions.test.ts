@@ -1,7 +1,7 @@
-import type { Server } from 'node:http';
+import { mockCatalogFallbackClient } from './catalogFallbackFixture';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AddressInfo } from 'node:net';
-import { afterEach,beforeEach,describe,expect,it,vi } from 'vitest';
-import { LLMClient } from '../../src/ai/llmClient';
+import type { Server } from 'node:http';
 import { createAppBundle } from '../helpers/engineHttp';
 import { SQLiteStore } from '../helpers/engineStore';
 import { createBaselineSolventFixture } from '../helpers/testFixtures';
@@ -22,9 +22,13 @@ describe('Feedback lifecycle and snapshot consistency through HTTP', () => {
   };
   beforeEach(async () => {
     const fixture = createBaselineSolventFixture();
+    // Exercise saving completion and goal validation with verified non-accruing debt.
+    for (const debt of fixture.snapshot.debts) {
+      fixture.extras.debtTerms![debt.id] = { ...fixture.extras.debtTerms![debt.id], interestAccruing: false };
+    }
     user = fixture.snapshot.userId;
     store = new SQLiteStore(':memory:');
-    bundle = createAppBundle({ store, llmClient: new LLMClient({ mockMode: true }) });
+    bundle = createAppBundle({ store, llmClient: mockCatalogFallbackClient() });
     store.savePIState(user, user, { snapshot: fixture.snapshot, calculatorExtras: fixture.extras });
     const initial = await bundle.orchestrator.runReviewCycle({ authenticatedUserId: user, targetUserId: user });
     recId = initial.recommendation.id;
@@ -142,14 +146,14 @@ describe('Feedback lifecycle and snapshot consistency through HTTP', () => {
   });
   it.each(['goal', 'source', 'currency'])('does not create a dangling saving allocation when %s facts are missing or inconsistent', async (missing) => {
     const saved = store.getRecommendationById(user, user, recId)!;
-    expect(saved.decision.selectedActionId).toBe('A007');
+    expect(saved.decision.selectedActionId).toBe('A012');
     if (missing === 'goal') saved.decision.candidate!.targetId = 'missing-goal';
     if (missing === 'source') saved.decision.candidate!.sourceAccountId = 'missing-source';
     if (missing === 'currency') saved.recommendation.currency = 'USD';
     store.saveRecommendation(user, user, saved.recommendation, saved.decision);
     const acceptance = await feedback('accept');
-    if (missing === 'source') {
-      // The strengthened Checker now rejects this invalid source before acceptance.
+    if (missing === 'source' || missing === 'goal') {
+      // Checker rejects missing saving targets and sources before acceptance.
       expect(acceptance.response.status).toBe(409);
       expect(acceptance.data.code).toBe('ACCEPTANCE_REVALIDATION_FAILED');
       expect(store.listActionFeedbackForUser(user, user)).toEqual([]);

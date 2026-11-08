@@ -1,0 +1,158 @@
+# 02 Strong · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_fd532315-85a6-4bc1-a4da-229f74121549",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "Analyzed 159 transactions (142 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "Pattern Recognition observed 24 groups with movements on multiple dates and 0 comparable full-month outflow pairs. Recurrence, purpose and future timing require separate evidence."
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "Pattern Recognition observed 24 groups with movements on multiple dates and 0 comparable full-month outflow pairs. Recurrence, purpose and future timing require separate evidence."
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "No debt records are present in this snapshot."
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "Insufficient verified claims to support specific execution of financial transfers or goal funding; current data requires clarification on unpaid obligations and goal allocation."
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:impact-cand_A012_education",
+      "stage": "impact-cand_A012_education",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:scoring",
+      "stage": "scoring",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:robustness",
+      "stage": "robustness",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd"
+    },
+    {
+      "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_8527a9a5-f83e-4fef-8d92-9342e4c57302_v3_f3bbf79584e7d3fd",
+      "summary_text": "Advances verified savings goal \"Education\" by 75.8 percentage points (F012, F015) while keeping cash above floor (R002, R012). Selected under weight profile \"goal_advancement\", score S=0.589 (F017), robustness stability=100% (F018). [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R002, R012; Sources: S001]"
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "6088d7756d97ad91099b4556bbd2dd4b2ccd3f99641bc3a1aa9476fc120b920d",
+    "promptVersion": "chat-memory.v1",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T17:14:26.164Z",
+    "entries": [
+      {
+        "messageIds": [
+          "strong-context"
+        ],
+        "kind": "PREFERENCE",
+        "text": "The user wants to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "strong-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget later."
+      }
+    ],
+    "summaryText": "The user wants to understand their saved financial information. The user may review their budget later.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemma-4-26b-a4b-it",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_fd532315-85a6-4bc1-a4da-229f74121549",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": "A012"
+  }
+}
+~~~~

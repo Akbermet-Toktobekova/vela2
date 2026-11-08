@@ -1,0 +1,167 @@
+(node:10536) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+debt/import
+debt/pi
+debt/as
+Model attempt gemini-3.5-flash-lite: live response
+debt/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated pi
+debt evaluated fx
+debt evaluated classification
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated pattern-recognition
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated behavior-agent
+debt evaluated financial-calculator
+debt evaluated debt-calculator
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated debt-agent
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated suggestion-generator
+debt evaluated catalog-selector
+debt evaluated checker
+debt evaluated critical-coverage
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated ai-evaluation
+debt evaluated weights
+debt evaluated decision-engine
+debt evaluated explanation
+debt/conversation-memory
+debt/fx
+debt/classification
+debt/pattern-recognition
+debt/behavior-agent
+debt/financial-calculator
+debt/debt-calculator
+debt/debt-agent
+debt/suggestion-generator
+debt/catalog-selector
+debt/checker
+debt/critical-coverage
+debt/ai-evaluation
+debt/weights
+debt/decision-engine
+debt/explanation
+debt/scoring
+debt/robustness
+debt/impact
+debt/beta-review
+Model attempt gemini-3.5-flash-lite: live response
+debt/assistant
+debt/feedback
+debt/postgres-mock
+strong/import
+strong/pi
+strong/as
+Model attempt gemini-3.5-flash-lite: live response
+strong/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated pi
+strong evaluated fx
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated classification
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated pattern-recognition
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated behavior-agent
+strong evaluated financial-calculator
+strong evaluated debt-calculator
+strong evaluated debt-agent
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated suggestion-generator
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated catalog-selector
+strong evaluated checker
+strong evaluated critical-coverage
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated ai-evaluation
+strong evaluated weights
+strong evaluated impact-cand_A012_education
+strong evaluated scoring
+strong evaluated robustness
+strong evaluated decision-engine
+strong evaluated explanation
+strong/conversation-memory
+strong/fx
+strong/classification
+strong/pattern-recognition
+strong/behavior-agent
+strong/financial-calculator
+strong/debt-calculator
+strong/debt-agent
+strong/suggestion-generator
+strong/catalog-selector
+strong/checker
+strong/critical-coverage
+strong/ai-evaluation
+strong/weights
+strong/impact-cand_A012_education
+strong/scoring
+strong/robustness
+strong/decision-engine
+strong/explanation
+strong/beta-review
+Model attempt gemini-3.5-flash-lite: live response
+strong/assistant
+strong/feedback
+strong/postgres-mock
+nora/import
+nora/pi
+nora/as
+Model attempt gemini-3.5-flash-lite: failed or invalid response
+nora/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated pi
+nora evaluated fx
+Model attempt gemini-3.5-flash-lite: live response
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated classification
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated pattern-recognition
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated behavior-agent
+nora evaluated financial-calculator
+nora evaluated debt-calculator
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated debt-agent
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated suggestion-generator
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated catalog-selector
+nora evaluated checker
+nora evaluated critical-coverage
+Model attempt gemini-3.5-flash-lite: live response
+nora evaluated ai-evaluation
+nora evaluated weights
+nora evaluated decision-engine
+nora evaluated explanation
+nora/conversation-memory
+nora/fx
+nora/classification
+nora/pattern-recognition
+nora/behavior-agent
+nora/financial-calculator
+nora/debt-calculator
+nora/debt-agent
+nora/suggestion-generator
+nora/catalog-selector
+nora/checker
+nora/critical-coverage
+nora/ai-evaluation
+nora/weights
+nora/decision-engine
+nora/explanation
+nora/scoring
+nora/robustness
+nora/impact
+nora/beta-review
+Model attempt gemini-3.5-flash-lite: live response
+nora/assistant
+nora/feedback
+nora/postgres-mock
+Saved C:\Users\sanat\OneDrive\Desktop\vela1\docs\testing\live-review\runs\2026-11-08T20-44-16-841Z\RECAP.md

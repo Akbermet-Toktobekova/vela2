@@ -1,0 +1,26 @@
+(node:18292) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+strong/import
+strong/pi
+strong/as
+Model attempt gemini-3.5-flash-lite: live response
+strong/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+strong evaluated pi
+strong evaluated fx
+Model attempt gemini-3.5-flash-lite: failed or invalid response
+Model attempt gemini-3.5-flash-lite: live response
+strong review: AI processing timed out. Please retry.
+C:\Users\sanat\OneDrive\Desktop\vela1\server\src\beta\jobs.ts:29
+      .prepare("SELECT status FROM beta_jobs WHERE id=? AND user_id=?")
+       ^
+
+Error: database is not open
+    at BetaJobs.get (C:\Users\sanat\OneDrive\Desktop\vela1\server\src\beta\jobs.ts:29:8)
+    at BetaJobs.drain (C:\Users\sanat\OneDrive\Desktop\vela1\server\src\beta\jobs.ts:128:19)
+    at runNextTicks (node:internal/process/task_queues:64:5)
+    at process.processTimers (node:internal/timers:538:9) {
+  code: 'ERR_INVALID_STATE'
+}
+
+Node.js v24.13.1

@@ -1,0 +1,534 @@
+{
+  "stage": "feedback",
+  "status": "COMPLETED",
+  "input": {
+    "recommendationId": "rec_A005_eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+    "action": "accept",
+    "expectedVersion": 2,
+    "requestId": "debt-accept"
+  },
+  "output": {
+    "status": "ACCEPTED",
+    "accepted": true,
+    "recommendation": {
+      "id": "rec_A005_eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+      "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+      "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+      "actionType": "confirm_upcoming_bill",
+      "title": "Contact Credit card issuer about the upcoming minimum",
+      "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+      "reasoning": "Ask the issuer what options are available before the due date. Terms depend on the issuer. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S001]",
+      "suggestedAmount": 20,
+      "adjustedAmount": null,
+      "currency": "EUR",
+      "targetGoalId": "card",
+      "sourceAccountId": null,
+      "priority": "priority",
+      "status": "accepted",
+      "readinessState": "state_a_action_ready",
+      "createdAt": "2026-11-08T20:28:06.994Z",
+      "updatedAt": "2026-11-08T20:28:12.407Z"
+    },
+    "decision": {
+      "evaluationId": "eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+      "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+      "snapshotVersion": "2.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "CRITICAL",
+      "selectedActionId": "A005",
+      "selectedActionType": "FINANCIAL_ACTION",
+      "candidate": {
+        "candidateId": "crit_A005_card",
+        "actionId": "A005",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contact Credit card issuer about the upcoming minimum",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+        "rationale": "Ask the issuer what options are available before the due date. Terms depend on the issuer.",
+        "targetId": "card",
+        "sourceAccountId": null,
+        "destinationAccountId": null,
+        "amount": 20,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [],
+        "supportingSourceIds": [],
+        "requiredPiInputs": [
+          "issuer_contact",
+          "minimum_due",
+          "affordable_payment"
+        ],
+        "origin": "CRITICAL_COVERAGE"
+      },
+      "title": "Contact Credit card issuer about the upcoming minimum",
+      "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+      "reasoning": "Ask the issuer what options are available before the due date. Terms depend on the issuer. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S001]",
+      "expectedEffectSummary": "Addresses imminent payment or cash-flow shortfall directly (A005).",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [
+        "R008"
+      ],
+      "claimIds": [],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+        "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+        "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+        "snapshotVersion": "2.0",
+        "createdAt": "2026-11-08T20:28:06.976Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "CRITICAL",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Liquid expense coverage M = 0.02 months is below entry threshold 1.00 months.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "crit_A005_card",
+              "actionId": "A005",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Contact Credit card issuer about the upcoming minimum",
+              "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+              "rationale": "Ask the issuer what options are available before the due date. Terms depend on the issuer.",
+              "targetId": "card",
+              "sourceAccountId": null,
+              "destinationAccountId": null,
+              "amount": 20,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R008"
+              ],
+              "supportingClaimIds": [],
+              "supportingSourceIds": [],
+              "requiredPiInputs": [
+                "issuer_contact",
+                "minimum_due",
+                "affordable_payment"
+              ],
+              "origin": "CRITICAL_COVERAGE"
+            },
+            "status": "VALID",
+            "isCritical": true,
+            "criticalPriorityRank": 1,
+            "resolvesCriticalProblemDirectly": true,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "issuer_contact",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "minimum_due",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "affordable_payment",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": -110,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "crit_A020_deficit",
+              "actionId": "A020",
+              "actionType": "VERIFICATION_ACTION",
+              "title": "Review projected EUR 45 cash shortfall before 2026-11-08",
+              "description": "Projected cash drops below required obligations by 2026-11-08 (Credit card minimum). Review upcoming bills and available balances.",
+              "rationale": "Diagnostic alert (F004, F019, R009): flags upcoming payment shortfall for user verification without assuming automatic resolution.",
+              "targetId": "card",
+              "sourceAccountId": null,
+              "destinationAccountId": null,
+              "amount": 45,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-08",
+              "supportingRuleIds": [
+                "R009"
+              ],
+              "supportingClaimIds": [
+                "C004",
+                "C009"
+              ],
+              "supportingSourceIds": [
+                "S001",
+                "S007"
+              ],
+              "requiredPiInputs": [
+                "cash",
+                "due_obligations",
+                "confirmed_income"
+              ],
+              "origin": "CRITICAL_COVERAGE"
+            },
+            "status": "VALID",
+            "isCritical": true,
+            "criticalPriorityRank": 3,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "cash",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "due_obligations",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "confirmed_income",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": -110,
+            "unlocksActionIds": [
+              "A001",
+              "A005",
+              "A011"
+            ]
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": {
+          "candidateId": "crit_A005_card",
+          "actionId": "A005",
+          "actionType": "FINANCIAL_ACTION",
+          "title": "Contact Credit card issuer about the upcoming minimum",
+          "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+          "rationale": "Ask the issuer what options are available before the due date. Terms depend on the issuer.",
+          "targetId": "card",
+          "sourceAccountId": null,
+          "destinationAccountId": null,
+          "amount": 20,
+          "currency": "EUR",
+          "proposedTiming": "2026-11-05",
+          "supportingRuleIds": [
+            "R008"
+          ],
+          "supportingClaimIds": [],
+          "supportingSourceIds": [],
+          "requiredPiInputs": [
+            "issuer_contact",
+            "minimum_due",
+            "affordable_payment"
+          ],
+          "origin": "CRITICAL_COVERAGE"
+        },
+        "stageArtifactIds": [
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:pi",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:fx",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:classification",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:pattern-recognition",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:behavior-agent",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:financial-calculator",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:debt-calculator",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:debt-agent",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:suggestion-generator",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:catalog-selector",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:checker",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:critical-coverage",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:ai-evaluation",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:weights",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:decision-engine",
+          "eval_49070fdc-7707-4201-8566-e9a2bfc81818:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review debt-1 payment timing",
+              "description": "Review the upcoming payment due date 2026-11-08 for debt-1 with an APR of 24% and balance of 900 EUR to align available cash.",
+              "rationale": "Evaluating the timing of the impending due date helps identify potential shortfalls before the payment deadline.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "debt-1",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Available funding by the due date for debt-1"
+              ],
+              "factIds": [
+                "debt-1",
+                "account-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Available funding by the due date for debt-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Review obligation-1 timing and coverage",
+              "description": "Review the energy obligation due on 2026-11-18 in relation to the upcoming income date.",
+              "rationale": "Checking the timing of the utility bill ensures awareness of the gap before salary is received.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "obligation-1",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Available funding by the due date for obligation-1"
+              ],
+              "factIds": [
+                "obligation-1",
+                "income-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Available funding by the due date for obligation-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Clarify payment arrangement for debt-1",
+              "description": "Confirm whether any alternative payment arrangement has been offered for debt-1.",
+              "rationale": "Gathering details on potential relief options aids in managing short-term liquidity constraints.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "MODEL",
+              "targetFactId": "debt-1",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Any payment arrangement already offered for debt-1"
+              ],
+              "factIds": [
+                "debt-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Any payment arrangement already offered for debt-1",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "Projected liquid funds are insufficient to cover upcoming obligations and debt minimums prior to the next income date.",
+          "fallbackReason": "NO_USEFUL_PRIMARY",
+          "criticalCoverageAddedIds": [
+            "A005",
+            "A020"
+          ]
+        },
+        "selectedActionType": "FINANCIAL_ACTION",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Ask the issuer what options are available before the due date. Terms depend on the issuer.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    },
+    "feedbackRecord": {
+      "id": "fb_1794169692441_accept",
+      "recommendationId": "rec_A005_eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+      "actionId": "A005",
+      "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+      "action": "accept",
+      "amount": 20,
+      "note": "User accepted recommendation (pending execution).",
+      "timestamp": "2026-11-08T20:28:12.407Z"
+    },
+    "version": 2,
+    "state": {
+      "user": {
+        "id": "979e01cc-7261-48e3-b720-2195868898d2",
+        "email": "debt@example.test",
+        "authStatus": "unverified",
+        "isDemoMode": false,
+        "createdAt": "2026-11-08T20:27:26.435Z"
+      },
+      "profile": {
+        "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+        "nickname": "01 Debt",
+        "locale": "en",
+        "baseCurrency": "EUR",
+        "country": "EU",
+        "updatedAt": "2026-11-05T12:00:00.000Z"
+      },
+      "preferences": {
+        "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+        "primaryConcern": null,
+        "concernNotes": "",
+        "notificationsEnabled": true,
+        "reducedMotion": false,
+        "updatedAt": "2026-11-08T20:27:26.435Z"
+      },
+      "onboarding": {
+        "id": "d03ff4a6-c02d-49b1-9094-9a2bf974f6e5",
+        "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+        "currentStep": 1,
+        "completedSteps": [],
+        "debtQuestionAnswer": "yes",
+        "status": "completed",
+        "startedAt": "2026-11-08T20:27:26.435Z",
+        "completedAt": "2026-11-05T12:00:00.000Z"
+      },
+      "accounts": [
+        {
+          "id": "main",
+          "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+          "name": "Current account",
+          "institution": "Synthetic bank",
+          "currency": "EUR",
+          "purposes": [
+            "daily_spending"
+          ],
+          "fundsOwnership": "personal",
+          "personalAvailableAmount": null,
+          "isPrimary": true,
+          "notes": "",
+          "createdAt": "2026-11-05T12:00:00.000Z",
+          "updatedAt": "2026-11-05T12:00:00.000Z"
+        }
+      ],
+      "balances": [
+        {
+          "id": "balance-main",
+          "accountId": "main",
+          "amount": 20,
+          "currency": "EUR",
+          "asOf": "2026-11-05T12:00:00.000Z",
+          "sourceType": "user_reported",
+          "createdAt": "2026-11-05T12:00:00.000Z"
+        }
+      ],
+      "incomes": [
+        {
+          "id": "salary",
+          "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+          "name": "Salary",
+          "pattern": "regular",
+          "estimatedMonthlyAmount": 1800,
+          "currency": "EUR",
+          "frequency": "monthly",
+          "sourceType": "salary",
+          "nextExpectedDate": "2026-11-25",
+          "receivingAccountId": "main",
+          "notes": "",
+          "createdAt": "2026-11-05T12:00:00.000Z"
+        }
+      ],
+      "expenseCommitment": {
+        "id": "essentials",
+        "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+        "estimatedMonthlyAmount": 950,
+        "currency": "EUR",
+        "notes": "",
+        "updatedAt": "2026-11-05T12:00:00.000Z"
+      },
+      "obligations": [
+        {
+          "id": "utility",
+          "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+          "name": "Utilities",
+          "amount": 65,
+          "currency": "EUR",
+          "dueDate": "2026-11-18",
+          "recurrence": "monthly",
+          "category": "energy",
+          "status": "unpaid",
+          "accountId": "main",
+          "notes": "",
+          "createdAt": "2026-11-05T12:00:00.000Z"
+        }
+      ],
+      "debts": [
+        {
+          "id": "card",
+          "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+          "name": "Credit card",
+          "debtType": "credit_card",
+          "currency": "EUR",
+          "remainingBalance": 900,
+          "apr": 24,
+          "minimumPayment": 65,
+          "nextDueDate": "2026-11-08",
+          "paymentFrequency": "monthly",
+          "createdAt": "2026-11-05T12:00:00.000Z"
+        }
+      ],
+      "goals": [],
+      "goalAllocations": [],
+      "statements": [],
+      "transactions": [],
+      "classifications": [],
+      "transferMatches": [],
+      "confirmations": [],
+      "recommendations": [
+        {
+          "id": "rec_A005_eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+          "userId": "979e01cc-7261-48e3-b720-2195868898d2",
+          "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+          "actionType": "confirm_upcoming_bill",
+          "title": "Contact Credit card issuer about the upcoming minimum",
+          "description": "Required minimum of EUR 65 is due on 2026-11-08. The dated cash projection shows a EUR 45 shortfall.",
+          "reasoning": "Ask the issuer what options are available before the due date. Terms depend on the issuer. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S001]",
+          "suggestedAmount": 20,
+          "adjustedAmount": null,
+          "currency": "EUR",
+          "targetGoalId": "card",
+          "sourceAccountId": null,
+          "priority": "priority",
+          "status": "accepted",
+          "readinessState": "state_a_action_ready",
+          "createdAt": "2026-11-08T20:28:06.994Z",
+          "updatedAt": "2026-11-08T20:28:12.407Z"
+        }
+      ],
+      "assistantMessages": [],
+      "actionFeedback": [
+        {
+          "id": "fb_1794169692441_accept",
+          "recommendationId": "rec_A005_eval_49070fdc-7707-4201-8566-e9a2bfc81818",
+          "actionId": "A005",
+          "snapshotId": "snap_beta_979e01cc-7261-48e3-b720-2195868898d2_v2_6c911a8325db003b",
+          "action": "accept",
+          "amount": 20,
+          "note": "User accepted recommendation (pending execution).",
+          "timestamp": "2026-11-08T20:28:12.407Z"
+        }
+      ]
+    },
+    "aiConsent": true,
+    "experimentalRecommendations": true,
+    "requestHash": "0aac7fb737e5a6c0761463fef864aba9ffedcdd68b58612302f94aba00792008"
+  },
+  "calls": []
+}

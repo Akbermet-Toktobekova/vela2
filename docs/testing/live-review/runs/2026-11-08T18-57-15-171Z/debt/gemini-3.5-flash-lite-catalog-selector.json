@@ -1,0 +1,9 @@
+{
+  "stage": "gemini-3.5-flash-lite-catalog-selector",
+  "status": "COMPLETED",
+  "input": {
+    "trigger": "NO_VALID_PRIMARY"
+  },
+  "output": [],
+  "calls": []
+}

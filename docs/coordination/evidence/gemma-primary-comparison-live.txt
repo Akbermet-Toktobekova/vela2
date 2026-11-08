@@ -1,0 +1,36 @@
+(node:10260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Primary comparison run 2026-11-08T17-26-37-103Z using inputs from 2026-11-08T16-41-15-473Z
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: failed or invalid response
+debt/gemma-4-31b-it-suggestion-generator
+debt/gemma-4-31b-it-checker
+Model attempt gemma-4-26b-a4b-it: live response
+debt/gemma-4-26b-a4b-it-suggestion-generator
+Model attempt gemma-4-26b-a4b-it: live response
+debt/gemma-4-26b-a4b-it-checker
+Model attempt gemini-3.1-flash-lite: live response
+debt/gemini-3.1-flash-lite-suggestion-generator
+Model attempt gemini-3.1-flash-lite: live response
+debt/gemini-3.1-flash-lite-checker
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: failed or invalid response
+strong/gemma-4-31b-it-suggestion-generator
+strong/gemma-4-31b-it-checker
+Model attempt gemma-4-26b-a4b-it: live response
+strong/gemma-4-26b-a4b-it-suggestion-generator
+strong/gemma-4-26b-a4b-it-checker
+Model attempt gemini-3.1-flash-lite: live response
+strong/gemini-3.1-flash-lite-suggestion-generator
+strong/gemini-3.1-flash-lite-checker
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: failed or invalid response
+nora/gemma-4-31b-it-suggestion-generator
+nora/gemma-4-31b-it-checker
+Model attempt gemma-4-26b-a4b-it: live response
+nora/gemma-4-26b-a4b-it-suggestion-generator
+nora/gemma-4-26b-a4b-it-checker
+Model attempt gemini-3.1-flash-lite: live response
+nora/gemini-3.1-flash-lite-suggestion-generator
+nora/gemini-3.1-flash-lite-checker
+Saved primary comparison C:\Users\sanat\OneDrive\Desktop\vela1\docs\testing\live-review\runs\2026-11-08T17-26-37-103Z

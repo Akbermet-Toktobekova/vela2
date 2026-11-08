@@ -1,0 +1,7 @@
+{
+  "manifestStatus": 200,
+  "bundleStatus": 200,
+  "configuredApi": true,
+  "connectionPromptRemoved": true,
+  "serverAddressFieldRemoved": true
+}

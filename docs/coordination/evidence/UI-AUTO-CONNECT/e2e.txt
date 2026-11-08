@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
+
+(node:14760) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/e2e/finagent-14-scenarios.test.ts (14 tests) 643ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  23:07:15
+   Duration  3.46s (transform 1.01s, setup 0ms, collect 1.75s, tests 643ms, environment 0ms, prepare 409ms)
+
