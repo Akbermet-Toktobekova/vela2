@@ -1,19 +1,23 @@
-import { themedStyles } from '../theme';
+import { themedStyles } from "../theme";
 import { useState } from "react";
-import { Text,TouchableOpacity,View } from "react-native";
-import type { Finding,FindingResponse,FindingsPacket } from "../../../shared/contracts/findingsTypes";
+import { Text, TouchableOpacity, View } from "react-native";
 import type {
-FinancialSnapshot,
-RecommendationRecord
+  Finding,
+  FindingResponse,
+  FindingsPacket,
+} from "../../../shared/contracts/findingsTypes";
+import type {
+  FinancialSnapshot,
+  RecommendationRecord,
 } from "../../../shared/pi/types";
 import { FindingsReview } from "../components/FindingsReview";
 import {
-Field,
-GlassButton,
-GlassCard,
-Icon,
-IconName,
-colors,
+  Field,
+  GlassButton,
+  GlassCard,
+  Icon,
+  IconName,
+  colors,
 } from "../components/SoftGlass";
 import { deriveObservedPlan } from "./planMath";
 
@@ -29,7 +33,10 @@ export function formatMoney(
 type Props = {
   manualReviewMessage?: string;
   findings?: FindingsPacket;
-  onFindingResponse: (finding: Finding, body: Omit<FindingResponse,"expectedVersion"|"evidenceVersion">) => Promise<void>;
+  onFindingResponse: (
+    finding: Finding,
+    body: Omit<FindingResponse, "expectedVersion" | "evidenceVersion">,
+  ) => Promise<void>;
   snapshot?: FinancialSnapshot;
   recommendation?: RecommendationRecord | null;
   analysis?: any;
@@ -105,14 +112,25 @@ export function TodayScreen(props: Props) {
   return (
     <>
       <View style={styles.topRow}>
-        <Text style={styles.note}>Your financial picture</Text>
-        <TouchableOpacity accessibilityRole="button" onPress={props.onReviewTransactions}>
-          <Text style={styles.link}>{snapshot?.readinessState === "state_a_action_ready" ? "Ready" : "Needs review"} · {snapshot?.unresolvedConfirmations.length || 0} checks</Text>
+        <Text style={styles.note}>
+          Hello, {snapshot?.profile.nickname || "there"} ·{" "}
+          {snapshot?.accountSummaries.length || 0} accounts tracked
+        </Text>
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={props.onReviewTransactions}
+        >
+          <Text style={styles.link}>
+            {snapshot?.readinessState === "state_a_action_ready"
+              ? "Ready"
+              : "Needs review"}{" "}
+            · {snapshot?.unresolvedConfirmations.length || 0} checks
+          </Text>
         </TouchableOpacity>
       </View>
-      <GlassCard style={{backgroundColor: "rgba(56,102,65,.08)", borderColor: "rgba(56,102,65,.25)"}}>
+      <GlassCard>
         <View style={styles.topRow}>
-          <Text style={styles.eyebrow}>✧ RECOMMENDED NEXT STEP</Text>
+          <Text style={styles.eyebrow}>✧ RECOMMENDED STEP</Text>
           <Text style={styles.badge}>
             {processing
               ? "Reviewing"
@@ -224,15 +242,19 @@ export function TodayScreen(props: Props) {
             )}
           </>
         ) : (
-          <><GlassButton
-            title={processing ? "Review in progress…" : "Review my finances"}
-            disabled={busy || processing}
-            onPress={props.onReview}
-          />
+          <>
+            <GlassButton
+              title={processing ? "Review in progress…" : "Review my finances"}
+              disabled={busy || processing}
+              onPress={props.onReview}
+            />
           </>
         )}
-        {active&&<GlassButton secondary title={processing?"Review in progress…":"Review my finances"} disabled={busy||processing} onPress={props.onReview}/>}
-        {!!props.manualReviewMessage&&<Text accessibilityLiveRegion="polite" style={styles.note}>{props.manualReviewMessage}</Text>}
+        {!!props.manualReviewMessage && (
+          <Text accessibilityLiveRegion="polite" style={styles.note}>
+            {props.manualReviewMessage}
+          </Text>
+        )}
         {props.job?.error && (
           <Text style={styles.error}>
             {typeof props.job.error === "string"
@@ -262,66 +284,129 @@ export function TodayScreen(props: Props) {
       <GlassCard>
         <Text style={styles.eyebrow}>YOUR FINANCIAL PICTURE</Text>
         <Text style={styles.actionTitle}>Here's what Vela found</Text>
-        <ValueRow label={`Observed spending · ${currency}`} value={formatMoney(observed?.grossSpending, currency)} />
-        <ValueRow label="Subscriptions" value={formatMoney(observed?.categories.subscriptions ?? (observed ? 0 : null), currency)} />
-        <ValueRow label="Transfer movements (excluded)" value={formatMoney(observed?.transfers, currency)} />
-        {snapshot?.dataQuality.multiCurrencyDetected && <Text style={styles.note}>Showing {currency} only. Other currencies remain separate in Analytics; no currency conversion is assumed.</Text>}
-        {!!observed?.unknownCount && <Text style={styles.note}>{observed.unknownCount} transactions in this currency still need review and are excluded from classified totals.</Text>}
-        <Text style={styles.note}>Coverage: {snapshot?.dataQuality.accountsWithStatements || 0} of {snapshot?.dataQuality.totalAccounts || 0} accounts have statements. These are observed history figures, not guaranteed monthly averages.</Text>
-        <View style={styles.line} />
-        <GlassButton secondary title={`Inspect all ${snapshot?.transactions.length || 0} transactions`} disabled={busy} onPress={props.onReviewTransactions} />
+        <View style={styles.tiles}>
+          <Metric
+            label="OBSERVED SPEND"
+            value={formatMoney(observed?.grossSpending, currency)}
+          />
+          <Metric
+            label="SUBSCRIPTIONS"
+            value={formatMoney(
+              observed?.categories.subscriptions ?? (observed ? 0 : null),
+              currency,
+            )}
+          />
+          <Metric
+            label="TRANSFERS EXCL."
+            value={formatMoney(observed?.transfers, currency)}
+          />
+        </View>
+        <Text style={styles.coverage}>
+          📌 Coverage note: {snapshot?.dataQuality.accountsWithStatements || 0}{" "}
+          of {snapshot?.dataQuality.totalAccounts || 0} accounts imported. Vela
+          treats these as observed period figures rather than permanent monthly
+          averages.
+        </Text>
+        <View style={styles.topRow}>
+          <Text style={styles.note}>
+            IMPACT-BASED CONFIRMATIONS ({props.findings?.unresolvedCount || 0})
+          </Text>
+          <TouchableOpacity
+            onPress={props.onReviewTransactions}
+            accessibilityRole="button"
+          >
+            <Text style={styles.link}>
+              Inspect all {snapshot?.transactions.length || 0} txns
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <FindingsReview
+          embedded
+          packet={props.findings}
+          busy={busy}
+          transactions={snapshot?.transactions || []}
+          respond={props.onFindingResponse}
+        />
       </GlassCard>
-
-      <FindingsReview packet={props.findings} busy={busy} transactions={snapshot?.transactions || []} respond={props.onFindingResponse} />
 
       <GlassCard>
         <View style={styles.topRow}>
-          <Text style={styles.eyebrow}>PERSONAL BALANCE · {currency}</Text>
-          <Icon name="leaf" size={20} />
+          <Text style={styles.eyebrow}>
+            AVAILABLE PERSONAL CASH ({currency})
+          </Text>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={() => props.onOpen("accounts")}
+          >
+            <Text style={styles.badge}>+ Account</Text>
+          </TouchableOpacity>
         </View>
         <Text style={styles.balance}>
           {summary?.hasMissingBalances
             ? "Needs balance data"
             : formatMoney(summary?.personalAccessibleCash, currency)}
         </Text>
-        <Text style={styles.note}>
-          Accessible personal funds across your reported accounts.
-        </Text>
-        <View style={styles.line} />
-        <ValueRow
-          label="Protected for goals"
-          value={formatMoney(summary?.allocatedToGoals, currency)}
-        />
-        <ValueRow
-          label="Upcoming bills"
-          value={formatMoney(summary?.upcomingUnpaidObligations, currency)}
-        />
-        <View style={styles.spendRow}>
-          <Text style={styles.eyebrow}>AVAILABLE TO SPEND</Text>
-          <Text style={styles.spendAmount}>
-            {summary?.hasMissingBalances
-              ? "Unknown"
-              : formatMoney(summary?.uncommittedSafeToSpend, currency)}
-          </Text>
+        <View style={styles.tiles}>
+          <Metric
+            label="Upcoming Bills"
+            value={formatMoney(summary?.upcomingUnpaidObligations, currency)}
+          />
+          <Metric
+            label="Earmarked Goals"
+            value={formatMoney(summary?.allocatedToGoals, currency)}
+          />
+          <Metric
+            label="Safe to Spend"
+            value={
+              summary?.hasMissingBalances
+                ? "Unknown"
+                : formatMoney(summary?.uncommittedSafeToSpend, currency)
+            }
+          />
         </View>
-        {(summary?.hasWorkOrMixedUncertainty ||
-          snapshot?.dataQuality.multiCurrencyDetected) && (
-          <Text style={styles.note}>
-            Some balances need confirmation. Currencies and mixed funds stay
-            separate.
-          </Text>
-        )}
         <View style={styles.line} />
         <Text style={styles.eyebrow}>YOUR ACCOUNTS</Text>
-        {snapshot?.accountSummaries.map(account => (
-          <TouchableOpacity key={account.account.id} accessibilityRole="button" disabled={busy} onPress={() => props.onOpen("accounts", account.account)} style={{paddingVertical: 10, gap: 4}}>
-            <Text style={styles.link}>{account.account.institution} · {account.account.name}{account.account.isPrimary ? " · Primary" : ""}</Text>
-            <Text style={styles.spendAmount}>{formatMoney(account.latestBalance?.amount, account.account.currency)}</Text>
-            <Text style={styles.note}>{account.account.fundsOwnership.replaceAll("_", " ")} · {account.isStale ? "Balance needs updating" : account.latestBalance ? `As of ${account.latestBalance.asOf.slice(0,10)}` : "No balance date"}</Text>
-            <Text style={styles.note}>{account.transactionCount} transactions · {account.statementCount} statements{account.account.fundsOwnership !== "personal" ? ` · Personal share ${formatMoney(account.personalAccessibleBalance, account.account.currency)}` : ""}</Text>
+        {snapshot?.accountSummaries.map((account) => (
+          <TouchableOpacity
+            key={account.account.id}
+            accessibilityRole="button"
+            disabled={busy}
+            onPress={() => props.onOpen("accounts", account.account)}
+            style={styles.account}
+          >
+            <View style={styles.topRow}>
+              <Text style={[styles.link, { flex: 1 }]} numberOfLines={1}>
+                {account.account.institution} · {account.account.name}
+                {account.account.isPrimary ? " · Primary" : ""}
+              </Text>
+              <Text style={styles.accountAmount}>
+                {formatMoney(
+                  account.latestBalance?.amount,
+                  account.account.currency,
+                )}
+              </Text>
+            </View>
+            <Text style={styles.accountMeta}>
+              {account.latestBalance
+                ? `Balance as of ${account.latestBalance.asOf.slice(0, 10)}`
+                : "No balance date yet"}
+              {account.account.fundsOwnership !== "personal"
+                ? ` · Personal: ${formatMoney(account.personalAccessibleBalance, account.account.currency)}`
+                : ""}
+            </Text>
           </TouchableOpacity>
         ))}
-        {snapshot?.currencySummaries.filter(c => c.currency !== currency).map(c => <Text key={c.currency} style={styles.note}>Kept separate · {c.currency}: {c.hasMissingBalances ? "Needs balance data" : formatMoney(c.personalAccessibleCash, c.currency)} personal funds</Text>)}
+        {snapshot?.currencySummaries
+          .filter((c) => c.currency !== currency)
+          .map((c) => (
+            <Text key={c.currency} style={styles.note}>
+              Kept separate · {c.currency}:{" "}
+              {c.hasMissingBalances
+                ? "Needs balance data"
+                : formatMoney(c.personalAccessibleCash, c.currency)}{" "}
+              personal funds
+            </Text>
+          ))}
         <TouchableOpacity accessibilityRole="button" onPress={props.onManage}>
           <Text style={styles.link}>View your accounts →</Text>
         </TouchableOpacity>
@@ -387,15 +472,53 @@ export function TodayScreen(props: Props) {
     </>
   );
 }
-function ValueRow({ label, value }: { label: string; value: string }) {
+function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.valueRow}>
-      <Text style={styles.muted}>● {label}</Text>
-      <Text style={styles.value}>{value}</Text>
+    <View style={styles.metric}>
+      <Text style={styles.metricLabel}>{label}</Text>
+      <Text style={styles.metricValue}>{value}</Text>
     </View>
   );
 }
 const styles = themedStyles({
+  tiles: { flexDirection: "row", gap: 8 },
+  metric: {
+    flex: 1,
+    backgroundColor: colors.secondary,
+    borderRadius: 16,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.line,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+  },
+  metricLabel: {
+    fontSize: 9,
+    lineHeight: 13,
+    color: colors.muted,
+    textAlign: "center",
+  },
+  metricValue: { fontSize: 17, fontWeight: "700", color: colors.green },
+  coverage: {
+    fontSize: 11,
+    lineHeight: 17,
+    color: colors.ink,
+    backgroundColor: "#d3dcd1",
+    padding: 13,
+    borderRadius: 24,
+  },
+  account: {
+    padding: 12,
+    gap: 3,
+    backgroundColor: "rgba(255,255,255,.55)",
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 15,
+  },
+  accountAmount: { fontSize: 13, fontWeight: "700", color: colors.ink },
+  accountMeta: { fontSize: 10, color: colors.muted },
+
   topRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -406,7 +529,7 @@ const styles = themedStyles({
     fontSize: 10,
     fontWeight: "600",
     letterSpacing: 0.8,
-    color: colors.muted,
+    color: colors.green,
   },
   badge: {
     paddingHorizontal: 10,
@@ -421,13 +544,18 @@ const styles = themedStyles({
   actionTitle: {
     color: colors.ink,
     fontWeight: "600",
-    fontSize: 23,
-    lineHeight: 29,
+    fontSize: 17,
+    lineHeight: 23,
     letterSpacing: -0.7,
   },
   description: { color: colors.muted, fontSize: 13, lineHeight: 21 },
   beta: { color: "#747b68", letterSpacing: 0.6, fontSize: 8, lineHeight: 14 },
-  actions: { flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center" },
+  actions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    alignItems: "center",
+  },
   outlineAction: {
     paddingVertical: 13,
     paddingHorizontal: 18,
@@ -493,17 +621,17 @@ const styles = themedStyles({
     backgroundColor: "rgba(255,255,255,.36)",
     borderWidth: 1.2,
     borderColor: "white",
-    borderRadius: 22,
+    borderRadius: 16,
     alignItems: "center",
     paddingHorizontal: 8,
-    paddingVertical: 20,
+    paddingVertical: 14,
     gap: 12,
-    minHeight: 110,
+    minHeight: 80,
   },
   quickIcon: { height: 30, justifyContent: "center" },
   quickText: {
     color: colors.ink,
-    fontSize: 12,
+    fontSize: 11,
     textAlign: "center",
     lineHeight: 17,
   },

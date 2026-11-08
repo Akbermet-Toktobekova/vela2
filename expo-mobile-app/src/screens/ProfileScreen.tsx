@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { GlassCard, Icon } from "../components/SoftGlass";
+import { Icon } from "../components/SoftGlass";
 import { colors, themedStyles } from "../theme";
 
 export function ProfileScreen({
@@ -14,7 +14,9 @@ export function ProfileScreen({
   currency: string;
   sections: { title: string; content: ReactNode }[];
 }) {
-  const [expanded, setExpanded] = useState<string | null>("Profile details");
+  const [expanded, setExpanded] = useState<string[]>(
+    sections.map((section) => section.title),
+  );
   return (
     <>
       <View style={{ gap: 6 }}>
@@ -34,31 +36,39 @@ export function ProfileScreen({
         </View>
       </View>
       {sections.map((section) => (
-        <GlassCard key={section.title}>
+        <View key={section.title} style={s.accordion}>
           <TouchableOpacity
             accessibilityRole="button"
-            accessibilityState={{ expanded: expanded === section.title }}
+            accessibilityState={{ expanded: expanded.includes(section.title) }}
             onPress={() =>
               setExpanded((value) =>
-                value === section.title ? null : section.title,
+                value.includes(section.title)
+                  ? value.filter((title) => title !== section.title)
+                  : [...value, section.title],
               )
             }
             style={s.trigger}
           >
             <Text style={s.section}>{section.title}</Text>
             <Text style={s.section}>
-              {expanded === section.title ? "−" : "+"}
+              {expanded.includes(section.title) ? "⌃" : "⌄"}
             </Text>
           </TouchableOpacity>
-          {expanded === section.title && (
+          {expanded.includes(section.title) && (
             <View style={{ gap: 12 }}>{section.content}</View>
           )}
-        </GlassCard>
+        </View>
       ))}
     </>
   );
 }
 const s = themedStyles({
+  accordion: {
+    borderTopWidth: 1,
+    borderColor: colors.line,
+    paddingVertical: 12,
+    gap: 12,
+  },
   eyebrow: {
     fontSize: 11,
     letterSpacing: 1.2,

@@ -1,4 +1,4 @@
-import { DebtSimulator } from "../components/DebtSimulator";
+import { MoneyHistoryChart } from "../components/MoneyHistoryChart";
 import { themedStyles } from "../theme";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -29,16 +29,7 @@ const money = (value: number | null | undefined, currency: string) =>
       );
 const label = (value: string) =>
   value.replaceAll("_", " ").replace(/^./, (c) => c.toUpperCase());
-const chartColors = [
-  "#386641",
-  "#6a994e",
-  "#a7c957",
-  "#bcaa8c",
-  "#737c66",
-  "#adc0a0",
-  "#7d9275",
-  "#d6c7aa",
-];
+const chartColors = ['#386641','#6a994e','#bc6c25','#a7c957','#52796f','#dda15e'];
 function Row({ name, value }: { name: string; value: string }) {
   return (
     <View style={s.row}>
@@ -80,6 +71,7 @@ export function AnalyticsScreen({
   onEssentials,
   onUpdateBalance,
 }: AnalyticsScreenProps) {
+  const [showDetails, setShowDetails] = useState(false);
   const [period, setPeriod] = useState("all");
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [selectedGoal, setSelectedGoal] = useState("");
@@ -167,31 +159,19 @@ export function AnalyticsScreen({
   return (
     <>
       <GlassCard>
-        <Text style={s.eyebrow}>VERIFIED SPENDING CATEGORIES</Text>
-        <Text style={s.heading}>Where your money went</Text>
-        <Chips
-          items={currencies.map((id) => ({ id, name: id }))}
-          value={currency}
-          onChange={setSelectedCurrency}
-        />
-        <Chips
-          items={[
-            { id: "all", name: "All imported" },
-            ...months.map((id) => ({ id, name: id })),
-          ]}
-          value={observedMonth || "all"}
-          onChange={setPeriod}
-        />
-        <Text style={s.note}>
-          Classified spending before refunds · {currency}. Tap a segment or
-          category to review its matching transactions.
-        </Text>
+        <View style={s.row}><View style={{flex:1,gap:4}}><Text style={s.eyebrow}>VERIFIED SPENDING CATEGORIES</Text><Text style={s.heading}>Where your money went</Text></View>        <GlassButton
+          secondary
+          title="Review All" compact
+          onPress={() =>
+            onReviewTransactions(undefined, currency, observedMonth)
+          }
+        /></View>
         {totalCategories > 0 ? (
-          <>
+          <View style={s.chartLayout}>
             <View style={s.chart}>
               <Svg
-                width={190}
-                height={190}
+                width={136}
+                height={136}
                 viewBox="0 0 190 190"
                 accessibilityLabel="Spending category chart"
               >
@@ -233,208 +213,120 @@ export function AnalyticsScreen({
                 {money(totalCategories, currency)}
               </Text>
             </View>
-            {categoryEntries.map(([category, value], i) => (
-              <TouchableOpacity
-                key={category}
-                accessibilityRole="button"
-                onPress={() =>
-                  onReviewTransactions(category, currency, observedMonth)
-                }
-                style={s.row}
-              >
-                <View style={s.legend}>
-                  <View
-                    style={[
-                      s.dot,
-                      { backgroundColor: chartColors[i % chartColors.length] },
-                    ]}
-                  />
-                  <Text style={s.body}>{label(category)}</Text>
-                </View>
-                <Text style={s.value}>
-                  {money(value, currency)} ·{" "}
-                  {Math.round((value / totalCategories) * 100)}%
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </>
+            <View style={s.categoryList}>
+              {categoryEntries.map(([category, value], i) => (
+                <TouchableOpacity
+                  key={category}
+                  accessibilityRole="button"
+                  onPress={() =>
+                    onReviewTransactions(category, currency, observedMonth)
+                  }
+                  style={s.categoryRow}
+                >
+                  <View style={s.legend}>
+                    <View
+                      style={[
+                        s.dot,
+                        {
+                          backgroundColor: chartColors[i % chartColors.length],
+                        },
+                      ]}
+                    />
+                    <Text style={s.categoryText} numberOfLines={1}>
+                      {label(category)}
+                    </Text>
+                  </View>
+                  <Text style={s.value}>
+                    {money(value, currency)} ·{" "}
+                    {Math.round((value / totalCategories) * 100)}%
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
         ) : (
           <Text style={s.note}>
             No classified spending in this period. Review operations to confirm
             their meaning.
           </Text>
         )}
-        <GlassButton
-          secondary
-          title="Review all transactions"
-          onPress={() =>
-            onReviewTransactions(undefined, currency, observedMonth)
-          }
-        />
+
       </GlassCard>
       <GlassCard>
-        <Text style={s.eyebrow}>SAFETY CUSHION</Text>
-        <Text style={s.heading}>
-          {cushion?.name || "Create your safety cushion"}
-        </Text>
-        {cushion ? (
-          <>
-            <Row
-              name="Allocated / target"
-              value={`${money(cushionAmount, cushion.currency)} / ${money(cushion.targetAmount, cushion.currency)}`}
-            />
-            <View
-              accessible
-              accessibilityLabel={`Safety cushion ${cushion.targetAmount && cushionAmount != null ? Math.round(Math.min(1, cushionAmount / cushion.targetAmount) * 100) : 0} percent funded`}
-              style={s.track}
-            >
-              <View
-                style={[
-                  s.fill,
-                  {
-                    width: `${cushion.targetAmount && cushionAmount != null ? Math.min(100, (cushionAmount / cushion.targetAmount) * 100) : 0}%`,
-                  },
-                ]}
-              />
-            </View>
+        <View style={s.row}>
+          <View style={{ flex: 1, gap: 8 }}>
+            <Text style={s.eyebrow}>SAFETY CUSHION</Text>
+            <Text style={s.heading}>
+              {money(cushionAmount, cushion?.currency || currency)}{" "}
+              <Text style={s.note}>
+                of {money(cushion?.targetAmount, cushion?.currency || currency)}
+              </Text>
+            </Text>
+          </View>
+          <GlassButton
+            secondary
+            title="Update Balance" compact
+            onPress={onUpdateBalance}
+          />
+          {cushion && (
             <GlassButton
               secondary
-              title="Edit target"
+              title="Edit Target" compact
               onPress={() => onEditGoal(cushion)}
             />
-          </>
-        ) : (
-          <Text style={s.note}>
-            Add a goal below to start tracking your cushion.
+          )}
+        </View>
+        <View style={s.row}>
+          <Text style={s.body}>
+            {cushion?.targetAmount && cushionAmount != null
+              ? Math.round((cushionAmount / cushion.targetAmount) * 100)
+              : 0}
+            % funded
           </Text>
-        )}
-        <Text style={s.note}>
-          {snapshot.emergencyCoverageMonths == null ||
-          !cushion ||
-          snapshot.essentialCommitment?.currency !== cushion.currency
-            ? "Emergency coverage needs a recorded cushion and essential monthly costs in the same currency."
-            : `Recorded emergency coverage: ${snapshot.emergencyCoverageMonths.toFixed(2)} months`}
-        </Text>
-        <GlassButton
-          secondary
-          title="Update account balance"
-          onPress={onUpdateBalance}
-        />
-        <Text style={s.note}>
-          Account balance updates do not change earmarked goal allocations.
-        </Text>
-        <GlassButton
-          secondary
-          title="Review essential monthly costs"
-          onPress={onEssentials}
-        />
-      </GlassCard>
-      <GlassCard>
-        <Text style={s.eyebrow}>CASH FLOW BREAKDOWN</Text>
-        <Text style={s.heading}>
-          {activePeriod === "planned"
-            ? "Your monthly estimates"
-            : "Your imported history"}
-        </Text>
-        <Chips
-          items={currencies.map((id) => ({ id, name: id }))}
-          value={currency}
-          onChange={setSelectedCurrency}
-        />
-        <Chips
-          items={[
-            { id: "all", name: "All imported" },
-            { id: "planned", name: "Planned" },
-            ...months.map((id) => ({ id, name: id })),
+          <Text style={s.note}>
+            {cushion?.targetAmount != null && cushionAmount != null
+              ? money(
+                  Math.max(0, cushion.targetAmount - cushionAmount),
+                  cushion.currency,
+                )
+              : "Target needed"}{" "}
+            to go
+          </Text>
+        </View>
+        <View style={s.track}>
+          <View
+            style={[
+              s.fill,
+              {
+                width: `${cushion?.targetAmount && cushionAmount != null ? Math.min(100, Math.max(0, (cushionAmount / cushion.targetAmount) * 100)) : 0}%`,
+              },
+            ]}
+          />
+        </View>
+        <View
+          style={[
+            s.row,
+            { borderTopWidth: 1, borderColor: colors.line, paddingTop: 12 },
           ]}
-          value={activePeriod}
-          onChange={setPeriod}
-        />
-        {activePeriod === "planned" ? (
-          <>
-            <Row
-              name="Declared monthly income"
-              value={money(plannedIncome, currency)}
-            />
-            <Row
-              name="Essential monthly estimate"
-              value={money(essentials, currency)}
-            />
+        >
+          <Text style={s.body}>Emergency Coverage</Text>
+          <TouchableOpacity accessibilityRole="button" onPress={onEssentials}>
             <Text style={s.note}>
-              These are your estimates, not observed statement totals. Bills are
-              included in the essential estimate rather than added again.
+              Essentials: {money(essentials, currency)}/mo (Edit)
             </Text>
-            <Row
-              name="Upcoming unpaid bills (due-date total)"
-              value={money(
-                snapshot.currencySummaries.find((c) => c.currency === currency)
-                  ?.upcomingUnpaidObligations,
-                currency,
-              )}
-            />
-            {snapshot.debts
-              .filter((d) => d.currency === currency)
-              .map((debt) => (
-                <Row
-                  key={debt.id}
-                  name={`${debt.name} minimum · ${debt.paymentFrequency || "frequency unknown"}`}
-                  value={money(debt.minimumPayment, currency)}
-                />
-              ))}
-            <Text style={s.note}>
-              Bill totals follow recorded due dates, not monthly averages. Debt
-              minimums retain their own frequencies; they are not added to
-              essential costs here.
-            </Text>
-          </>
-        ) : (
-          <>
-            <Text style={s.note}>
-              {range.length
-                ? `${range[0]} – ${range[range.length - 1]} · ${observed.count} transactions`
-                : "No imported transactions for this currency."}
-            </Text>
-            <Row
-              name="Identified income"
-              value={money(observed.income, currency)}
-            />
-            <Row
-              name="Spending before refunds"
-              value={money(observed.grossSpending, currency)}
-            />
-            <Row name="Refunds" value={money(observed.refunds, currency)} />
-            <Row
-              name="Spending after refunds"
-              value={money(observed.netSpending, currency)}
-            />
-            <Row
-              name="Debt payments"
-              value={money(observed.debtPayments, currency)}
-            />
-            <Row
-              name="Internal movements (excluded)"
-              value={money(observed.transfers, currency)}
-            />
-            <Row
-              name="Work movements (excluded)"
-              value={money(observed.workMovements, currency)}
-            />
-            <Text style={s.note}>
-              Currencies are never converted or combined. Internal movements
-              show recorded entries, not new income. {observed.unknownCount}{" "}
-              operations need economic review and are excluded from these
-              totals.
-            </Text>
-            <Text style={s.note}>
-              Coverage: {snapshot.dataQuality.accountsWithStatements} of{" "}
-              {snapshot.dataQuality.totalAccounts} accounts have statements.
-              Imported history is not a permanent monthly average. A negative
-              after-refund total means refunds exceed recorded spending.
-            </Text>
-          </>
-        )}
+          </TouchableOpacity>
+        </View>
+        <Text style={[s.body, { color: colors.green }]}>
+          {snapshot.emergencyCoverageMonths == null
+            ? "Needs essential costs and cushion data"
+            : `${snapshot.emergencyCoverageMonths.toFixed(2)} months of essential expenses`}
+        </Text>
+        <Text style={s.note}>
+          Calculated from recorded cushion and same-currency essential costs.
+          Balance updates edit your account; allocations remain separate.
+        </Text>
       </GlassCard>
-      <DebtSimulator debts={snapshot.debts} />
+      <MoneyHistoryChart snapshot={snapshot} />
       <GlassCard>
         <Text style={s.eyebrow}>INTERACTIVE SIMULATOR</Text>
         <Text style={s.heading}>Goal timeline calculator</Text>
@@ -528,24 +420,32 @@ export function AnalyticsScreen({
                 }
               />
             </View>
-            <Text style={s.heading}>
-              {goal.targetAmount == null
-                ? "Set a target amount first"
-                : timeline?.months === 0
-                  ? "Target already reached"
-                  : timeline?.months == null
-                    ? "Choose a positive monthly amount"
-                    : `${timeline.months} months to target`}
-            </Text>
-            {timeline?.date && timeline.months !== 0 && (
-              <Text style={s.body}>
-                Estimated completion:{" "}
-                {timeline.date.toLocaleDateString(undefined, {
-                  month: "long",
-                  year: "numeric",
-                })}
+            <View
+              style={{
+                backgroundColor: colors.green,
+                padding: 15,
+                borderRadius: 18,
+              }}
+            >
+              <Text style={[s.heading, { color: colors.white }]}>
+                {goal.targetAmount == null
+                  ? "Set a target amount first"
+                  : timeline?.months === 0
+                    ? "Target already reached"
+                    : timeline?.months == null
+                      ? "Choose a positive monthly amount"
+                      : `${timeline.months} months to target`}
               </Text>
-            )}
+              {timeline?.date && timeline.months !== 0 && (
+                <Text style={[s.body, { color: colors.white }]}>
+                  Estimated completion:{" "}
+                  {timeline.date.toLocaleDateString(undefined, {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </Text>
+              )}
+            </View>
             <Text style={s.note}>
               Hypothetical only: no interest, investment return, transfers, or
               affordability guarantee. Contributions stay in the goal currency.
@@ -559,21 +459,152 @@ export function AnalyticsScreen({
           </>
         )}
       </GlassCard>
+      <GlassButton
+        secondary
+        title={showDetails ? "Hide cash flow details" : "Cash flow details"}
+        onPress={() => setShowDetails((value) => !value)}
+      />
+      {showDetails && (
+        <>
+          {" "}
+          <GlassCard>
+            <Text style={s.eyebrow}>CASH FLOW BREAKDOWN</Text>
+            <Text style={s.heading}>
+              {activePeriod === "planned"
+                ? "Your monthly estimates"
+                : "Your imported history"}
+            </Text>
+            <Chips
+              items={currencies.map((id) => ({ id, name: id }))}
+              value={currency}
+              onChange={setSelectedCurrency}
+            />
+            <Chips
+              items={[
+                { id: "all", name: "All imported" },
+                { id: "planned", name: "Planned" },
+                ...months.map((id) => ({ id, name: id })),
+              ]}
+              value={activePeriod}
+              onChange={setPeriod}
+            />
+            {activePeriod === "planned" ? (
+              <>
+                <Row
+                  name="Declared monthly income"
+                  value={money(plannedIncome, currency)}
+                />
+                <Row
+                  name="Essential monthly estimate"
+                  value={money(essentials, currency)}
+                />
+                <Text style={s.note}>
+                  These are your estimates, not observed statement totals. Bills
+                  are included in the essential estimate rather than added
+                  again.
+                </Text>
+                <Row
+                  name="Upcoming unpaid bills (due-date total)"
+                  value={money(
+                    snapshot.currencySummaries.find(
+                      (c) => c.currency === currency,
+                    )?.upcomingUnpaidObligations,
+                    currency,
+                  )}
+                />
+                {snapshot.debts
+                  .filter((d) => d.currency === currency)
+                  .map((debt) => (
+                    <Row
+                      key={debt.id}
+                      name={`${debt.name} minimum · ${debt.paymentFrequency || "frequency unknown"}`}
+                      value={money(debt.minimumPayment, currency)}
+                    />
+                  ))}
+                <Text style={s.note}>
+                  Bill totals follow recorded due dates, not monthly averages.
+                  Debt minimums retain their own frequencies; they are not added
+                  to essential costs here.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={s.note}>
+                  {range.length
+                    ? `${range[0]} – ${range[range.length - 1]} · ${observed.count} transactions`
+                    : "No imported transactions for this currency."}
+                </Text>
+                <Row
+                  name="Identified income"
+                  value={money(observed.income, currency)}
+                />
+                <Row
+                  name="Spending before refunds"
+                  value={money(observed.grossSpending, currency)}
+                />
+                <Row name="Refunds" value={money(observed.refunds, currency)} />
+                <Row
+                  name="Spending after refunds"
+                  value={money(observed.netSpending, currency)}
+                />
+                <Row
+                  name="Debt payments"
+                  value={money(observed.debtPayments, currency)}
+                />
+                <Row
+                  name="Internal movements (excluded)"
+                  value={money(observed.transfers, currency)}
+                />
+                <Row
+                  name="Work movements (excluded)"
+                  value={money(observed.workMovements, currency)}
+                />
+                <Text style={s.note}>
+                  Currencies are never converted or combined. Internal movements
+                  show recorded entries, not new income. {observed.unknownCount}{" "}
+                  operations need economic review and are excluded from these
+                  totals.
+                </Text>
+                <Text style={s.note}>
+                  Coverage: {snapshot.dataQuality.accountsWithStatements} of{" "}
+                  {snapshot.dataQuality.totalAccounts} accounts have statements.
+                  Imported history is not a permanent monthly average. A
+                  negative after-refund total means refunds exceed recorded
+                  spending.
+                </Text>
+              </>
+            )}
+          </GlassCard>
+        </>
+      )}
     </>
   );
 }
 
 const s = themedStyles({
+  chartLayout: { flexDirection: "row", alignItems: "center", gap: 10 },
+  categoryList: { flex: 1, gap: 6 },
+  categoryRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: colors.secondary,
+    borderRadius: 20,
+    padding: 9,
+    gap: 4,
+  },
+  categoryText: { fontSize: 10, color: colors.ink, flexShrink: 1 },
+
   eyebrow: {
     fontSize: 10,
     fontWeight: "700",
     letterSpacing: 1,
     color: colors.green,
   },
-  heading: { fontSize: 18, fontWeight: "700", color: colors.ink },
+  heading: { fontSize: 16, fontWeight: "700", color: colors.ink },
   body: { fontSize: 13, color: colors.ink, flexShrink: 1 },
   value: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "600",
     color: colors.ink,
     flexShrink: 1,
@@ -607,10 +638,10 @@ const s = themedStyles({
     overflow: "hidden",
   },
   fill: { height: "100%", backgroundColor: colors.green, borderRadius: 8 },
-  chart: { alignItems: "center", justifyContent: "center", height: 190 },
+  chart: { alignItems: "center", justifyContent: "center", height: 160 },
   chartValue: {
     position: "absolute",
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "700",
     color: colors.ink,
   },
@@ -624,8 +655,8 @@ const s = themedStyles({
     color: colors.ink,
   },
   slider: {
-    height: 32,
-    borderRadius: 16,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: "#e3e5df",
     overflow: "hidden",
   },

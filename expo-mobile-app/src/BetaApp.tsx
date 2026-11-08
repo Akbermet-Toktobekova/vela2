@@ -354,6 +354,7 @@ export default function App() {
   const [documentsOpen, setDocumentsOpen] = useState(false);
   const [connectionOpen, setConnectionOpen] = useState(!base);
   const [tab, setTab] = useState("Today");
+  const [settingsSectionOpen,setSettingsSectionOpen]=useState(false);
   useEffect(() => { authScroll.current?.scrollTo({y: 0, animated: false}); }, [tab, documentsOpen]);
   const [manualReviewMessage,setManualReviewMessage]=useState("");
   const [settings, setSettings] = useState(false);
@@ -1023,7 +1024,7 @@ export default function App() {
     });
   }
 
-  async function upload() {
+  async function upload(selectedAccountId?: string) {
     await run(async () => {
       if (!state?.accounts.length) throw new Error("Add an account first.");
       let file: { name: string; size?: number; uri: string; base64?: string; mimeType?: string };
@@ -1071,7 +1072,7 @@ export default function App() {
           : extension && `statement.${extension}`;
       if (!fileName) throw new Error("Choose a CSV, Excel or PDF statement.");
       const source = {
-        accountId: importAccount || state.accounts[0].id,
+        accountId: selectedAccountId || importAccount || state.accounts[0].id,
         fileName,
         contentBase64,
       };
@@ -1393,7 +1394,7 @@ export default function App() {
               ) : null}
               {notice ? <Text style={s.notice}>{notice}</Text> : null}
 
-              {user && state && <Button secondary disabled={busy} title="Refresh account & resume pending work" onPress={() => void run(refreshAccount)} />}
+              {user && state && (error || importJob?.status === "connection_lost") && <Button secondary disabled={busy} title="Refresh account & resume pending work" onPress={() => void run(refreshAccount)} />}
               {versionConflict && user && <View style={s.card}>
                 <Text style={s.error}>A newer version exists. Your draft has not been overwritten.</Text>
                 <Button secondary disabled={busy} title="Reload records; keep my draft" onPress={() => void run(async () => {
@@ -1562,7 +1563,7 @@ export default function App() {
 
               {user && state && !onboarding && tab === "Profile" && !documentsOpen ? (
                 <ProfileScreen name={user.name || state.profile.nickname} email={user.email} currency={state.profile.baseCurrency} sections={[
-{title: 'Profile details', content: (<View style={s.card}>
+{title: 'Profile details', content: (<View style={{gap:12}}>
                     <Text style={s.h2}>Your profile</Text>
                     <Text style={s.body}>{user.email}</Text>
                     <Input label="Display name" value={profileName} onChange={v => {profileNameDirty.current = true; setProfileName(v);}} />
@@ -1579,7 +1580,7 @@ export default function App() {
 {title: 'Accounts', content: (section("accounts", "Your accounts"))},
 {title: 'Statements', content: (<>{imports()}<Button secondary title="Review imported transactions" onPress={() => {setSettings(false); setDocumentsOpen(false); setOnboardingDismissed(true); setShowOnboarding(false); reviewTransactions();}} /></>)},
 {title: 'Privacy & AI', content: (consent())},
-{title: "Data & account", content: (<View style={s.card}>
+{title: "Data & account", content: (<View style={{gap:12}}>
                     <Text style={s.h2}>Your data & account</Text>
                     <Text style={s.muted}>Export a copy before deleting. Sign out only affects this device's session.</Text>
                   <Button
@@ -1782,7 +1783,16 @@ export default function App() {
                   )}
                   {step === 7 && (
                     <>
-                      {imports()}
+                      <Text style={s.eyebrow}>CONNECT STATEMENTS · STEP 7</Text>
+                      <Text style={s.h1}>Let Vela connect the dots</Text>
+                      <Text style={s.body}>Upload bank statements so Vela can uncover subscriptions, internal transfers, and real spending patterns.</Text>
+                      {state.accounts.map(account => <GlassCard key={account.id}>
+                        <View style={s.row}><View style={{flex:1}}><Text style={s.h2}>{account.name} ({account.currency})</Text><Text style={s.muted}>{account.institution} · {state.statements.filter(statement => statement.accountId === account.id).length} statement(s)</Text></View><Button title="+ Upload" disabled={busy} onPress={() => void upload(account.id)} /></View>
+                        {state.statements.filter(statement => statement.accountId === account.id).map(statement => <View key={statement.id} style={{backgroundColor:colors.secondary,borderRadius:20,padding:14}}><Text style={s.h2} numberOfLines={1}>{statement.fileName}</Text><Text style={s.muted}>Status: {statement.status.replaceAll("_"," ")} · {statement.transactionCount} txns</Text></View>)}
+                        {!state.statements.some(statement => statement.accountId === account.id) && <Text style={[s.muted,{backgroundColor:colors.secondary,borderRadius:20,padding:16,textAlign:"center"}]}>No statements uploaded yet.</Text>}
+                      </GlassCard>)}
+                      {(preview || importJob) && imports()}
+                      <GlassCard><Text style={s.muted}>🛡 You stay in control: review parsed operations before confirming. Importing a statement cannot move your money.</Text></GlassCard>
                       {consent()}
                       <View style={s.card}>
                         <Text style={s.h2}>Ready to review</Text>
@@ -1809,7 +1819,7 @@ export default function App() {
                     )}
                     <Button
                       disabled={busy}
-                      title={step === 7 ? "Open Today" : "Save & continue"}
+                      title={step === 7 ? `See What Vela Found in Today (${state.transactions.length} txns) →` : "Save & continue"}
                       onPress={() => void changeStep(step + 1)}
                     />
                   </View>
@@ -1924,45 +1934,10 @@ export default function App() {
               !documentsOpen &&
               tab === "Analytics" ? (
                 <>
-                  <Text style={s.eyebrow}>YOUR FINANCIAL PICTURE</Text>
-                  <Text style={s.h1}>Analytics</Text>
-                  <Text style={s.muted}>
-                    Your goals, commitments and accepted next steps.
-                  </Text>
                   <AnalyticsScreen snapshot={snapshot} onReviewTransactions={reviewTransactions} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} onUpdateBalance={() => open("accounts", state.accounts.find(account => account.isPrimary) || state.accounts[0])} />
-                  <Button
-                    secondary
-                    title="Manage statements"
-                    onPress={() => setDocumentsOpen(true)}
-                  />
-                  {section("accounts", "Your accounts")}
-                  {section("obligations", "Upcoming bills")}
-                  {section("goals", "Your goals")}
-
-                  <View style={s.card}>
-                    <Text style={s.muted}>
-                      You can create and track goals. Suggested goal funding
-                      appears on Today when experimental recommendations are
-                      enabled and the financial checks pass.
-                    </Text>
-                  </View>
-                  <Button secondary title="Review all transactions" onPress={() => reviewTransactions()} />
-                  {section("debts", "Debts")}
-                  {section("incomes", "Income")}
-                  <View style={s.card}>
-                    <Text style={s.h2}>Essential expenses</Text>
-                    <Text>
-                      {money(
-                        state.expenseCommitment?.estimatedMonthlyAmount,
-                        state.expenseCommitment?.currency,
-                      )}
-                    </Text>
-                    <Button
-                      secondary
-                      title="Edit estimate"
-                      onPress={() => open("expenses")}
-                    />
-                  </View>
+                  {section("debts", "Debts & credit")}
+                  <Button secondary title="Manage goals, income & bills" onPress={() => setSettingsSectionOpen(value => !value)} />
+                  {settingsSectionOpen && <>{section("goals", "Your goals")}{section("incomes", "Income")}{section("obligations", "Upcoming bills")}</>}
                   <ActionHistory items={env.actionHistory || []}
                     refresh={async()=>{const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}}
                     save={async(id,body)=>{await request(`/action-history/${id}/outcome`,"PUT",body);const result=await request("/action-history");setEnv(current=>current?{...current,actionHistory:result.items}:current);}} />
@@ -2303,7 +2278,7 @@ const s = themedStyles({
   header: {
     flexShrink: 0,
     paddingHorizontal: 23,
-    paddingVertical: 16,
+    paddingVertical: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -2316,12 +2291,12 @@ const s = themedStyles({
     letterSpacing: -0.9,
   },
   brandIcon: {
-    width: 43,
-    height: 43,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: colors.green,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: colors.line,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -2337,7 +2312,7 @@ const s = themedStyles({
     padding: 16,
     gap: 16,
     paddingBottom: 112,
-    maxWidth: 422,
+    maxWidth: 430,
     width: "100%",
     alignSelf: "center",
   },
@@ -2361,10 +2336,10 @@ const s = themedStyles({
   card: {
     padding: 16,
     gap: 12,
-    backgroundColor: "rgba(255,255,255,.47)",
+    backgroundColor: colors.secondary,
     borderRadius: 24,
     borderWidth: 1.2,
-    borderColor: "#fff",
+    borderColor: colors.line,
     shadowColor: "#8e9882",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.065,
@@ -2374,7 +2349,7 @@ const s = themedStyles({
   input: {
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: colors.line,
     backgroundColor: "rgba(255,255,255,.66)",
     paddingHorizontal: 15,
     paddingVertical: 13,
@@ -2395,7 +2370,7 @@ const s = themedStyles({
     paddingHorizontal: 13,
     paddingVertical: 11,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: colors.line,
     backgroundColor: "rgba(255,255,255,.5)",
   },
   record: {
@@ -2415,7 +2390,7 @@ const s = themedStyles({
     borderRadius: 20,
     padding: 17,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: colors.line,
     gap: 12,
   },
   notice: {
@@ -2437,7 +2412,7 @@ const s = themedStyles({
     backgroundColor: "#eef1e9f5",
     zIndex: 50,
   },
-  sheet: { flex: 1, maxWidth: 422, width: "100%", alignSelf: "center" },
+  sheet: { flex: 1, maxWidth: 430, width: "100%", alignSelf: "center" },
   serviceLink: {
     fontSize: 11,
     color: "#80877a",

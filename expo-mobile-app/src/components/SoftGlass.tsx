@@ -149,11 +149,13 @@ export function GlassButton({
   title,
   onPress,
   secondary = false,
+  compact = false,
   disabled = false,
 }: {
   title: string;
   onPress: () => void;
   secondary?: boolean;
+  compact?: boolean;
   disabled?: boolean;
 }) {
   return (
@@ -164,10 +166,11 @@ export function GlassButton({
       style={[
         glass.button,
         secondary && glass.secondary,
+        compact && {paddingHorizontal:10,paddingVertical:6,minHeight:28},
         disabled && { opacity: 0.45 },
       ]}
     >
-      <Text style={[glass.buttonText, secondary && { color: colors.ink }]}>
+      <Text style={[glass.buttonText, secondary && { color: colors.ink }, compact && {fontSize:10} ]}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -255,21 +258,20 @@ export function FloatingNavigation({
 export function AmbientBackground() {
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <View style={glass.greenOrb} />
-      <View style={glass.warmOrb} />
+
     </View>
   );
 }
 export const glass = themedStyles({
   card: {...cardStyle, overflow: "hidden"},
-  cardContent: { padding: 16, gap: 12 },
+  cardContent: { padding: 18, gap: 10 },
   button: {
-    minHeight: 49,
-    paddingVertical: 14,
+    minHeight: 38,
+    paddingVertical: 9,
     paddingHorizontal: 18,
-    borderRadius: 18,
+    borderRadius: 22,
     backgroundColor: colors.green,
-    borderColor: "#fff",
+    borderColor: colors.line,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -279,7 +281,7 @@ export const glass = themedStyles({
     shadowRadius: 10,
   },
   secondary: { backgroundColor: colors.secondary, shadowOpacity: 0 },
-  buttonText: { fontSize: 14, fontWeight: "600", color: colors.white },
+  buttonText: { fontSize: 12, fontWeight: "600", color: colors.white },
   label: {
     fontSize: 10,
     fontWeight: "600",
@@ -288,13 +290,13 @@ export const glass = themedStyles({
     color: colors.muted,
   },
   input: {
-    minHeight: 50,
+    minHeight: 40,
     paddingHorizontal: 15,
-    paddingVertical: 13,
+    paddingVertical: 9,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#fff",
-    backgroundColor: "rgba(255,255,255,.62)",
+    borderColor: colors.line,
+    backgroundColor: colors.secondary,
     color: colors.ink,
     fontSize: 15,
   },

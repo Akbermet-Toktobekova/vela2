@@ -31,17 +31,18 @@ function FindingCard({finding,busy,transactions,respond,initiallyExpanded}:{find
   {saving&&<Text accessibilityLiveRegion="polite">Saving…</Text>}{!!error&&<Text accessibilityRole="alert">{error}</Text>}</>}
  </View>;
 }
-export function FindingsReview({packet,busy,transactions,respond}:{packet?:FindingsPacket;busy:boolean;transactions:any[];respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>}) {
+export function FindingsReview({packet,busy,transactions,respond,embedded=false}:{embedded?:boolean;packet?:FindingsPacket;busy:boolean;transactions:any[];respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>}) {
  const [showReviewed,setShowReviewed]=useState(false);const [showInfo,setShowInfo]=useState(false);
  const reviewedCount=useRef(packet?.reviewed.length||0);
  useEffect(()=>{const count=packet?.reviewed.length||0;if(count>reviewedCount.current)setShowReviewed(true);reviewedCount.current=count;},[packet?.reviewed.length]);
  const progress=packet?.progress;
- return <GlassCard><Text style={s.heading}>Needs your review</Text><Text>Only unclear cases and risks that affect your financial picture.</Text>
+ const Container=embedded?View:GlassCard;
+ return <Container>{!embedded&&<Text style={s.heading}>Needs your review</Text>}
  {progress&&<><Text accessibilityLiveRegion="polite">{progress.resolved} of {progress.total} reviewed · {progress.remaining} still need a decision</Text><View accessibilityRole="progressbar" accessibilityValue={{min:0,max:progress.total,now:progress.resolved}} style={{height:8,borderRadius:4,backgroundColor:'#e3e7df',overflow:'hidden'}}><View style={{height:8,backgroundColor:'#386641',width:`${progress.total?progress.resolved/progress.total*100:0}%`}}/></View>{progress.remaining===0&&<Text>Review complete—all {progress.total} cases resolved.</Text>}{progress.deferred>0&&<Text>{progress.deferred} deferred for later review.</Text>}</>}
  {!packet?<Text>Refresh to load findings.</Text>:!packet.unresolvedCount?<Text>No unclear cases need your attention.</Text>:<Text>{packet.unresolvedCount} cases remaining{packet.unresolvedCount>5?' · showing five at a time':''}</Text>}
  {packet?.findings.slice(0,5).map((f,i)=><FindingCard key={`${f.id}:${f.evidenceVersion}`} initiallyExpanded={i===0} finding={f} busy={busy} transactions={transactions} respond={respond}/>)}
  {!!packet?.reviewed.length&&<><GlassButton secondary title={`${showReviewed?'Hide':'Show'} reviewed (${packet.reviewed.length})`} onPress={()=>setShowReviewed(!showReviewed)}/>{showReviewed&&packet.reviewed.map(f=><View key={`${f.id}:${f.evidenceVersion}`} style={s.item}><Text style={s.title}>{f.reviewStatus==='Deferred'?'◷':'✓'} {f.reviewStatus} · {f.title}</Text><Text>{f.dateRange.start} – {f.dateRange.end} · {f.currency}</Text></View>)}</>}
  {!!packet?.informational.length&&<><GlassButton secondary title={showInfo?'Hide observations':'View informational observations'} onPress={()=>setShowInfo(!showInfo)}/>{showInfo&&packet.informational.map(f=><View key={f.id} style={s.item}><Text style={s.title}>{f.title}</Text><Text>{f.observation}</Text><Text>{f.currency} {f.totalAmount.toFixed(2)} · {f.dateRange.start} – {f.dateRange.end}</Text></View>)}</>}
- </GlassCard>;
+ </Container>;
 }
-const s=StyleSheet.create({heading:{fontSize:20,fontWeight:'700'},title:{fontWeight:'600',fontSize:16},meta:{fontSize:13,color:'#74766d'},item:{gap:10,paddingVertical:16},row:{flexDirection:'row',flexWrap:'wrap',gap:8}});
+const s=StyleSheet.create({heading:{fontSize:20,fontWeight:'700'},title:{fontWeight:'600',fontSize:16},meta:{fontSize:13,color:'#74766d'},item:{gap:8,padding:14,backgroundColor:'#dce1d6',borderWidth:1,borderColor:'rgba(39,46,35,.12)',borderRadius:18},row:{flexDirection:'row',flexWrap:'wrap',gap:8}});
