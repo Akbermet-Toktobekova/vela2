@@ -1,6 +1,7 @@
 /** Evidence descriptions only: financial totals and action eligibility remain with existing owners. */
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
+import { BetaPlanning, SubscriptionInput } from './planning';
 import { FindingCategorySchema,FindingResponseSchema,FindingSchema,FindingsPacketSchema,type Finding,type FindingResponse } from '../../../shared/contracts/findings';
 import type { SpendingCategory,TransactionClassification,TransactionEconomicType,TransactionRecord } from '../../../shared/pi/types';
 import policyBundle from '../../config/prototype-policy.json';
@@ -41,10 +42,51 @@ function groups<T>(rows:T[],key:(row:T)=>string):T[][] {
 
 export class BetaFindings {
  constructor(private store:BetaStore,private financial:BetaFinancial){}
+ private automatic(user: User, current: BetaState): Finding[] {
+  const state = current.state;
+  const decisions = (this.store.get(user.id, 'finding-decisions-v1') || {}) as Decisions;
+  const classes = new Map(state.classifications.map(c => [c.transactionId, c]));
+  const rows = state.transactions.filter(t => !t.excluded && t.userId === user.id);
+  const findings: Finding[] = [];
+  const pending = new Map(rows.filter(row => {
+    const label = classes.get(row.id);
+    return label?.isInternalTransferCandidate;
+  }).map(row => [row.id, row]));
+  const add = (evidence: TransactionRecord[]) => {
+    evidence.sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+    const id = hash(['transfer', evidence.map(row => row.id)]);
+    const version = hash(evidence.map(evidenceKey));
+    if (decisions[id]?.evidenceVersion === version) return;
+    const first = evidence[0];
+    findings.push(FindingSchema.parse({
+      id, kind: 'transfer', title: 'Transfer between your accounts?',
+      observation: 'This may be a transfer between your own accounts.',
+      question: 'Is this between your own accounts?',
+      whyItMatters: 'Possible transfers are shown separately from income and spending.',
+      currency: first.currency, accountId: first.accountId, evidenceIds: evidence.map(row => row.id),
+      dateRange: {start: first.date, end: evidence.at(-1)!.date},
+      totalAmount: Math.abs(evidence.find(row => row.amount < 0)?.amount ?? first.amount),
+      confidence: 'medium', state: 'unresolved', evidenceVersion: version,
+      responses: ['internal_transfer', 'external_transfer'],
+    }));
+  };
+  for (const match of state.transferMatches) {
+    if (match.status !== 'matched' || !match.incomingTransactionId) continue;
+    const outgoing = pending.get(match.outgoingTransactionId);
+    const incoming = pending.get(match.incomingTransactionId);
+    if (!outgoing || !incoming) continue;
+    add([outgoing, incoming]);
+    pending.delete(outgoing.id);
+    pending.delete(incoming.id);
+  }
+  for (const row of pending.values()) add([row]);
+  return findings;
+ }
  private generate(user:User,current:BetaState):Finding[] {
   const state=current.state;
   const rows=state.transactions.filter(row=>row.userId===user.id&&state.accounts.some(account=>account.id===row.accountId&&account.userId===user.id));
   const classes=new Map(state.classifications.map(item=>[item.transactionId,item]));
+  if (state.preferences.statementReviewMode === 'automatic') return this.automatic(user, current);
   const decisions=(this.store.get(user.id,'finding-decisions-v1')||{}) as Decisions;
   const findings:Finding[]=[];
   const add=(kind:Finding['kind'],key:string,evidence:TransactionRecord[],details:Partial<Finding>)=>{
@@ -132,16 +174,31 @@ export class BetaFindings {
    if(['confirm_classification','internal_transfer','external_transfer'].includes(body.response)){
     for(const transactionId of finding.evidenceIds){
      const previousClass=state.classifications.find(item=>item.transactionId===transactionId);
-     if(previousClass?.status==='user_confirmed')continue;
+     if(previousClass?.status==='user_confirmed' && !previousClass.isInternalTransferCandidate)continue;
      const economicType=body.response==='confirm_classification'?body.economicType!:body.response as TransactionEconomicType;
      const category=body.response==='confirm_classification'?body.category!:'transfer';
      if(previousClass&&(previousClass.category!==category||previousClass.economicType!==economicType))corrected=true;
      state.classifications=state.classifications.filter(item=>item.transactionId!==transactionId);
-     state.classifications.push({id:previousClass?.id||`finding-classification-${transactionId}`,transactionId,economicType,category,confidence:'high',status:'user_confirmed',classifierVersion:'user',isRecurringCandidate:previousClass?.isRecurringCandidate||false,provenanceNote:'Explicit grouped finding review',updatedAt:now});
+     state.classifications.push({...previousClass,id:previousClass?.id||`finding-classification-${transactionId}`,transactionId,economicType,category,confidence:'high',status:'user_confirmed',classifierVersion:'user',isRecurringCandidate:previousClass?.isRecurringCandidate||false,provenanceNote:'Explicit grouped finding review',updatedAt:now});
     }
     state.transferMatches=state.transferMatches.map(match=>finding.evidenceIds.includes(match.outgoingTransactionId)||!!match.incomingTransactionId&&finding.evidenceIds.includes(match.incomingTransactionId)?{...match,status:body.response==='internal_transfer'?'user_confirmed':body.response==='external_transfer'?'user_rejected':match.status}:match);
    }
-   // Usage answers intentionally do not create a cancellation candidate or change money.
+   if (state.preferences.statementReviewMode === 'automatic' && finding.kind === 'recurrence' && body.response === 'confirm_subscription') {
+    if (!body.subscription) throw new BetaError('NEEDS_DATA', 'Confirm subscription details.');
+    const sub = new BetaPlanning(this.store, this.financial).subscription(state, id, SubscriptionInput.parse(body.subscription), finding.evidenceIds);
+    state.subscriptions = [...(state.subscriptions || []).filter(s => s.id !== id), sub];
+   }
+   if (state.preferences.statementReviewMode === 'automatic' && ['recurrence','transfer'].includes(finding.kind)) {
+    if (body.response !== 'unsure') for (const transactionId of finding.evidenceIds) {
+      const row = state.transactions.find(t => t.id === transactionId)!;
+      const cls = state.classifications.find(c => c.transactionId === transactionId);
+      if (cls) Object.assign(cls, {status: 'user_confirmed', confidence: 'high', classifierVersion: 'user',
+        isInternalTransferCandidate: false, isRecurringCandidate: body.response === 'confirm_subscription',
+        category: ['internal_transfer', 'external_transfer'].includes(body.response) ? 'transfer' : body.response === 'confirm_subscription' ? 'subscriptions' : 'other',
+        economicType: body.response === 'internal_transfer' ? 'internal_transfer' : body.response === 'external_transfer' ? 'external_transfer' : row.amount < 0 ? 'expense' : 'income'});
+    }
+   }
+   // Confirmation never establishes usage, cancellation eligibility or completion.
    if(body.applyMerchantPreference&&body.response==='confirm_classification'){
     const preferences=(this.store.get(user.id,'merchant-preferences-v1')||{}) as Record<string,Preference>;
     const evidence=state.transactions.filter(row=>finding.evidenceIds.includes(row.id));
@@ -152,14 +209,20 @@ export class BetaFindings {
    for(const batch of batches)for(const item of batch.items)if(item.finding.id===id&&item.finding.evidenceVersion===body.evidenceVersion)item.status=body.response==='unsure'?'Deferred':body.response==='dismiss'?'Dismissed':corrected?'Corrected':'Approved';
    this.store.put(user.id,'finding-review-batches-v1',batches);
    const result={...current,state,version:current.version+1};
-   this.store.put(user.id,'state',result);this.store.put(user.id,'finding-decisions-v1',decisions);
+   this.financial.persist(user.id,result);this.store.put(user.id,'finding-decisions-v1',decisions);
    this.store.remove(user.id,'analysis');this.store.remove(user.id,'analysis-private');
    this.store.database.exec('COMMIT');return result;
   }catch(error){this.store.database.exec('ROLLBACK');throw error;}
  }
  applyMerchantPreferences(userId:string,transactions:TransactionRecord[],classifications:TransactionClassification[]):TransactionClassification[]{
   const preferences=(this.store.get(userId,'merchant-preferences-v1')||{}) as Record<string,Preference>;
-  return classifications.map(item=>{const row=transactions.find(row=>row.id===item.transactionId&&row.userId===userId);if(!row||item.status==='user_confirmed')return item;const preference=['processor','marketplace'].includes(identifyMerchant(row.description)?.kind||'')?undefined:preferences[preferenceKey(row.accountId,merchantKey(row))];return preference?{...item,...preference,status:'user_confirmed',confidence:'high',classifierVersion:'user-merchant-preference-v1',provenanceNote:'Account-scoped merchant preference explicitly selected by user'}:item;});
+  const overrides = (this.store.get(userId, 'statement-merchant-edits') || {}) as Record<string, {displayName?: string; category?: SpendingCategory}>;
+  return classifications.map(item=>{
+   const preference = item.merchantKey && overrides[item.merchantKey];
+   if (!preference || item.status === 'user_confirmed') return item;
+   return {...item, ...preference, status: 'user_confirmed' as const, confidence: 'high' as const,
+    isRecurringCandidate: preference.category === undefined ? item.isRecurringCandidate : preference.category === 'subscriptions' && item.economicType === 'expense'};
+  }).map(item=>{const row=transactions.find(row=>row.id===item.transactionId&&row.userId===userId);if(!row||item.status==='user_confirmed')return item;const preference=['processor','marketplace'].includes(identifyMerchant(row.description)?.kind||'')?undefined:preferences[preferenceKey(row.accountId,merchantKey(row))];return preference?{...item,...preference,status:'user_confirmed',confidence:'high',classifierVersion:'user-merchant-preference-v1',provenanceNote:'Account-scoped merchant preference explicitly selected by user'}:item;});
  }
  async suggestCategories(user:User,provider?:CategorySuggestionProvider):Promise<CategorySuggestionResult>{
   const current=this.financial.get(user);if(!current.aiConsent)return {status:'consent_required',suggestions:[]};

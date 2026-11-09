@@ -14,6 +14,7 @@ export function buildFinancialSnapshot(
   state: PIDatabaseSeed,
   options?: { referenceNowIso?: string }
 ): FinancialSnapshot {
+  state = { ...state, transactions: state.transactions.filter(row => !row.excluded) };
   const baseCurrency = state.profile.baseCurrency || 'EUR';
   const referenceNow = options?.referenceNowIso ? new Date(options.referenceNowIso) : new Date();
   if (!Number.isFinite(referenceNow.getTime())) throw new Error('Invalid snapshot reference time.');
@@ -387,6 +388,8 @@ export function computeObservedAnalytics(
     shopping: 0,
     health: 0,
     education: 0,
+    entertainment: 0,
+    fees: 0,
     work_expense: 0,
     income: 0,
     transfer: 0,

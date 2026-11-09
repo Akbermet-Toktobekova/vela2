@@ -7,6 +7,7 @@ BetaCredentialsSchema,
 BetaImportSchema,
 BetaPdfMappingSchema,
 BetaRegistrationSchema,
+BetaSpendingRatesSchema,
 } from "../../../shared/contracts/beta";
 import { FindingResponseSchema } from "../../../shared/contracts/findings";
 import { LLMClient } from "../ai/llmClient";
@@ -16,9 +17,12 @@ import { BetaAuth } from "./auth";
 import { BetaError,BetaFinancial } from "./financial";
 import { BetaFindings,CategorySuggestionsSchema } from "./findings";
 import { BetaImports } from "./imports";
+import { BetaUploads } from './uploads';
+import { BetaPlanning } from './planning';
 import { BetaJobs } from "./jobs";
 import { BetaReviewScheduler } from "./reviewScheduler";
 import { BetaStore } from "./store";
+import { FrankfurterFXService } from "../fx/frankfurterService";
 export function createBetaApp(
   options: {
     store?: BetaStore;
@@ -28,6 +32,7 @@ export function createBetaApp(
     llmClient?: LLMClient;
     autoReview?: boolean;
     analysisOptions?: BetaAnalysisOptions;
+    spendingFxService?: Pick<FrankfurterFXService, "getSpendingRates">;
   } = {},
 ) {
   const store =
@@ -46,14 +51,39 @@ export function createBetaApp(
       decryptText: (t) => store.decryptText(t),
     });
   const financial = new BetaFinancial(store);
+  const spendingFx = options.spendingFxService || new FrankfurterFXService();
   const jobs = new BetaJobs(store);
   const analysis = new BetaAnalysis(store, financial, options.llmClient, options.analysisOptions);
   const imports = new BetaImports(store, financial);
+  const uploads = new BetaUploads(store, financial, imports);
+  const planning = new BetaPlanning(store, financial);
   const findings = new BetaFindings(store, financial);
   const actionHistory = new BetaActionHistory(store, financial);
+  const forgetSourceCaches = (user: {id:string;name:string;email:string}) => {
+    const oldEngine = store.get(user.id,'engine') as any;
+    store.remove(user.id,'engine');
+    if (oldEngine?.feedback) {
+      const current = financial.get(user); current.state.actionFeedback = oldEngine.feedback; financial.persist(user.id,current);
+    }
+    for (const row of store.database.prepare("SELECT doc_key FROM beta_documents WHERE user_id=? AND doc_key LIKE 'stage:%'").all(user.id) as {doc_key:string}[]) store.remove(user.id,row.doc_key);
+  };
   const scheduler = new BetaReviewScheduler(store, analysis, jobs);
-  const schedule = (user: { id: string; name: string; email: string }) =>
-    options.autoReview === false ? null : scheduler.check(user);
+  const schedule = (user: { id: string; name: string; email: string }) => {
+    if (options.autoReview === false) return null;
+    const current = financial.get(user);
+    if (current.state.preferences.statementReviewMode === 'automatic') {
+      if (current.state.onboarding.status !== 'completed') return null;
+      const pending = uploads.pending(user);
+      if (pending.length) return jobs.enqueue(user.id, 'statement-batch', {user, pending}, current.version);
+      if (uploads.list(user).some(row => row.status === 'processing')) return null;
+    }
+    return scheduler.check(user);
+  };
+  jobs.register('statement-batch', async job => {
+    const result = await uploads.process(job.args.user);
+    schedule(job.args.user);
+    return {uploads: result};
+  });
   jobs.register("review", async (job) => {
     const result = await analysis.review(
       job.args.user,
@@ -74,6 +104,10 @@ export function createBetaApp(
   });
   void jobs.drain();
   if (options.autoReview !== false) scheduler.restore();
+  if (options.autoReview !== false) for (const row of store.database.prepare("SELECT user_id FROM beta_documents WHERE doc_key='state'").all() as {user_id:string}[]) {
+    const saved = store.get(row.user_id, 'state') as any;
+    if (saved?.state?.preferences?.statementReviewMode === 'automatic') schedule({id:row.user_id,name:saved.state.profile.nickname,email:saved.state.user.email});
+  }
   const app = express();
   app.disable("x-powered-by");
   app.use((req, res, next) => {
@@ -183,6 +217,16 @@ export function createBetaApp(
     await auth.changePassword(q.token, q.body.currentPassword, q.body.password);
     r.json({ ok: true });
   });
+  route("get", "/analytics/spending-rates", async (q, r) => {
+    const snapshot = financial.snapshot(q.user);
+    const base = snapshot.baseCurrency;
+    const currencies = [...new Set([
+      ...snapshot.accountSummaries.map(summary => summary.account.currency),
+      ...snapshot.transactions.map(row => row.currency),
+    ])];
+    const rates = await spendingFx.getSpendingRates(base, currencies);
+    r.json(BetaSpendingRatesSchema.parse({base, rates}));
+  });
   route("get", "/state", (q, r) => {
     const reviewJob = schedule(q.user);
     const current = analysis.getCurrent(q.user);
@@ -194,6 +238,8 @@ export function createBetaApp(
       actionHistory: actionHistory.list(q.user).items,
       recommendation: current?.recommendation ?? null,
       reviewJob,
+      uploads: uploads.list(q.user),
+      retainStatements: store.get(q.user.id, 'retain-statements') !== false,
     });
   });
   route("put", "/state", (q, r) => {
@@ -211,6 +257,42 @@ export function createBetaApp(
         .filter((row) => row.doc_key.startsWith("import:"))
         .map((row) => imports.get(q.user.id, row.doc_key.slice(7))),
     });
+  });
+  route('post', '/uploads', (q, r) => {
+    const upload = uploads.stage(q.user, q.body); const reviewJob = schedule(q.user);
+    r.status(202).json({upload, uploads: uploads.list(q.user), reviewJob});
+  });
+  route('post', '/uploads/:id/retry', (q, r) => {uploads.retry(q.user, q.params.id); r.json({reviewJob: schedule(q.user)});});
+  route('delete', '/uploads/:id', (q, r) => {
+    const upload = uploads.list(q.user).find(row=>row.id===q.params.id);
+    const affectsPI = upload?.importId && imports.get(q.user.id,upload.importId)?.confirmed;
+    const engine = store.get(q.user.id, 'engine') as any;
+    if (affectsPI && engine?.recommendations?.some((row: any) => ['accepted','adjusted'].includes(row.recommendation.status)))
+      throw new BetaError('PENDING_ACTION', 'Finish or decline pending actions before deleting their evidence.', 409);
+    uploads.delete(q.user, q.params.id, z.number().int().nonnegative().parse(q.body.expectedVersion));
+    jobs.cancelUser(q.user.id); if(affectsPI)forgetSourceCaches(q.user); const reviewJob = schedule(q.user);
+    r.json({...financial.get(q.user), uploads: uploads.list(q.user), reviewJob});
+  });
+  route('put', '/statement-retention', (q, r) => {
+    const {retain} = z.object({retain: z.boolean()}).strict().parse(q.body);
+    store.put(q.user.id, 'retain-statements', retain); r.json({retainStatements: retain});
+  });
+  route('put', '/transactions/:id', (q, r) => {
+    const result = planning.transaction(q.user, q.params.id, q.body);
+    jobs.cancelUser(q.user.id); schedule(q.user); r.json(result);
+  });
+  route('put', '/subscriptions/:id', (q, r) => {
+    const result = planning.saveSubscription(q.user, q.params.id, q.body);
+    jobs.cancelUser(q.user.id); schedule(q.user); r.json(result);
+  });
+  route('put', '/reserve-target', (q, r) => {
+    const result = planning.reserveTarget(q.user, q.body);
+    jobs.cancelUser(q.user.id);
+    schedule(q.user);
+    r.json(result);
+  });
+  route('put','/reserve-balance',(q,r)=>{
+    const result=planning.reserveBalance(q.user,q.body);jobs.cancelUser(q.user.id);schedule(q.user);r.json(result);
   });
   route("post", "/transactions/:id/classify", (q, r) => {
     const current = financial.get(q.user);
@@ -309,6 +391,12 @@ export function createBetaApp(
     schedule(q.user);
     r.json({...result, findings: findings.list(q.user)});
   });
+  route('put', '/imports/:id/rows/:rowId', (q, r) => {
+    const result = imports.correctRow(q.user, q.params.id, q.params.rowId, q.body);
+    jobs.cancelUser(q.user.id);
+    schedule(q.user);
+    r.json(result);
+  });
   route("put", "/imports/:id/review", async (q, r) => {
     r.json(await imports.revise(q.user, q.params.id, q.body));
   });
@@ -344,14 +432,7 @@ export function createBetaApp(
       z.number().int().nonnegative().parse(q.body.expectedVersion),
     );
     jobs.purgeUser(q.user.id);
-    store.remove(q.user.id, "engine");
-    const cached = store.database
-      .prepare("SELECT doc_key FROM beta_documents WHERE user_id=?")
-      .all(q.user.id) as { doc_key: string }[];
-    for (const row of cached) {
-      if (row.doc_key.startsWith("feedback-request:"))
-        store.remove(q.user.id, row.doc_key);
-    }
+    forgetSourceCaches(q.user);
     schedule(q.user);
     r.json(result);
   });
@@ -521,7 +602,7 @@ export function createBetaApp(
     r
       .type("html")
       .send(
-        `<!doctype html><html><meta name="viewport" content="width=device-width"><title>Vela password reset</title><h1>Reset your password</h1><form id="reset"><input name="password" type="password" minlength="12" maxlength="128" required autocomplete="new-password" placeholder="New password"><button>Save password</button></form><p id="message"></p><script>const t=new URLSearchParams(location.search).get('token');history.replaceState(null,'','/reset');document.getElementById('reset').onsubmit=async e=>{e.preventDefault();try{const r=await fetch('/api/beta/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:t,password:e.target.password.value})});document.getElementById('message').textContent=r.ok?'Password changed. Return to Vela and sign in.':'Unable to reset password. Request a new link.';}catch{document.getElementById('message').textContent='Connection unavailable. Please retry.';}};</script></html>`,
+        `<!doctype html><html><meta name="viewport" content="width=device-width"><title>Vela password reset</title><h1>Reset your password</h1><form id="reset"><input name="password" type="password" minlength="8" maxlength="128" required autocomplete="new-password" placeholder="New password"><button>Save password</button></form><p id="message"></p><script>const t=new URLSearchParams(location.search).get('token');history.replaceState(null,'','/reset');document.getElementById('reset').onsubmit=async e=>{e.preventDefault();try{const r=await fetch('/api/beta/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:t,password:e.target.password.value})});document.getElementById('message').textContent=r.ok?'Password changed. Return to Vela and sign in.':'Unable to reset password. Request a new link.';}catch{document.getElementById('message').textContent='Connection unavailable. Please retry.';}};</script></html>`,
       ),
   );
   app.use((error: any, _q: any, r: any, _n: any) => {
@@ -534,7 +615,7 @@ export function createBetaApp(
       const messages: Record<string, string> = {
         name: "Enter a name between 1 and 100 characters.",
         email: "Enter a valid email address.",
-        password: "Password must be between 12 and 128 characters.",
+        password: "Password must be between 8 and 128 characters.",
       };
       if (messages[field]) fields[field] = messages[field];
     }

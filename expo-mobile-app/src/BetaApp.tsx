@@ -1,7 +1,6 @@
 import { themedStyles } from './theme';
-import React,{ useEffect,useRef,useState } from "react";
+import React,{ useCallback,useEffect,useRef,useState } from "react";
 import { ActionHistory } from "./components/ActionHistory";
-import { StatementReview } from "./components/StatementReview";
 
 import {
 ActivityIndicator,
@@ -32,7 +31,6 @@ import { CurrencyField } from "./components/CurrencyField";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import type { BetaPdfMapping,BetaPdfReview } from "../../shared/contracts/betaPdf";
 import {
 api,
 ApiError,
@@ -53,9 +51,12 @@ GlassCard,
 Icon,
 Field as Input,
 } from "./components/SoftGlass";
+import type { FXRateEntry } from "../../shared/pi/types";
 import { AnalyticsScreen } from "./screens/AnalyticsScreen";
 import { AssistantScreen } from "./screens/AssistantScreen";
 import { ProfileScreen } from "./screens/ProfileScreen";
+import { EssentialCosts, SubscriptionList, ReserveBalanceEditor, ReserveTargetEditor } from './components/PlanningEditors';
+import { StatementLibrary } from './components/StatementLibrary';
 import { colors } from "./theme";
 import { TodayScreen } from "./screens/TodayScreen";
 
@@ -110,8 +111,6 @@ const fields: Record<string, string[]> = {
     "currency",
     "dueDate",
     "recurrence",
-    "category",
-    "accountId",
     "status",
   ],
   debts: [
@@ -173,7 +172,6 @@ const options: Record<string, string[]> = {
     "other",
   ],
   goalType: [
-    "emergency_cushion",
     "specific_purchase",
     "debt_paydown",
     "general_savings",
@@ -245,88 +243,6 @@ function Select({
   );
 }
 
-function PdfImportReview({
-  preview, accounts, busy, addAccount, saveMapping, confirm,
-}: {
-  preview: {pdf: BetaPdfReview; status: string; transactions: unknown[]};
-  accounts: {id: string; name: string; currency: string}[];
-  busy: boolean;
-  addAccount: (currency: string) => void;
-  saveMapping: (mapping: Omit<BetaPdfMapping, "expectedVersion">) => void;
-  confirm: () => void;
-}) {
-  const [selected, setSelected] = useState<Record<string, string>>({});
-  const [excluded, setExcluded] = useState<string[]>(preview.pdf.excludedRows ?? []);
-  const [edits, setEdits] = useState<Record<string, {date: string; description: string; amount: string}>>(
-    () => Object.fromEntries(Object.entries(preview.pdf.corrections ?? {}).map(([id, value]) =>
-      [id, {...value, amount: String(value.amount)}])),
-  );
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [editingMapping, setEditingMapping] = useState(false);
-  useEffect(() => setEditingMapping(false), [preview]);
-  const {groups, issues} = preview.pdf;
-  const mapped = preview.status === "parsed_successfully" && !editingMapping;
-  const corrections = Object.fromEntries(Object.entries(edits)
-    .filter(([id, value]) => !excluded.includes(id) && /^\d{4}-\d{2}-\d{2}$/.test(value.date) && value.description.trim() && value.amount.trim() && Number.isFinite(Number(value.amount.replace(",", "."))))
-    .map(([id, value]) => [id, {...value, amount: Number(value.amount.replace(",", "."))}]));
-  const currencies = [...new Set<string>([
-    ...groups.map(group => group.currency),
-    ...issues.filter(issue => corrections[issue.id]).map(issue => issue.currency),
-  ])];
-  const mapping = Object.fromEntries(currencies.map(currency => {
-    const options = accounts.filter(account => account.currency === currency);
-    const saved = groups.find(group => group.currency === currency)?.accountId;
-    const preferred = selected[currency] || saved || (options.length === 1 ? options[0].id : "");
-    return [currency, options.some(account => account.id === preferred) ? preferred : ""];
-  }));
-  return <>
-    {!currencies.length && !issues.length && <Text>No completed operations in this PDF.</Text>}
-    {Object.entries(preview.pdf.excluded).map(([currency, counts]) => {
-      const {pending, summary} = counts;
-      return <Text key={currency} style={s.muted}>{currency} · {pending} pending · {summary} summary rows skipped</Text>;
-    })}
-    {currencies.map(currency => {
-      const group = groups.find(item => item.currency === currency);
-      const options = accounts.filter(account => account.currency === currency);
-      return <View key={currency} style={s.record}>
-        <Text style={s.h2}>{currency} · {group?.operations.length ?? 0} operations</Text>
-        {mapped ? <Text>{options.find(account => account.id === group?.accountId)?.name} · {group?.duplicates ?? 0} duplicates</Text> : <>
-          <Select label={`${currency} account`} value={mapping[currency]} values={options}
-            onChange={id => setSelected(old => ({...old,[currency]:id}))} />
-          <Button secondary title={`Add ${currency} account`} disabled={busy} onPress={() => addAccount(currency)} />
-        </>}
-        {Boolean(group?.operations.length) && <Button secondary title={expanded === currency ? "Hide operations" : "Review operations"}
-          onPress={() => setExpanded(expanded === currency ? null : currency)} />}
-        {expanded === currency && group?.operations.map(row => <Text key={`${row.page}:${row.line}`}>
-          {row.date} · {row.description} · {money(row.amount, currency)} · p. {row.page}, line {row.line}
-        </Text>)}
-      </View>;
-    })}
-    {mapped ? <>
-      <Text>{preview.transactions.length} new operations ready to save</Text>
-      <Button title="Confirm import" disabled={busy} onPress={confirm} />
-      <Button secondary title="Change mapping" disabled={busy} onPress={() => setEditingMapping(true)} />
-    </> : <>
-      {issues.map(issue => {
-        const value = edits[issue.id];
-        const skipped = excluded.includes(issue.id);
-        return <View key={issue.id} style={s.record}>
-          <Text style={s.error}>Page {issue.page}, line {issue.line} · {issue.reason}</Text>
-          <Text>{issue.text}</Text>
-          <Button secondary title={skipped ? "Include row" : "Exclude row"} onPress={() => setExcluded(old => skipped ? old.filter(id => id !== issue.id) : [...old, issue.id])} />
-          {!skipped && <Button secondary title="Correct row" onPress={() => setEdits(old => ({...old, [issue.id]: value ?? {date:"",description:"",amount:""}}))} />}
-          {!skipped && value && (["date","description","amount"] as const).map(field =>
-            <Input key={field} label={field === "date" ? "Date (YYYY-MM-DD)" : field === "amount" ? "Signed amount" : "Description"}
-              value={value[field]} onChange={input => setEdits(old => ({...old,[issue.id]:{...value,[field]:input}}))} />)}
-        </View>;
-      })}
-      <Button title="Check accounts and duplicates" disabled={busy || !currencies.length || currencies.some(currency => !mapping[currency]) ||
-        issues.some(issue => !excluded.includes(issue.id) && !corrections[issue.id])}
-        onPress={() => saveMapping({accounts:mapping, excludedRows:excluded, corrections})} />
-    </>}
-  </>;
-}
-
 export default function App() {
   const [base, setBase] = useState(process.env.EXPO_PUBLIC_API_URL || "");
   const [token, setToken] = useState<string | null>(null);
@@ -358,24 +274,20 @@ export default function App() {
   const [settings, setSettings] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
-  const [importDetails, setImportDetails] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
+  const [reserveEditor,setReserveEditor]=useState(false);
+  const [reserveTargetEditor,setReserveTargetEditor]=useState(false);
+  const [operationFocus,setOperationFocus]=useState<{id:string;key:string}|null>(null);
+  useEffect(()=>{setReserveEditor(false);setReserveTargetEditor(false);},[user?.id]);
   const [draft, setDraft] = useState<Editor | null>(null);
-  const [importAccount, setImportAccount] = useState("");
-  const [preview, setPreview] = useState<any>(null);
+  const [, setPreview] = useState<any>(null);
   const [importJob, setImportJob] = useState<any>(null);
   const [job, setJob] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [question, setQuestion] = useState("");
-  const [reviewTransaction, setReviewTransaction] = useState<any>(null);
-  const [economicType, setEconomicType] = useState("unknown");
-  const [category, setCategory] = useState("other");
   const [importHistory, setImportHistory] = useState<any[]>([]);
   const [chatRequestId, setChatRequestId] = useState(uid());
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [transactionFilter, setTransactionFilter] = useState<string | null>(null);
-  const [transactionCurrency, setTransactionCurrency] = useState<string | null>(null);
-  const [transactionMonth, setTransactionMonth] = useState<string | null>(null);
   const [versionConflict, setVersionConflict] = useState(false);
   const [profileName, setProfileName] = useState("");
   const profileNameDirty = useRef(false);
@@ -426,6 +338,10 @@ export default function App() {
     // Do not use clearLocal: it also removes saved form drafts/import progress.
     await writeSession(null);
   }
+  const loadSpendingRates = useCallback(
+    () => api<{base: string; rates: Record<string, FXRateEntry>}>(base, '/analytics/spending-rates', token),
+    [base, token],
+  );
   const request = async <T = any,>(path: string, method = "GET", data?: unknown): Promise<T> => {
     try {
       const result = await api<T>(base, path, token, method, data);
@@ -468,12 +384,18 @@ export default function App() {
 
   async function hydrate(session: string, address = base) {
     const me = await api<any>(address, "/auth/me", session);
-    const [fresh, historyResponse, savedDraft, pending] = await Promise.all([
+    let [fresh, historyResponse, savedDraft, pending] = await Promise.all([
       api<StateEnvelope>(address, "/state", session),
       api<any>(address, "/imports", session),
       drafts.get(me.user.id),
       readImportJob(me.user.id),
     ]);
+    if (fresh.state.preferences.statementReviewMode !== 'automatic') {
+      await api(address, '/state', session, 'PUT', {expectedVersion:fresh.version,
+        state:{...fresh.state,preferences:{...fresh.state.preferences,statementReviewMode:'automatic'}},
+        aiConsent:fresh.aiConsent,experimentalRecommendations:fresh.experimentalRecommendations});
+      fresh = await api<StateEnvelope>(address, '/state', session);
+    }
     let pendingJob: any = null;
     if (pending) {
       try {pendingJob = await api<any>(address, "/jobs/" + pending, session);}
@@ -604,11 +526,13 @@ export default function App() {
       void request(`/jobs/${job.id}`)
         .then(async (r) => {
           if (stop) return;
-          if (["completed", "COMPLETED", "succeeded"].includes(r.status)) {
+          const completed = ["completed", "COMPLETED", "succeeded"].includes(r.status);
+          const failed = ["failed", "FAILED"].includes(r.status);
+          if (completed || failed) {
             const fresh = await request<StateEnvelope>("/state");
             if (stop) return;
             updateEnvelope(fresh);
-            if(r.origin === "manual")setManualReviewMessage(r.result?.manualReviewResult === "action_saved" ? "Your suggestion is saved in Action history." : "No new action to suggest right now. Your financial picture is up to date.");
+            if(completed && r.origin === "manual")setManualReviewMessage(r.result?.manualReviewResult === "action_saved" ? "Your suggestion is saved in Action history." : "No new action to suggest right now. Your financial picture is up to date.");
           }
           setJob(r);
         })
@@ -681,12 +605,13 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
+  const uploadsRevision = env?.uploads?.map(row => [row.id, row.status, row.importId].join(':')).join('|');
   useEffect(() => {
     if (user)
       void request("/imports")
         .then((r) => setImportHistory(r.imports || []))
         .catch(() => {});
-  }, [user?.id, state?.statements.length]);
+  }, [user?.id, state?.statements.length, uploadsRevision]);
 
   useEffect(() => {
     if (user && importJob?.id)
@@ -706,7 +631,7 @@ export default function App() {
     if (!env) throw new Error("Load your profile first.");
     await request<StateEnvelope>("/state", "PUT", {
       expectedVersion,
-      state: next,
+      state: {...next, preferences:{...next.preferences,statementReviewMode:'automatic'}},
       aiConsent: consent,
       experimentalRecommendations: experimental,
     });
@@ -743,13 +668,9 @@ export default function App() {
     });
   }
 
-  function reviewTransactions(filter?: string, currency?: string, month?: string) {
-    setTransactionFilter(filter || null);
-    setTransactionCurrency(currency || null);
-    setTransactionMonth(month || null);
-    setSettings(false); setDocumentsOpen(false); setShowOnboarding(false);
-    setOnboardingDismissed(true); setTab("Transactions");
-    requestAnimationFrame(() => authScroll.current?.scrollTo({y: 0, animated: false}));
+  function showStatementLibrary() {
+    setDocumentsOpen(false);
+    setTab('Profile');
   }
   async function clearChat() {
     await run(async () => {
@@ -772,7 +693,7 @@ export default function App() {
     const cleanEmail = email.trim();
     if (mode === "register" && (!name.trim() || name.trim().length > 100)) return showAuthError("Enter a name between 1 and 100 characters.", "name");
     if (mode !== "reset" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return showAuthError("Enter a valid email address.", "email");
-    if (mode !== "forgot" && (password.length < 12 || password.length > 128)) return showAuthError("Password must be between 12 and 128 characters.", "password");
+    if (mode !== "forgot" && (password.length < 8 || password.length > 128)) return showAuthError("Password must be between 8 and 128 characters.", "password");
     await run(async () => {
       try {
       const health = await api<any>(base, "/health", null);
@@ -860,7 +781,7 @@ export default function App() {
       category: "other",
       status: "unpaid",
       debtType: "credit_card",
-      goalType: "emergency_cushion",
+      goalType: "general_savings",
       priority: "medium",
     };
     if (collection === "expenses") item = state.expenseCommitment;
@@ -957,10 +878,12 @@ export default function App() {
       if (editor.collection === "debts") record.paymentFrequency = "monthly";
       if (editor.collection === "incomes")
         record.receivingAccountId = record.receivingAccountId || null;
-      if (editor.collection === "obligations")
-        record.accountId = record.accountId || null;
+      if (editor.collection === "obligations") {
+        record.accountId = null;
+        record.category = 'other';
+      }
 
-      if (editor.collection === "expenses") next.expenseCommitment = record;
+      if (editor.collection === "expenses") next.expenseCommitment = {...next.expenseCommitment,...record};
       else {
         const rows = next[editor.collection];
         const index = rows.findIndex((r: any) => r.id === record.id);
@@ -1020,7 +943,7 @@ export default function App() {
           completedAt: value > 7 ? now() : state.onboarding.completedAt,
         },
       });
-      if (value > 7) setShowOnboarding(false);
+      if (value > 7) {setShowOnboarding(false);setOnboardingDismissed(true);setTab('Today');}
     });
   }
 
@@ -1072,12 +995,14 @@ export default function App() {
           : extension && `statement.${extension}`;
       if (!fileName) throw new Error("Choose a CSV, Excel or PDF statement.");
       const source = {
-        accountId: selectedAccountId || importAccount || state.accounts[0].id,
+        accountId: selectedAccountId || state.accounts[0].id,
         fileName,
         contentBase64,
       };
       setPreview(null);
-      setImportJob(await request("/imports", "POST", source));
+      await request('/uploads','POST',source);
+      updateEnvelope(await request('/state'));
+      setNotice(onboarding ? 'File uploaded. Add more files or continue to Today.' : 'File uploaded. Processing continues in the background.');
     });
   }
 
@@ -1115,6 +1040,7 @@ export default function App() {
             </Text>
           )}
           <View style={s.row}>
+            {r.goalType==='emergency_cushion'?<Button secondary title="Edit Safety Cushion target" onPress={()=>setReserveTargetEditor(true)}/>:<>
             <Button
               secondary
               disabled={busy}
@@ -1127,6 +1053,7 @@ export default function App() {
               title="Delete"
               onPress={() => remove(collection, r)}
             />
+            </>}
             {collection === "accounts" && !r.isPrimary && (
               <Button
                 secondary
@@ -1192,138 +1119,18 @@ export default function App() {
     </View>
   );
 
-  const confirmImport = () => void run(async () => {
-    await request(`/imports/${preview.id}/confirm`, "POST", {expectedVersion: env?.version});
-    updateEnvelope(await request("/state"));
-    setPreview(null);
-    setImportDetails(false);
-    setDocumentsOpen(false);
-    setSettings(false);
-    setShowOnboarding(false);
-    setOnboardingDismissed(true);
-    setTab("Today");
-    setNotice(env?.aiConsent ? "Statement imported. Review your financial picture on Today; analysis status appears there." : "Statement imported. Deterministic findings are ready on Today. Optional AI processing stays off.");
-  });
-  const sourceImport = (statementId: string) => importHistory.find(
-    item => item.statement?.id === statementId || item.statements?.some((statement: any) => statement.id === statementId),
-  );
-  const imports = () => (
-    <View style={s.card}>
-      <Text style={s.h2}>Statements</Text>
-      <Text style={s.muted}>
-        CSV, Excel and text PDF. Review operations before confirming. Scanned
-        PDF is not supported.
-      </Text>
-      {state?.accounts.length ? (
-        <Select
-          label="Target account"
-          value={importAccount || state.accounts[0].id}
-          values={state.accounts}
-          onChange={setImportAccount}
-        />
-      ) : (
-        <Text>Add an account first.</Text>
-      )}
-      <Button
-        title="Choose statement"
-        disabled={busy || !state?.accounts.length}
-        onPress={() => void upload()}
-      />
-      {importJob && <Text style={s.muted}>{["queued", "running", "processing"].includes(importJob.status) ? "Preparing your statement…" : importJob.status === "connection_lost" ? "Connection interrupted. Reload your profile to resume." : importJob.status === "failed" ? "Statement needs attention. Review the error below." : "Statement ready for review"}</Text>}
-      {preview && (
-        <>
-          <Text style={s.h2}>
-            {preview.statement?.fileName || preview.fileName || "Import preview"}
-          </Text>
-          {preview.pdf ? preview.confirmed ? <Text>This PDF was already confirmed.</Text> :
-            <PdfImportReview key={preview.id} preview={preview} accounts={state?.accounts ?? []} busy={busy}
-              addAccount={currency => open("accounts", undefined, currency)}
-              saveMapping={mapping => void run(async () => setPreview(await request(`/imports/${preview.id}/accounts`, "PUT", {
-                ...mapping, expectedVersion: env?.version,
-              })))}
-              confirm={confirmImport} />
-          : <>
-          <Text style={s.muted}>Review the summary before adding these records to your account.</Text>
-          <StatementReview key={`${preview.id}:${JSON.stringify(preview.parsing?.options)}`} preview={preview} busy={busy}
-            revise={body => void run(async () => setPreview(await request(`/imports/${preview.id}/review`, "PUT", {...body, expectedVersion: env?.version})))} />
-          {preview.statement?.errorMessage && (
-            <Text style={s.error}>{preview.statement.errorMessage}</Text>
-          )}
-          <Text>
-            {preview.transactions?.length || 0} operations ·{" "}
-            {preview.statement?.duplicateCountSkipped || 0} duplicates
-          </Text>
-          <Button secondary title={importDetails ? "Hide transaction details" : "Inspect transactions and technical details"} onPress={() => setImportDetails(v => !v)} />
-          {importDetails && preview.transactions?.map((t: any) => (
-            <View key={t.id} style={s.record}>
-              <Text>
-                {t.date} · {t.description}
-              </Text>
-              <Text>{money(t.amount, t.currency)}</Text>
-              <Text style={s.small}>
-                {Object.entries(t.rawRow || {})
-                  .map(([k, v]) => `${k}: ${v}`)
-                  .join(" · ")}
-              </Text>
-            </View>
-          ))}
-          {preview.rejectedRows?.map((r: any, i: number) => (
-            <Text key={i} style={s.error}>
-              Row {r.rowNumber ?? i + 1}:{" "}
-              {r.reason || r.message || "Review required"}
-            </Text>
-          ))}
-          <Button
-            title="Confirm import"
-            disabled={busy || !preview.transactions?.length || !["parsed_successfully", "ready_to_confirm"].includes(preview.status)}
-            onPress={confirmImport}
-          />
-          </>}
-          <Button
-            secondary
-            title="Dismiss preview"
-            onPress={() => setPreview(null)}
-          />
-        </>
-      )}
-      {state?.statements.map((st) => (
-        <View key={st.id} style={s.record}>
-          <Text>{st.fileName}</Text>
-          <Text style={s.muted}>
-            {st.transactionCount} operations · {st.status.replaceAll("_", " ")}
-          </Text>
-          {sourceImport(st.id) && (
-            <Button
-              secondary
-              title="Delete source file and its operations"
-              disabled={busy}
-              onPress={() =>
-                Alert.alert(
-                  "Delete statement?",
-                  "This removes the source file and all operations and balances imported from it, across its currencies.",
-                  [
-                    { text: "Cancel", style: "cancel" },
-                    {
-                      text: "Delete",
-                      style: "destructive",
-                      onPress: () =>
-                        void run(async () => {
-                          const item = sourceImport(st.id);
-                          await request(`/imports/${item.id}`, "DELETE", {
-                            expectedVersion: env?.version,
-                          });
-                          updateEnvelope(await request("/state"));
-                        }),
-                    },
-                  ],
-                )
-              }
-            />
-          )}
-        </View>
-      ))}
-    </View>
-  );
+  const library = (duringOnboarding=false) => state && env ? <StatementLibrary state={state} version={env.version}
+    refresh={()=>hydrate(token!)}
+    focus={operationFocus} onFocusConsumed={()=>setOperationFocus(null)}
+    uploads={env.uploads} history={importHistory} onboarding={duringOnboarding} retain={env.retainStatements ?? true}
+    upload={id=>void upload(id)}
+    remove={async(id,staged)=>{await request(`/${staged?'uploads':'imports'}/${id}`,'DELETE',{expectedVersion:env.version});await hydrate(token!);}}
+    retry={async id=>{await request(`/uploads/${id}/retry`,'POST');await hydrate(token!);}}
+    correctRow={async(importId,rowId,body)=>{await request('/imports/'+importId+'/rows/'+encodeURIComponent(rowId),'PUT',body);await hydrate(token!);}}
+    retention={async retain=>{await request('/statement-retention','PUT',{retain});await hydrate(token!);}}
+    editOperation={async(id,body)=>{await request(`/transactions/${id}`,'PUT',body);await hydrate(token!);}}/> : null;
+  const essentialEditor = state && user && env ? <EssentialCosts expense={state.expenseCommitment} currency={state.profile.baseCurrency} userId={user.id} version={env.version} refresh={()=>hydrate(token!)}
+    save={async(expense,version)=>{await save({...state,expenseCommitment:expense},env.aiConsent,env.experimentalRecommendations,version);}}/> : null;
 
   if (boot)
     return (
@@ -1360,9 +1167,11 @@ export default function App() {
                     "Open profile and settings"
                   }
                   style={s.settingsButton}
+                  activeOpacity={0.7}
+                  hitSlop={4}
                   onPress={() => {setSettings(false); setDocumentsOpen(false); setTab("Profile"); setOnboardingDismissed(true); setShowOnboarding(false);}}
                 >
-                  <Icon name="settings" size={23} />
+                  <Icon name="settings" size={20} color={colors.green} />
                 </TouchableOpacity>
               )}
             </View>
@@ -1427,7 +1236,7 @@ export default function App() {
                     )}
                     {mode !== "forgot" && (
                       <Input
-                        label="Password (at least 12 characters)"
+                        label="Password (at least 8 characters)"
                         value={password}
                         onChange={setPassword}
                         secure
@@ -1500,7 +1309,7 @@ export default function App() {
               )}
 
               {user && state && !onboarding && tab === "Profile" && !documentsOpen ? (
-                <ProfileScreen name={user.name || state.profile.nickname} email={user.email} currency={state.profile.baseCurrency} sections={[
+                <ProfileScreen reveal={operationFocus?{section:'Statements & transactions',key:operationFocus.key}:null} name={user.name || state.profile.nickname} email={user.email} currency={state.profile.baseCurrency} sections={[
 {title: 'Profile details', content: (<View style={{gap:12}}>
                     <Text style={s.h2}>Your profile</Text>
                     <Text style={s.body}>{user.email}</Text>
@@ -1514,9 +1323,11 @@ export default function App() {
                     <CurrencyField label="Planning currency" value={state.profile.baseCurrency} onChange={v => void run(async () => {await save({...state, profile: {...state.profile, baseCurrency: v, updatedAt: now()}});})} />
                     <Text style={s.muted}>Setup {state.onboarding.status === "completed" ? "completed" : `in progress · step ${step} of 7`}</Text>
                     <Button secondary title="Continue onboarding" onPress={() => {setShowOnboarding(true); setOnboardingDismissed(false); setSettings(false);}} />
+                    {essentialEditor}
                   </View>)},
 {title: 'Accounts', content: (section("accounts", "Your accounts"))},
-{title: 'Statements', content: (<>{imports()}<Button secondary title="Review imported transactions" onPress={() => {setSettings(false); setDocumentsOpen(false); setOnboardingDismissed(true); setShowOnboarding(false); reviewTransactions();}} /></>)},
+{title: 'Statements & transactions', content: library()},
+{title: 'Subscriptions', content: (<SubscriptionList rows={state.subscriptions || []} version={env.version} refresh={()=>hydrate(token!)} save={async(id,body)=>{await request(`/subscriptions/${id}`,'PUT',body);await hydrate(token!);}}/>)},
 {title: 'Privacy & AI', content: (consent())},
 {title: "Data & account", content: (<View style={{gap:12}}>
                     <Text style={s.h2}>Your data & account</Text>
@@ -1546,17 +1357,6 @@ export default function App() {
                   />
                   <Button
                     secondary
-                    title="Log out"
-                    disabled={busy}
-                    onPress={() =>
-                      void run(async () => {
-                        await request("/auth/logout", "POST");
-                        await clearLocal();
-                      })
-                    }
-                  />
-                  <Button
-                    secondary
                     title="Delete my account"
                     disabled={busy}
                     onPress={() =>
@@ -1581,6 +1381,7 @@ export default function App() {
                   </View>)}
                 ]} />
               ) : null}
+              {user&&state&&!onboarding&&tab==='Profile'&&!documentsOpen&&<Button secondary title="Log out" disabled={busy} onPress={()=>void run(async()=>{await request('/auth/logout','POST');await clearLocal();})}/>}
 
               {user && state && !settings && onboarding ? (
                 <>
@@ -1639,8 +1440,7 @@ export default function App() {
                   {step === 2 && <View style={s.card}>
                     <Text style={s.h2}>Your essential monthly costs</Text>
                     <Text style={s.muted}>Estimate rent, food, utilities and transport. This total includes your regular bills; adding bill records later does not mean adding them to this estimate again. Unknown is different from zero.</Text>
-                    <Text style={s.body}>{money(state.expenseCommitment?.estimatedMonthlyAmount, state.expenseCommitment?.currency || state.profile.baseCurrency)}</Text>
-                    <Button secondary title="Add or edit essential costs" onPress={() => open("expenses")} />
+                    {essentialEditor}
                     <Text style={s.small}>Not sure yet? Continue and complete the estimate later. Vela will explain which calculations need it.</Text>
                   </View>}
                   {step === 3 && (
@@ -1724,13 +1524,8 @@ export default function App() {
                       <Text style={s.eyebrow}>CONNECT STATEMENTS · STEP 7</Text>
                       <Text style={s.h1}>Let Vela connect the dots</Text>
                       <Text style={s.body}>Upload bank statements so Vela can uncover subscriptions, internal transfers, and real spending patterns.</Text>
-                      {state.accounts.map(account => <GlassCard key={account.id}>
-                        <View style={s.row}><View style={{flex:1}}><Text style={s.h2}>{account.name} ({account.currency})</Text><Text style={s.muted}>{account.institution} · {state.statements.filter(statement => statement.accountId === account.id).length} statement(s)</Text></View><Button title="+ Upload" disabled={busy} onPress={() => void upload(account.id)} /></View>
-                        {state.statements.filter(statement => statement.accountId === account.id).map(statement => <View key={statement.id} style={{backgroundColor:colors.secondary,borderRadius:20,padding:14}}><Text style={s.h2} numberOfLines={1}>{statement.fileName}</Text><Text style={s.muted}>Status: {statement.status.replaceAll("_"," ")} · {statement.transactionCount} txns</Text></View>)}
-                        {!state.statements.some(statement => statement.accountId === account.id) && <Text style={[s.muted,{backgroundColor:colors.secondary,borderRadius:20,padding:16,textAlign:"center"}]}>No statements uploaded yet.</Text>}
-                      </GlassCard>)}
-                      {(preview || importJob) && imports()}
-                      <GlassCard><Text style={s.muted}>🛡 You stay in control: review parsed operations before confirming. Importing a statement cannot move your money.</Text></GlassCard>
+                      {library(true)}
+                      <GlassCard><Text style={s.muted}>Your files are saved securely on the backend. Gemini receives normalized records for classification only after your consent. Importing cannot move money.</Text></GlassCard>
                       {consent()}
                       <View style={s.card}>
                         <Text style={s.h2}>Ready to review</Text>
@@ -1757,7 +1552,7 @@ export default function App() {
                     )}
                     <Button
                       disabled={busy}
-                      title={step === 7 ? `See What Vela Found in Today (${state.transactions.length} txns) →` : "Save & continue"}
+                      title={step === 7 ? 'Go to Today →' : "Save & continue"}
                       onPress={() => void changeStep(step + 1)}
                     />
                   </View>
@@ -1765,7 +1560,7 @@ export default function App() {
                     secondary
                     title="Finish setup later · View Today"
                     disabled={busy}
-                    onPress={() => {setShowOnboarding(false); setOnboardingDismissed(true); setTab("Today");}}
+                    onPress={() => void changeStep(8)}
 
                   />
                 </>
@@ -1777,6 +1572,9 @@ export default function App() {
               !onboarding &&
               !documentsOpen &&
               tab === "Today" ? (
+                <>
+                {env.uploads?.some(row=>['uploaded','processing'].includes(row.status))&&<GlassCard><Text accessibilityLiveRegion="polite">Your statements are processing in the background. You can keep using Vela.</Text></GlassCard>}
+                {env.uploads?.some(row=>row.status==='needs_attention')&&<GlassCard><Text>Some statements need attention. Other saved records remain available.</Text><Button secondary title="Open Profile" onPress={()=>setTab('Profile')}/></GlassCard>}
                 <TodayScreen
                   snapshot={snapshot}
                   findings={env.findings}
@@ -1811,8 +1609,10 @@ export default function App() {
                   onOpen={open}
                   onUpload={() => setDocumentsOpen(true)}
                   onManage={() => setTab("Profile")}
-                  onReviewTransactions={() => reviewTransactions()}
+                  onEditFinding={finding=>{setOperationFocus({id:finding.evidenceIds[0],key:uid()});setTab('Profile');}}
+                  onReviewTransactions={showStatementLibrary}
                 />
+                </>
               ) : null}
               {user && state && !settings && !onboarding && documentsOpen ? (
                 <>
@@ -1822,47 +1622,7 @@ export default function App() {
                     onPress={() => setDocumentsOpen(false)}
                   />
                   <Text style={s.h1}>Your statements</Text>
-                  {imports()}
-                </>
-              ) : null}
-              {user && state && !settings && !onboarding && !documentsOpen && tab === "Transactions" ? (
-                <>
-                  <Button secondary title="← Back to Analytics" onPress={() => setTab("Analytics")} />
-                  <Text accessibilityRole="header" style={s.h1}>Review transactions</Text>
-                  {!state.transactions.length && <Text style={s.muted}>No imported transactions yet. Confirm a statement import to review its transactions.</Text>}
-                  <View style={s.card}>
-                    <Text style={s.h2}>Imported operations</Text>
-                    <Text style={s.muted}>
-                      Confirm the economic meaning of each operation. Internal
-                      transfers are not new income.
-                    </Text>
-                    {(transactionFilter || transactionCurrency || transactionMonth) && <><Text style={s.small}>Showing {[transactionFilter?.replaceAll("_", " "), transactionCurrency, transactionMonth].filter(Boolean).join(" · ")}</Text><Button secondary title="Show all transactions" onPress={() => {setTransactionFilter(null); setTransactionCurrency(null); setTransactionMonth(null);}} /></>}
-                    {state.transactions.filter(t => (!transactionFilter || state.classifications.find(c => c.transactionId === t.id)?.category === transactionFilter) && (!transactionCurrency || t.currency === transactionCurrency) && (!transactionMonth || t.date.startsWith(transactionMonth))).map((t) => (
-                      <TouchableOpacity
-                        key={t.id}
-                        style={s.record}
-                        onPress={() => {
-                          const c = state.classifications.find(
-                            (c) => c.transactionId === t.id,
-                          );
-                          setReviewTransaction(t);
-                          setEconomicType(c?.economicType || "unknown");
-                          setCategory(c?.category || "other");
-                        }}
-                      >
-                        <Text>
-                          {t.date} · {t.description}
-                        </Text>
-                        <Text>{money(t.amount, t.currency)}</Text>
-                        <Text style={s.small}>
-                          {state.classifications.find(
-                            (c) => c.transactionId === t.id,
-                          )?.economicType || "unknown"}{" "}
-                          · {state.classifications.find(c => c.transactionId === t.id)?.status === "user_confirmed" ? "✓ Approved" : state.classifications.find(c => c.transactionId === t.id)?.confidence === "high" ? "Automatically classified" : "Needs review"} · Tap to review
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                  {library()}
                 </>
               ) : null}
               {user &&
@@ -1872,8 +1632,7 @@ export default function App() {
               !documentsOpen &&
               tab === "Analytics" ? (
                 <>
-                  <AnalyticsScreen snapshot={snapshot} onReviewTransactions={reviewTransactions} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} onUpdateBalance={() => open("accounts", state.accounts.find(account => account.isPrimary) || state.accounts[0])} />
-                  {section("debts", "Debts & credit")}
+                  <AnalyticsScreen snapshot={snapshot} loadSpendingRates={loadSpendingRates} onReviewTransactions={showStatementLibrary} onEditGoal={goal => open("goals", goal)} onEssentials={() => open("expenses")} onUpdateBalance={() => setReserveEditor(true)} onEditReserveTarget={() => setReserveTargetEditor(true)} onDebt={debt=>open('debts',debt)} />
                   <Button secondary title="Manage goals, income & bills" onPress={() => setSettingsSectionOpen(value => !value)} />
                   {settingsSectionOpen && <>{section("goals", "Your goals")}{section("incomes", "Income")}{section("obligations", "Upcoming bills")}</>}
                   <ActionHistory items={env.actionHistory || []}
@@ -1929,94 +1688,9 @@ export default function App() {
                 }}
               />
             )}
-            {reviewTransaction && (
-              <View style={s.overlay}>
-                <SafeAreaView style={s.sheet}>
-                  <ScrollView contentContainerStyle={{ padding: 22, gap: 16 }}>
-                    <Text style={s.h1}>Review operation</Text>
-                    <Text>
-                      {reviewTransaction.date} · {reviewTransaction.description}
-                    </Text>
-                    <Text>
-                      {money(
-                        reviewTransaction.amount,
-                        reviewTransaction.currency,
-                      )}
-                    </Text>
-                    <Text style={s.small}>
-                      {Object.entries(reviewTransaction.rawRow || {})
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join(" · ")}
-                    </Text>
-                    <Select
-                      label="Economic type"
-                      value={economicType}
-                      values={[
-                        "income",
-                        "expense",
-                        "internal_transfer",
-                        "external_transfer",
-                        "debt_payment",
-                        "interest_fee",
-                        "refund",
-                        "cash_withdrawal",
-                        "savings_allocation",
-                        "work_business_movement",
-                        "unknown",
-                      ].map((id) => ({ id, name: id }))}
-                      onChange={setEconomicType}
-                    />
-                    <Select
-                      label="Category"
-                      value={category}
-                      values={[
-                        "rent_housing",
-                        "utilities_energy",
-                        "internet_telecom",
-                        "groceries_food",
-                        "dining_coffee",
-                        "transport",
-                        "subscriptions",
-                        "shopping",
-                        "health",
-                        "education",
-                        "work_expense",
-                        "income",
-                        "transfer",
-                        "other",
-                      ].map((id) => ({ id, name: id }))}
-                      onChange={setCategory}
-                    />
-                    {error && <Text style={s.error}>{error}</Text>}
-                    <Button
-                      title="Confirm classification"
-                      disabled={busy}
-                      onPress={() =>
-                        void run(async () => {
-                          await request(
-                            `/transactions/${reviewTransaction.id}/classify`,
-                            "POST",
-                            {
-                              expectedVersion: env?.version,
-                              economicType,
-                              category,
-                            },
-                          );
-                          updateEnvelope(await request("/state"));
-                          setReviewTransaction(null);
-                        })
-                      }
-                    />
-                    <Button
-                      secondary
-                      title="Close"
-                      onPress={() => setReviewTransaction(null)}
-                    />
-                  </ScrollView>
-                </SafeAreaView>
-              </View>
-            )}
-
+            {reserveTargetEditor&&state&&env&&<ReserveTargetEditor state={state} version={env.version} close={()=>setReserveTargetEditor(false)}
+              save={async body=>{await request('/reserve-target','PUT',body);await hydrate(token!);}}/>}
+            {reserveEditor&&state&&env&&<ReserveBalanceEditor state={state} version={env.version} close={()=>setReserveEditor(false)} save={async body=>{await request('/reserve-balance','PUT',body);await hydrate(token!);}}/>}
             {editor && user && (
               <Modal animationType="slide" presentationStyle="fullScreen" onRequestClose={() => {setDraft(editor); setEditor(null);}}>
                 <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
@@ -2238,7 +1912,21 @@ const s = themedStyles({
     alignItems: "center",
     justifyContent: "center",
   },
-  settingsButton: { padding: 10, borderRadius: 18 },
+  settingsButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.6)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.8)",
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 1,
+  },
   small: { fontSize: 10, color: "#74766d", letterSpacing: 0.5, lineHeight: 17 },
   eyebrow: {
     fontSize: 10,

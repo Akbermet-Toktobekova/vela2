@@ -31,6 +31,7 @@ export function formatMoney(
   );
 }
 type Props = {
+  onEditFinding?: (finding:Finding)=>void;
   manualReviewMessage?: string;
   findings?: FindingsPacket;
   onFindingResponse: (
@@ -329,14 +330,6 @@ export function TodayScreen(props: Props) {
           <Text style={styles.note}>
             IMPACT-BASED CONFIRMATIONS ({props.findings?.unresolvedCount || 0})
           </Text>
-          <TouchableOpacity
-            onPress={props.onReviewTransactions}
-            accessibilityRole="button"
-          >
-            <Text style={styles.link}>
-              Inspect all {snapshot?.transactions.length || 0} txns
-            </Text>
-          </TouchableOpacity>
         </View>
         <FindingsReview
           embedded
@@ -344,6 +337,9 @@ export function TodayScreen(props: Props) {
           busy={busy}
           transactions={snapshot?.transactions || []}
           respond={props.onFindingResponse}
+          essential={snapshot?.essentialCommitment}
+          obligations={snapshot?.obligations}
+          onEdit={props.onEditFinding || props.onManage}
         />
       </GlassCard>
 
@@ -539,6 +535,7 @@ const styles = themedStyles({
 
   topRow: {
     flexDirection: "row",
+    flexWrap: 'wrap',
     alignItems: "center",
     justifyContent: "space-between",
     gap: 9,

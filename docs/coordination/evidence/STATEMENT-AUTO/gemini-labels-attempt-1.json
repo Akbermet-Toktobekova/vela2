@@ -1,0 +1,134 @@
+{
+  "synthetic": true,
+  "executedAt": "2026-11-09T10:28:29.267Z",
+  "financialReferenceDate": "2026-11-09",
+  "promptVersion": "classification.v4",
+  "input": {
+    "transactions": [
+      {
+        "id": "subscription-example",
+        "accountId": "checking",
+        "amount": -15,
+        "description": "Netflix monthly subscription",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T10:28:29.267Z"
+      },
+      {
+        "id": "own-transfer-out",
+        "accountId": "checking",
+        "amount": -100,
+        "description": "Transfer to my own savings account REF-SYNTHETIC",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T10:28:29.267Z"
+      },
+      {
+        "id": "own-transfer-in",
+        "accountId": "savings",
+        "amount": 100,
+        "description": "Transfer from my own checking account REF-SYNTHETIC",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T10:28:29.267Z"
+      }
+    ],
+    "matchedTransfers": [
+      {
+        "id": "synthetic-match",
+        "userId": "user_local_new",
+        "outgoingTransactionId": "own-transfer-out",
+        "incomingTransactionId": "own-transfer-in",
+        "outgoingAccountId": "checking",
+        "incomingAccountId": "savings",
+        "amount": 100,
+        "currency": "EUR",
+        "date": "2026-11-09",
+        "description": "Synthetic matched evidence",
+        "status": "matched"
+      }
+    ]
+  },
+  "output": {
+    "categorizedCount": 3,
+    "processedIds": [
+      "subscription-example",
+      "own-transfer-out",
+      "own-transfer-in"
+    ],
+    "unresolvedIds": [
+      "subscription-example",
+      "own-transfer-out",
+      "own-transfer-in"
+    ],
+    "models": [
+      {
+        "provider": "deterministic_fallback",
+        "modelUsed": "deterministic_fallback_after_error",
+        "liveCallUsed": false,
+        "fallbackReason": "{\"error\":{\"code\":503,\"message\":\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\"status\":\"UNAVAILABLE\"}}"
+      }
+    ],
+    "updatedClassifications": {
+      "subscription-example": {
+        "id": "cls_subscription-example",
+        "transactionId": "subscription-example",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v4:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "isInternalTransferCandidate": false,
+        "provenanceNote": "Gemini unavailable. Other is provisional; no subscription or transfer is confirmed.",
+        "updatedAt": "2026-11-09T10:28:30.600Z"
+      },
+      "own-transfer-out": {
+        "id": "cls_own-transfer-out",
+        "transactionId": "own-transfer-out",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v4:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "isInternalTransferCandidate": false,
+        "provenanceNote": "Gemini unavailable. Other is provisional; no subscription or transfer is confirmed.",
+        "updatedAt": "2026-11-09T10:28:30.600Z"
+      },
+      "own-transfer-in": {
+        "id": "cls_own-transfer-in",
+        "transactionId": "own-transfer-in",
+        "economicType": "income",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v4:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "isInternalTransferCandidate": false,
+        "provenanceNote": "Gemini unavailable. Other is provisional; no subscription or transfer is confirmed.",
+        "updatedAt": "2026-11-09T10:28:30.600Z"
+      }
+    },
+    "recurringDetected": [],
+    "proposedConfirmations": [],
+    "summaryText": "Analyzed 3 transactions (3 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+  },
+  "storage": "Report file only; no user PI changed.",
+  "limitations": "AI labels remain candidates. No subscription or internal transfer is user-confirmed in this capture."
+}

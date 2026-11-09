@@ -1,48 +1,45 @@
-import { useEffect,useRef,useState } from 'react';
-import { StyleSheet,Text,View } from 'react-native';
-import type { Finding,FindingResponse,FindingsPacket } from '../../../shared/contracts/findingsTypes';
-import { GlassButton,GlassCard } from './SoftGlass';
-const labels:Record<FindingResponse['response'],string>={dismiss:'Dismiss',still_used:'Still used',no_longer_used:'No longer used',unsure:'Unsure',internal_transfer:'Between my accounts',external_transfer:'External transfer',confirm_classification:'Save classification'};
-const categories=['rent_housing','utilities_energy','internet_telecom','groceries_food','dining_coffee','transport','subscriptions','shopping','health','education','work_expense','income','transfer','other'] as const;
-const types=['income','expense','internal_transfer','external_transfer','debt_payment','interest_fee','refund','cash_withdrawal','savings_allocation','work_business_movement','unknown'] as const;
-function FindingCard({finding,busy,transactions,respond,initiallyExpanded}:{finding:Finding;initiallyExpanded:boolean;busy:boolean;transactions:any[];respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>}) {
- const [expanded,setExpanded]=useState(initiallyExpanded);
- useEffect(()=>{if(initiallyExpanded)setExpanded(true);},[initiallyExpanded]);
- const [saving,setSaving]=useState(false);const [error,setError]=useState('');
- async function answer(body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>){setSaving(true);setError('');try{await respond(finding,body);}catch(e){setError(e instanceof Error?e.message:'Could not save. Please retry.');}finally{setSaving(false);}}
- const [category,setCategory]=useState<FindingResponse['category']>();
- const [economicType,setType]=useState<FindingResponse['economicType']>();
- const [preference,setPreference]=useState(false);
- return <View style={s.item}>
-  <GlassButton secondary title={`${expanded?'▾':'▸'} ${finding.title}${finding.reviewStatus==='Deferred'?' · Deferred':''}`} onPress={()=>setExpanded(!expanded)}/>
-  {finding.reopened&&<Text>New evidence changed this case. Please review it again.</Text>}
-  {expanded&&<><Text>{finding.observation}</Text>
-  <Text style={s.meta}>{finding.dateRange.start} – {finding.dateRange.end} · {finding.currency} {finding.totalAmount.toFixed(2)} observed · {finding.confidence} confidence</Text>
-  <Text>{finding.whyItMatters}</Text><Text style={s.title}>{finding.question}</Text>
-  {finding.kind==='recurrence'&&<Text style={s.meta}>This records your answer only. Cancellation eligibility is a separate check; no service is cancelled and no money moves.</Text>}
-  <Text>Supporting transactions</Text>
-  {expanded&&finding.evidenceIds.map(id=>{const t=transactions.find(t=>t.id===id);return <Text selectable key={id}>{t?`${t.date} · ${t.description} · ${t.currency} ${t.amount}`:id}</Text>;})}
-  {finding.responses.includes('confirm_classification')&&<>
-   <Text>Economic type</Text><View style={s.row}>{types.map(v=><GlassButton key={v} secondary title={`${economicType===v?'✓ ':''}${v.replaceAll('_',' ')}`} disabled={busy||saving} onPress={()=>setType(v)}/>)}</View>
-   <Text>Category</Text><View style={s.row}>{categories.map(v=><GlassButton key={v} secondary title={`${category===v?'✓ ':''}${v.replaceAll('_',' ')}`} disabled={busy||saving} onPress={()=>setCategory(v)}/>)}</View>
-   {!!finding.merchant&&<GlassButton secondary title={preference?'✓ Remember for this merchant and account':'Remember for future imports in this account'} disabled={busy||saving} onPress={()=>setPreference(!preference)}/>}
-  </>}
-  <View style={s.row}>{finding.responses.map(response=><GlassButton key={response} secondary title={labels[response]} disabled={busy||saving||(response==='confirm_classification'&&(!category||!economicType))} onPress={()=>void answer({response,...(response==='confirm_classification'?{category,economicType,applyMerchantPreference:preference}:{})})}/>)}</View>
-  {saving&&<Text accessibilityLiveRegion="polite">Saving…</Text>}{!!error&&<Text accessibilityRole="alert">{error}</Text>}</>}
- </View>;
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import type { Finding, FindingResponse, FindingsPacket } from '../../../shared/contracts/findingsTypes';
+import type { ExpenseCommitment, FinancialObligation } from '../../../shared/pi/types';
+import { GlassButton as Button, GlassCard } from './SoftGlass';
+import { SubscriptionForm } from './PlanningEditors';
+const key = (value:string) => value.trim().toLowerCase().replace(/\s+/g,' ');
+function FindingCard({finding,transactions,busy,respond,essential,obligations,onEdit}: {
+  finding:Finding;transactions:any[];busy:boolean;respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>;
+  essential?:ExpenseCommitment|null;obligations?:FinancialObligation[];onEdit?:(finding:Finding)=>void;
+}) {
+  const [edit,setEdit]=useState(false); const [error,setError]=useState('');const [saving,setSaving]=useState(false);
+  const send=async(body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>{setSaving(true);setError('');try{await respond(finding,body);}catch(e){setError(e instanceof Error?e.message:'Could not save.');throw e;}finally{setSaving(false);}};
+  const transaction=transactions.filter(t=>finding.evidenceIds.includes(t.id)).sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const detail=essential?.details?.find(d=>key(d.name)===key(finding.merchant || finding.title));
+  const bill=obligations?.find(b=>key(b.name)===key(finding.merchant || finding.title)&&b.currency===finding.currency);
+  return <View style={s.item}>
+    <Text style={s.meta}>{finding.kind==='recurrence'?'SUBSCRIPTION':'TRANSFER'} · {finding.currency} {Math.abs(transaction?.amount ?? finding.totalAmount).toFixed(2)}</Text>
+    <Text style={s.title}>{finding.question}</Text><Text>{finding.observation}</Text><Text style={s.meta}>{finding.whyItMatters}</Text>
+    <View style={s.row}>
+      <Button title="Approve" disabled={busy||saving} onPress={()=>finding.kind==='recurrence'?setEdit(true):void send({response:'internal_transfer'}).catch(()=>{})}/>
+      <Button secondary title="Edit" disabled={busy||saving} onPress={()=>finding.kind==='recurrence'?setEdit(!edit):onEdit?.(finding)}/>
+      <Button secondary destructive title="Reject" disabled={busy||saving} onPress={()=>void send({response:finding.kind==='transfer'?'external_transfer':'dismiss'}).catch(()=>{})}/>
+    </View>
+    {edit&&finding.kind==='recurrence'&&<SubscriptionForm includedKnown={!!detail} initial={{
+      name:finding.merchant || finding.title,currency:finding.currency,amount:bill?.amount ?? (detail?.monthlyAmount ?? Math.abs(transaction?.amount ?? finding.totalAmount)),
+      frequency:bill?.recurrence==='yearly'?'yearly':bill?.recurrence==='weekly'?'weekly':bill?.recurrence==='monthly'||detail?'monthly':finding.cadence==='annual'?'yearly':finding.cadence,
+      nextDueDate:bill?.dueDate || detail?.dueDate, detailId:detail?.id,
+    }} submit={async subscription=>{await send({response:'confirm_subscription',subscription});setEdit(false);}}/>}
+    {!!error&&<Text accessibilityRole="alert">{error}</Text>}
+  </View>;
 }
-export function FindingsReview({packet,busy,transactions,respond,embedded=false}:{embedded?:boolean;packet?:FindingsPacket;busy:boolean;transactions:any[];respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>}) {
- const [showReviewed,setShowReviewed]=useState(false);const [showInfo,setShowInfo]=useState(false);
- const reviewedCount=useRef(packet?.reviewed.length||0);
- useEffect(()=>{const count=packet?.reviewed.length||0;if(count>reviewedCount.current)setShowReviewed(true);reviewedCount.current=count;},[packet?.reviewed.length]);
- const progress=packet?.progress;
- const Container=embedded?View:GlassCard;
- return <Container>{!embedded&&<Text style={s.heading}>Needs your review</Text>}
- {progress&&<><Text accessibilityLiveRegion="polite">{progress.resolved} of {progress.total} reviewed · {progress.remaining} still need a decision</Text><View accessibilityRole="progressbar" accessibilityValue={{min:0,max:progress.total,now:progress.resolved}} style={{height:8,borderRadius:4,backgroundColor:'#e3e7df',overflow:'hidden'}}><View style={{height:8,backgroundColor:'#386641',width:`${progress.total?progress.resolved/progress.total*100:0}%`}}/></View>{progress.remaining===0&&<Text>Review complete—all {progress.total} cases resolved.</Text>}{progress.deferred>0&&<Text>{progress.deferred} deferred for later review.</Text>}</>}
- {!packet?<Text>Refresh to load findings.</Text>:!packet.unresolvedCount?<Text>No unclear cases need your attention.</Text>:<Text>{packet.unresolvedCount} cases remaining{packet.unresolvedCount>5?' · showing five at a time':''}</Text>}
- {packet?.findings.slice(0,5).map((f,i)=><FindingCard key={`${f.id}:${f.evidenceVersion}`} initiallyExpanded={i===0} finding={f} busy={busy} transactions={transactions} respond={respond}/>)}
- {!!packet?.reviewed.length&&<><GlassButton secondary title={`${showReviewed?'Hide':'Show'} reviewed (${packet.reviewed.length})`} onPress={()=>setShowReviewed(!showReviewed)}/>{showReviewed&&packet.reviewed.map(f=><View key={`${f.id}:${f.evidenceVersion}`} style={s.item}><Text style={s.title}>{f.reviewStatus==='Deferred'?'◷':'✓'} {f.reviewStatus} · {f.title}</Text><Text>{f.dateRange.start} – {f.dateRange.end} · {f.currency}</Text></View>)}</>}
- {!!packet?.informational.length&&<><GlassButton secondary title={showInfo?'Hide observations':'View informational observations'} onPress={()=>setShowInfo(!showInfo)}/>{showInfo&&packet.informational.map(f=><View key={f.id} style={s.item}><Text style={s.title}>{f.title}</Text><Text>{f.observation}</Text><Text>{f.currency} {f.totalAmount.toFixed(2)} · {f.dateRange.start} – {f.dateRange.end}</Text></View>)}</>}
- </Container>;
+export function FindingsReview({packet,busy,transactions,respond,embedded=false,essential,obligations,onEdit}: {
+  packet?:FindingsPacket;busy:boolean;transactions:any[];respond:(f:Finding,body:Omit<FindingResponse,'expectedVersion'|'evidenceVersion'>)=>Promise<void>;embedded?:boolean;
+  essential?:ExpenseCommitment|null;obligations?:FinancialObligation[];onEdit?:(finding:Finding)=>void;
+}) {
+  const Container=embedded?View:GlassCard;
+  const rows=packet?.findings.filter(f=>f.kind==='transfer') || [];
+  return <Container style={{gap:12}}>
+    {!embedded&&<Text style={s.title}>Confirm own-account transfers</Text>}
+    {!rows.length&&<Text>No own-account transfers need confirmation.</Text>}
+    {rows.map(f=><FindingCard key={`${f.id}:${f.evidenceVersion}`} finding={f} transactions={transactions} busy={busy} respond={respond} essential={essential} obligations={obligations} onEdit={onEdit}/>)}
+  </Container>;
 }
-const s=StyleSheet.create({heading:{fontSize:20,fontWeight:'700'},title:{fontWeight:'600',fontSize:16},meta:{fontSize:13,color:'#74766d'},item:{gap:8,padding:14,backgroundColor:'#dce1d6',borderWidth:1,borderColor:'rgba(39,46,35,.12)',borderRadius:18},row:{flexDirection:'row',flexWrap:'wrap',gap:8}});
+const s=StyleSheet.create({title:{fontWeight:'600',fontSize:16,flexShrink:1},meta:{fontSize:13,color:'#74766d',flexShrink:1},item:{gap:10,padding:14,backgroundColor:'#dce1d6',borderWidth:1,borderColor:'rgba(39,46,35,.12)',borderRadius:18},row:{flexDirection:'row',flexWrap:'wrap',gap:8}});

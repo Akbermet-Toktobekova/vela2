@@ -2,6 +2,8 @@
   "version": "merchant_directory_v1_synthetic",
   "scope": "Exact aliases reviewed against synthetic acceptance fixtures; not universal merchant coverage.",
   "entries": [
+    {"id":"spar","canonicalName":"SPAR","aliases":["spar","interspar"],"matchingMethod":"exact_normalized","possibleCategories":["groceries_food"],"kind":"ordinary_purchase","provenance":"Approved synthetic SPAR Budapest example in D-026.","confidence":"medium"},
+    {"id":"lidl","canonicalName":"Lidl","aliases":["lidl"],"matchingMethod":"exact_normalized","possibleCategories":["groceries_food"],"kind":"ordinary_purchase","provenance":"Approved Lidl grocery fixture in D-026.","confidence":"medium"},
     {"id":"netflix","canonicalName":"Netflix","aliases":["netflix","netflix.com"],"matchingMethod":"exact_normalized","possibleCategories":["subscriptions"],"kind":"subscription_service","provenance":"Synthetic findings fixtures: Netflix monthly/annual/weekly charges; descriptor identity is not proof of a subscription contract.","confidence":"medium"},
     {"id":"spotify","canonicalName":"Spotify","aliases":["spotify","spotify premium"],"matchingMethod":"exact_normalized","possibleCategories":["subscriptions"],"kind":"subscription_service","provenance":"Synthetic findings fixture: Spotify recurrence; descriptor identity requires user review.","confidence":"medium"},
     {"id":"test_energy","canonicalName":"Test Energy","aliases":["test energy","test energy bill"],"matchingMethod":"exact_normalized","possibleCategories":["utilities_energy"],"kind":"variable_bill","provenance":"Fictional utility in synthetic variable-bill acceptance fixture.","confidence":"medium"},

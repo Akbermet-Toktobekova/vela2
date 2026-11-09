@@ -114,3 +114,22 @@ Integrated the completed backend with the new-ui Expo Android/iOS application un
 The isolated deterministic Nora import/review profile returned NEEDS_DATA, with no invented amount or score and a concrete account-balance clarification. Current live captures remain historical evidence; this integration did not repeat the paid live benchmark. Existing synthetic financial/FX/feedback regressions passed, and import provenance verification passed 34 focused tests after the final worksheet-preservation adjustment.
 
 [Handoff](handoffs/UI-BACKEND.md) · [Raw test output](evidence/UI-BACKEND/tests.txt) · [Synthetic profile output](evidence/UI-BACKEND/synthetic-profile.txt) · [Native export](evidence/UI-BACKEND/native-export.txt)
+
+
+## STATEMENT-AUTO browser follow-up - 2026-11-09
+
+Non-live suite: 35 files passed, 347 tests passed and 2 platform skips, including 14 mandatory E2E. The synthetic Chrome profile saved EUR1000 essentials with an included EUR600 dated bill; recording EUR3000 emergency earmark preserved EUR5000 bank cash and displayed EUR1400 uncommitted. No new scoring/calibration benchmark was performed. Earlier provider captures remain unresolved (503, then confidence-schema rejection), and the latest full suite includes a failed live evaluation telemetry assertion. Main-screen browser checks do not substitute for populated findings or physical-device acceptance. See [handoff](handoffs/STATEMENT-AUTO.md) and [actual test output](evidence/STATEMENT-AUTO/server-tests-visual-followup.txt).
+
+
+## STATEMENT-ENRICHMENT - 2026-11-09
+
+The offline baseline and new classifier processed the same six synthetic rows. Correct name/category/type counts were 4/2/3 before, 6/6/6 with local evidence and 6/5/6 with live Gemini 3.5 Flash Lite. See [handoff](handoffs/STATEMENT-ENRICHMENT.md) and [final checks](evidence/STATEMENT-ENRICHMENT/final-non-live.txt).
+
+
+## ANALYTICS-FX - 2026-11-09
+
+The frozen reference scored 41 of 41 Wise source rows. Offline Other decreased from 38 to 34, grounded category matches improved from 3/27 to 7/27, and economic type matches improved from 28/32 to 32/32. Saved Gemini 3.5 and 3.1 runs scored 22/27 and 27/27 grounded categories respectively; no updated live-model result is claimed. Synthetic spending analytics regressions cover native currencies, multiple accounts, transfer and refund exclusion, and partial Frankfurter totals. Non-live suite: 36 files passed, 355 tests passed, and 2 platform skips, including all 14 mandatory E2E scenarios. Server and Expo type checks and Android/iOS preview probes passed. See [handoff](handoffs/ANALYTICS-FX.md) and [evidence](evidence/ANALYTICS-FX/).
+
+## STATEMENT-AI-DELIVERY - 2026-11-09
+
+The authenticated isolated Wise upload saved the classification output of two live Gemini 3.5 Flash Lite batches before an intentionally failed downstream stage. Coverage was 41/41, with 5 Other, 27/27 grounded category matches and 32/32 economic type matches. One uncertain deposit differed from the reference. Input for the provider was minimized. All 14 mandatory E2E scenarios passed within 356 passed tests, 2 platform skips and 36 passed files. The added synthetic HTTP regression verifies that a downstream failure and subsequent provider fallback leave successful statement categories in place. See [handoff](handoffs/STATEMENT-AI-DELIVERY.md) and [live results](evidence/STATEMENT-AI-DELIVERY/wise-live.json).

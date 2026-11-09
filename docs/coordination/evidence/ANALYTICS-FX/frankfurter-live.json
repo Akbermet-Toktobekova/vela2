@@ -1,0 +1,19 @@
+{
+  "asOf": "2026-11-09",
+  "quotes": [
+    {
+      "status": 200,
+      "base": "EUR",
+      "currency": "HUF",
+      "date": "2026-11-09",
+      "usable": true
+    },
+    {
+      "status": 200,
+      "base": "EUR",
+      "currency": "KGS",
+      "date": "2026-11-09",
+      "usable": true
+    }
+  ]
+}

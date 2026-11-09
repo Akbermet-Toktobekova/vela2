@@ -9,6 +9,7 @@ TouchableOpacity,
 View,
 } from "react-native";
 import Svg,{ Circle,Path,Rect } from "react-native-svg";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, cardStyle, themedStyles } from '../theme';
 export { colors } from '../theme';
@@ -70,7 +71,8 @@ export function Icon({
     settings: (
       <>
         <Path
-          d="m9 3 .5 3a7 7 0 0 1 5 0l.5-3 3 2-1 3a7 7 0 0 1 2 4l3 1-1 3-3-.2a7 7 0 0 1-3 3l-1 3-3-1-.5-3a7 7 0 0 1-4-2l-3 1-1-3 2-2a7 7 0 0 1 1-4L5 5l4-2Z"
+          d="M19.85 8.75 L22.37 10.36 L22.37 13.64 L19.85 15.25 L20.49 18.17 L18.17 20.49 L15.25 19.85 L13.64 22.37 L10.36 22.37 L8.75 19.85 L5.83 20.49 L3.51 18.17 L4.15 15.25 L1.63 13.64 L1.63 10.36 L4.15 8.75 L3.51 5.83 L5.83 3.51 L8.75 4.15 L10.36 1.63 L13.64 1.63 L15.25 4.15 L18.17 3.51 L20.49 5.83 Z"
+          strokeLinejoin="round"
           {...common}
         />
         <Circle cx="12" cy="12" r="3" {...common} />
@@ -151,26 +153,30 @@ export function GlassButton({
   secondary = false,
   compact = false,
   disabled = false,
+  destructive = false,
 }: {
   title: string;
   onPress: () => void;
   secondary?: boolean;
   compact?: boolean;
   disabled?: boolean;
+  destructive?: boolean;
 }) {
   return (
     <TouchableOpacity
       accessibilityRole="button"
       disabled={disabled}
+      hitSlop={6}
       onPress={onPress}
       style={[
         glass.button,
         secondary && glass.secondary,
-        compact && {paddingHorizontal:10,paddingVertical:6,minHeight:28},
+        destructive && {borderColor:colors.destructive,backgroundColor:'transparent'},
+        compact && {paddingHorizontal:10,paddingVertical:6,minHeight:44},
         disabled && { opacity: 0.45 },
       ]}
     >
-      <Text style={[glass.buttonText, secondary && { color: colors.ink }, compact && {fontSize:10} ]}>
+      <Text style={[glass.buttonText, secondary && { color: colors.ink }, compact && {fontSize:10},destructive&&{color:colors.destructive} ]}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -223,6 +229,7 @@ export function FloatingNavigation({
   active: string;
   onChange: (tab: string) => void;
 }) {
+  const insets = useSafeAreaInsets();
   const items: { name: string; icon: IconName }[] = [
     { name: "Today", icon: "sun" },
     { name: "Analytics", icon: "analytics" },
@@ -230,7 +237,7 @@ export function FloatingNavigation({
     { name: "Profile", icon: "profile" },
   ];
   return (
-    <View style={glass.navigationWrap}>
+    <View style={[glass.navigationWrap,{bottom:Math.max(14,insets.bottom)}]}>
       <BlurView intensity={65} tint="light" style={glass.navigation}>
         {items.map((item) => (
           <TouchableOpacity
@@ -266,7 +273,9 @@ export const glass = themedStyles({
   card: {...cardStyle, overflow: "hidden"},
   cardContent: { padding: 18, gap: 10 },
   button: {
-    minHeight: 38,
+    minHeight: 44,
+    maxWidth: '100%',
+    flexShrink: 1,
     paddingVertical: 9,
     paddingHorizontal: 18,
     borderRadius: 22,
@@ -281,7 +290,7 @@ export const glass = themedStyles({
     shadowRadius: 10,
   },
   secondary: { backgroundColor: colors.secondary, shadowOpacity: 0 },
-  buttonText: { fontSize: 12, fontWeight: "600", color: colors.white },
+  buttonText: { fontSize: 12, fontWeight: "600", color: colors.white, textAlign:'center', flexShrink:1 },
   label: {
     fontSize: 10,
     fontWeight: "600",

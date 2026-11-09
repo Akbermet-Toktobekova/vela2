@@ -120,3 +120,31 @@ English translation: “Use Expo only; we do not need the web part.”
 Remove the Connection section, host-address instructions and server-address input from the app. Configure the HTTPS API endpoint through deployment/local Expo configuration. Preserve endpoint-bound sessions: when a configured endpoint differs from the saved endpoint, discard the previous session before connecting.
 
 Original user instruction after quoting the Connection section: “remove this”.
+
+### D-025 (PRODUCT_DECISION, 2026-11-09) — Automatic statements and reference UI
+
+The supplied mobile images govern UI structure; explicit user instructions override differences. Keep seven onboarding steps. Upload and retain originals without parsing during onboarding; leaving onboarding starts background processing. Subsequent uploads process in background. Keep all operations, visible/editable only through Profile > Statements > Show. Preserve original evidence and reversible exclusions without changing bank balances. Remove category selection; Gemini supplies analytical categories, with Other for uncertain results. Today confirms only subscription existence and internal transfers using Approve/Edit/Reject. User answers override future AI classifications.
+
+Essential monthly spending remains authoritative. Named monthly details are included within it, with optional due dates and no required source account. Dated bills use total eligible personal cash with existing FX checks. Safety Cushion target is three times confirmed essentials. Optional other-goal contributions and extra debt payments require the protected reserve; mandatory obligations remain available. Missing essentials block optional actions. Existing allocations, canonical AS records and scoring coefficients remain unchanged.
+
+Confirmed subscriptions create future obligations only with known dates/amounts; existence does not imply usage or cancellation eligibility. Reuse known details. Ask once whether a new subscription is included in essentials; if not, add its monthly equivalent once. Avoid duplicate detail/subscription obligations. Add Profile subscription Edit/Mark as ended. Retain files until manual deletion unless the user changes retention. Delete removes unique derived data; overlapping provenance survives. Mutations invalidate affected results and trigger orchestration. Sections start collapsed; logout is separate. Existing supported file formats remain; Gemini does not parse files or perform OCR.
+
+### D-026 (PRODUCT_DECISION, 2026-11-09) - Statement enrichment and budgeting
+
+The user approved background import with file-scoped details, editable enrichment, automatic subscription detection and a single question only for potential own-account transfers. Pending own transfers are separate from income and spending. Valid rows enter analytics immediately. Unreadable rows remain visible and do not enter analytics until corrected. The classification model order is Gemini 3.5 Flash Lite, Gemini 3.1 Flash Lite, then Gemma 4 31B, with local evidence fallback. Forecast a subscription only from supported terms. Detection never changes essential costs.
+
+Use five essential spending groups, a calculated total and Other as the balancing category. Recommend three months of expenses for a new Safety Cushion, persist the saved target, and use it as the protected reserve. Allow passwords of 8 to 128 characters. Show chat suggestions only in a new conversation. These choices supersede the conflicting portions of D-025.
+
+The user confirmed the Transfers category for external and own-account transfers. The supplied Revolut, Wise and MBANK files are acceptance inputs. Infer layouts from headers and structure. Existing AI consent still applies. The user waived browser acceptance for this run.
+
+### D-027 (PRODUCT_DECISION, 2026-11-09) - Spending category filters
+
+Show spending categories by account and currency. All expresses imported spending in the profile base currency as a display estimate at latest available Frankfurter quotes, with quote dates. Disclose any omitted currency when no usable quote is available. The All view uses Frankfurter v2 and has no authority over balances or action eligibility.
+
+### D-028 (PRODUCT_DECISION, 2026-11-09) - Statement classification reference and bank evidence
+
+Score the same source rows against frozen, independently assigned labels. Report row coverage, grounded category accuracy, all-row agreement, and economic type separately. Keep possible own transfers and insufficient merchant descriptions visible without treating uncertain labels as required matches. Classify explicit bank-declared fees and currency conversions before model interpretation. Use a bank-declared deposit and a matching account holder name only as an own-transfer candidate. Send normalized operation hints to the classifier, without raw statement fields or the account holder name.
+
+### D-029 (PRODUCT_DECISION, 2026-11-09) - Deliver statement AI labels independently
+
+For profiles with AI consent, publish automatic statement labels after classification, before the remaining stages of the financial review. Preserve prior successful model labels during a temporary provider failure unless current structured bank evidence or a user edit takes priority. A failure in the remaining review stages does not remove available statement labels.

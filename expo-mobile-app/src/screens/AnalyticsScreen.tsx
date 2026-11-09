@@ -1,17 +1,20 @@
 import { MoneyHistoryChart } from "../components/MoneyHistoryChart";
 import { themedStyles } from "../theme";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Text, TextInput, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import type {
   FinancialGoal,
   FinancialSnapshot,
+  DebtRecord,
+  FXRateEntry,
 } from "../../../shared/pi/types";
 import { GlassButton, GlassCard, colors } from "../components/SoftGlass";
-import { deriveObservedPlan, goalAllocated, goalTimeline } from "./planMath";
+import { deriveObservedPlan, deriveSpendingCategories, goalAllocated, goalTimeline } from "./planMath";
 
 export type AnalyticsScreenProps = {
   snapshot?: FinancialSnapshot;
+  loadSpendingRates: () => Promise<{base: string; rates: Record<string, FXRateEntry>}>;
   onReviewTransactions: (
     category?: string,
     currency?: string,
@@ -20,6 +23,8 @@ export type AnalyticsScreenProps = {
   onEditGoal: (goal: FinancialGoal) => void;
   onEssentials: () => void;
   onUpdateBalance: () => void;
+  onEditReserveTarget: () => void;
+  onDebt: (debt?:DebtRecord) => void;
 };
 const money = (value: number | null | undefined, currency: string) =>
   value == null || !Number.isFinite(value)
@@ -66,14 +71,39 @@ function Chips({
 
 export function AnalyticsScreen({
   snapshot,
-  onReviewTransactions,
+  loadSpendingRates,
   onEditGoal,
   onEssentials,
   onUpdateBalance,
+  onEditReserveTarget,
+  onDebt,
 }: AnalyticsScreenProps) {
+  const {width} = useWindowDimensions();
   const [showDetails, setShowDetails] = useState(false);
   const [period, setPeriod] = useState("all");
   const [selectedCurrency, setSelectedCurrency] = useState("");
+  const [spendingCurrency, setSpendingCurrency] = useState("");
+  const [spendingAccount, setSpendingAccount] = useState("");
+  const [spendingRates, setSpendingRates] = useState<{
+    key: string; rates?: Record<string, FXRateEntry>; error?: boolean;
+  }>();
+  const [rateRetry, setRateRetry] = useState(0);
+  const baseCurrency = snapshot?.baseCurrency;
+  const quoteKey = baseCurrency + ':' + [...new Set([
+    ...(snapshot?.accountSummaries.map(summary => summary.account.currency) ?? []),
+    ...(snapshot?.transactions.map(row => row.currency) ?? []),
+  ])].sort().join(',');
+  useEffect(() => {
+    if (spendingCurrency !== 'all' || !baseCurrency) return;
+    let active = true;
+    setSpendingRates({key: quoteKey});
+    void loadSpendingRates().then(result => {
+      if (active) setSpendingRates(result.base === baseCurrency ? {key: quoteKey, rates: result.rates} : {key: quoteKey, error: true});
+    }).catch(() => {
+      if (active) setSpendingRates({key: quoteKey, error: true});
+    });
+    return () => { active = false; };
+  }, [baseCurrency, loadSpendingRates, quoteKey, rateRetry, spendingCurrency]);
   const [selectedGoal, setSelectedGoal] = useState("");
   const [contribution, setContribution] = useState("80");
   const [trackWidth, setTrackWidth] = useState(1);
@@ -132,7 +162,21 @@ export function AnalyticsScreen({
     ? goalTimeline(goal.targetAmount, allocated, amount)
     : null;
   const maximum = Math.max(400, Number.isFinite(amount) ? amount : 0);
-  const categoryEntries = Object.entries(observed.categories)
+  const accounts = snapshot.accountSummaries.map(summary => summary.account);
+  const chartCurrencies = [...new Set([
+    snapshot.baseCurrency, ...accounts.map(account => account.currency), ...snapshot.transactions.map(row => row.currency),
+  ])];
+  const chartSelection = spendingCurrency === 'all' || chartCurrencies.includes(spendingCurrency)
+    ? spendingCurrency : snapshot.baseCurrency;
+  const availableAccounts = accounts.filter(account => chartSelection === 'all' || account.currency === chartSelection ||
+    snapshot.transactions.some(row => row.accountId === account.id && row.currency === chartSelection));
+  const chartAccount = availableAccounts.some(account => account.id === spendingAccount) ? spendingAccount : '';
+  const quoteState = spendingRates?.key === quoteKey ? spendingRates : undefined;
+  const loadingRates = chartSelection === 'all' && !quoteState?.rates && !quoteState?.error;
+  const spending = deriveSpendingCategories(snapshot, {
+    currency: chartSelection, accountId: chartAccount || undefined, rates: quoteState?.rates,
+  });
+  const categoryEntries = Object.entries(spending.categories)
     .filter(([, v]) => v > 0)
     .sort((a, b) => b[1] - a[1]);
   const totalCategories = categoryEntries.reduce((sum, [, v]) => sum + v, 0);
@@ -159,15 +203,29 @@ export function AnalyticsScreen({
   return (
     <>
       <GlassCard>
-        <View style={s.row}><View style={{flex:1,gap:4}}><Text style={s.eyebrow}>VERIFIED SPENDING CATEGORIES</Text><Text style={s.heading}>Where your money went</Text></View>        <GlassButton
-          secondary
-          title="Review All" compact
-          onPress={() =>
-            onReviewTransactions(undefined, currency, observedMonth)
-          }
-        /></View>
-        {totalCategories > 0 ? (
-          <View style={s.chartLayout}>
+        <View style={s.row}><View style={{flex:1,gap:4}}><Text style={s.eyebrow}>SPENDING CATEGORIES</Text><Text style={s.heading}>Where your money went</Text></View></View>
+        <Text style={s.note}>Currency</Text>
+        <Chips items={[{id: 'all', name: 'All'}, ...chartCurrencies.map(id => ({id, name: id}))]}
+          value={chartSelection} onChange={setSpendingCurrency} />
+        <Text style={s.note}>Account</Text>
+        <Chips items={[{id: '', name: 'All accounts'}, ...availableAccounts.map(account => ({
+          id: account.id, name: account.name + ' · ' + account.currency,
+        }))]} value={chartAccount} onChange={setSpendingAccount} />
+        {chartSelection === 'all' && <Text style={s.note}>
+          Estimated in {spending.currency} using latest available Frankfurter rates.
+        </Text>}
+        {loadingRates && <Text accessibilityLiveRegion="polite" style={s.note}>Loading exchange rates…</Text>}
+        {!loadingRates && Object.entries(spending.quoteDates).map(([code, date]) =>
+          <Text key={code} style={s.note}>{code} rate · {date}</Text>)}
+        {!loadingRates && spending.unconverted.length > 0 && <View style={{gap: 6}}>
+          <Text style={s.note}>Partial total. No usable exchange rate for:</Text>
+          {spending.unconverted.map(row => <Row key={row.currency} name={row.currency} value={money(row.amount, row.currency)} />)}
+          <GlassButton secondary title="Retry exchange rates" onPress={() => setRateRetry(count => count + 1)} />
+        </View>}
+        {quoteState?.error && !loadingRates && chartSelection === 'all' && !spending.unconverted.length &&
+          <Text style={s.note}>Exchange rates could not be loaded.</Text>}
+        {!loadingRates && (totalCategories > 0 ? (
+          <View style={[s.chartLayout,width<380&&{flexDirection:'column',alignItems:'stretch'}]}>
             <View style={s.chart}>
               <Svg
                 width={136}
@@ -201,28 +259,18 @@ export function AnalyticsScreen({
                       strokeDashoffset={-start}
                       rotation={-90}
                       origin="95,95"
-                      onPress={() =>
-                        onReviewTransactions(category, currency, observedMonth)
-                      }
-                      accessibilityLabel={`${label(category)} ${money(value, currency)}`}
+                      accessibilityLabel={`${label(category)} ${money(value, spending.currency)}`}
                     />
                   );
                 })}
               </Svg>
               <Text pointerEvents="none" style={s.chartValue}>
-                {money(totalCategories, currency)}
+                {money(totalCategories, spending.currency)}
               </Text>
             </View>
             <View style={s.categoryList}>
               {categoryEntries.map(([category, value], i) => (
-                <TouchableOpacity
-                  key={category}
-                  accessibilityRole="button"
-                  onPress={() =>
-                    onReviewTransactions(category, currency, observedMonth)
-                  }
-                  style={s.categoryRow}
-                >
+                <View key={category} style={s.categoryRow}>
                   <View style={s.legend}>
                     <View
                       style={[
@@ -237,24 +285,23 @@ export function AnalyticsScreen({
                     </Text>
                   </View>
                   <Text style={s.value}>
-                    {money(value, currency)} ·{" "}
+                    {money(value, spending.currency)} ·{" "}
                     {Math.round((value / totalCategories) * 100)}%
                   </Text>
-                </TouchableOpacity>
+                </View>
               ))}
             </View>
           </View>
         ) : (
           <Text style={s.note}>
-            No classified spending in this period. Review operations to confirm
-            their meaning.
+            {spending.unconverted.length ? "No spending could be converted for these filters." : "No spending for these filters."}
           </Text>
-        )}
+        ))}
 
       </GlassCard>
       <GlassCard>
-        <View style={s.row}>
-          <View style={{ flex: 1, gap: 8 }}>
+        <View style={{ gap: 8 }}>
+          <View style={{ gap: 8 }}>
             <Text style={s.eyebrow}>SAFETY CUSHION</Text>
             <Text style={s.heading}>
               {money(cushionAmount, cushion?.currency || currency)}{" "}
@@ -263,6 +310,7 @@ export function AnalyticsScreen({
               </Text>
             </Text>
           </View>
+          <View style={[s.row, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
           <GlassButton
             secondary
             title="Update Balance" compact
@@ -271,10 +319,11 @@ export function AnalyticsScreen({
           {cushion && (
             <GlassButton
               secondary
-              title="Edit Target" compact
-              onPress={() => onEditGoal(cushion)}
+              title="Edit target" compact
+              onPress={onEditReserveTarget}
             />
           )}
+          </View>
         </View>
         <View style={s.row}>
           <Text style={s.body}>
@@ -323,7 +372,7 @@ export function AnalyticsScreen({
         </Text>
         <Text style={s.note}>
           Calculated from recorded cushion and same-currency essential costs.
-          Balance updates edit your account; allocations remain separate.
+          Update Balance records the amount earmarked for emergencies. It does not change your bank balance or move money.
         </Text>
       </GlassCard>
       <MoneyHistoryChart snapshot={snapshot} />
@@ -451,13 +500,18 @@ export function AnalyticsScreen({
               affordability guarantee. Contributions stay in the goal currency.
               This does not save an allocation or alter your plan.
             </Text>
-            <GlassButton
+            {goal.goalType !== 'emergency_cushion' && <GlassButton
               secondary
               title="Edit selected goal"
               onPress={() => onEditGoal(goal)}
-            />
+            />}
           </>
         )}
+      </GlassCard>
+      <GlassCard>
+        <View style={[s.row,{flexWrap:'wrap'}]}><View style={{flex:1,minWidth:130}}><Text style={s.eyebrow}>DEBTS &amp; CREDIT</Text><Text style={s.heading}>Tracked balances &amp; minimums</Text></View><GlassButton secondary title="+ Add debt" onPress={()=>onDebt()}/></View>
+        {!snapshot.debts.length&&<Text style={s.note}>No saved debts. Unknown terms can be added later.</Text>}
+        {snapshot.debts.map(debt=><View key={debt.id} style={{gap:8,padding:14,borderRadius:18,backgroundColor:colors.secondary}}><Text style={s.heading}>{debt.name}</Text><Text style={s.value}>{money(debt.remainingBalance,debt.currency)}</Text><Text style={s.note}>Minimum: {money(debt.minimumPayment,debt.currency)} · APR: {debt.apr==null?'Unknown':debt.apr+'%'} · Due: {debt.nextDueDate || 'Unknown'}</Text><GlassButton secondary title="Edit" onPress={()=>onDebt(debt)}/></View>)}
       </GlassCard>
       <GlassButton
         secondary

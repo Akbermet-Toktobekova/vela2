@@ -1,0 +1,70 @@
+- generic: Vela
+- button "Open profile and settings":
+- generic: SPENDING CATEGORIES
+- generic: Where your money went
+- generic: No spending is available in this period. File status and saved operations are available in Profile.
+- generic: SAFETY CUSHION
+- text: €3,000.00
+- generic: of €3,000.00
+- button "Update Balance":
+  - generic: Update Balance
+- button "Edit essentials":
+  - generic: Edit essentials
+- generic: 100% funded
+- generic: €0.00 to go
+- generic: Emergency Coverage
+- 'button "Essentials: €1,000.00/mo (Edit)"':
+  - generic: "Essentials: €1,000.00/mo (Edit)"
+- generic: 3.00 months of essential expenses
+- generic: Calculated from recorded cushion and same-currency essential costs. Update Balance records the amount earmarked for emergencies. It does not change your bank balance or move money.
+- generic: MONEY OVER TIME
+- generic: Balances & savings
+- button "Sample data":
+  - generic: Sample data
+- button "My records":
+  - generic: My records
+- checkbox "✓ ━ General cash balance":
+  - generic: ✓ ━
+  - generic: General cash balance
+- checkbox "✓ ━ Emergency fund":
+  - generic: ✓ ━
+  - generic: Emergency fund
+- checkbox "✓ ━ Other savings":
+  - generic: ✓ ━
+  - generic: Other savings
+- generic: Amount (EUR)
+- generic: Synthetic sample amounts in EUR · March–November 2026. Not your financial records. Emergency fund and other savings are earmarked within cash, not additional money.
+- generic: INTERACTIVE SIMULATOR
+- generic: Goal timeline calculator
+- button "Safety Cushion":
+  - generic: Safety Cushion
+- generic: Allocated / target
+- generic: €3,000.00 / €3,000.00
+- generic: Hypothetical monthly contribution (EUR)
+- textbox "Monthly contribution in EUR": "80"
+- slider "Monthly contribution slider"
+- button "−10":
+  - generic: −10
+- button "+10":
+  - generic: "+10"
+- generic: Target already reached
+- generic: "Hypothetical only: no interest, investment return, transfers, or affordability guarantee. Contributions stay in the goal currency. This does not save an allocation or alter your plan."
+- generic: DEBTS & CREDIT
+- generic: Tracked balances & minimums
+- button "+ Add debt":
+  - generic: + Add debt
+- generic: No saved debts. Unknown terms can be added later.
+- button "Cash flow details":
+  - generic: Cash flow details
+- button "Manage goals, income & bills":
+  - generic: Manage goals, income & bills
+- generic: Suggestion history
+- generic: Useful suggestions you request with “Review my finances” will appear here.
+- tab "TODAY":
+  - generic: TODAY
+- tab "ANALYTICS" [active]:
+  - generic: ANALYTICS
+- tab "ASSISTANT":
+  - generic: ASSISTANT
+- tab "PROFILE":
+  - generic: PROFILE

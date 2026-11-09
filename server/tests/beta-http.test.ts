@@ -2,14 +2,15 @@ import type { Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { afterEach,describe,expect,it,vi } from 'vitest';
 import { createBetaApp } from '../src/beta/app';
+import type { FrankfurterFXService } from '../src/fx/frankfurterService';
 import { BetaStore } from '../src/beta/store';
 
 const cleanups:(()=>Promise<void>)[]=[];
 afterEach(async()=>{for(const cleanup of cleanups.splice(0))await cleanup();});
 const password='Correct-Test-Password-123!';
-async function setup(){
+async function setup(spendingFx?: Pick<FrankfurterFXService, 'getSpendingRates'>){
  const store=new BetaStore({filename:':memory:'});const emails:{email:string;url:string}[]=[];
- const bundle=createBetaApp({store,autoReview:false,resetBaseUrl:'https://beta.example/reset',sendResetEmail:async(email,url)=>{emails.push({email,url});}});
+ const bundle=createBetaApp({store,spendingFxService:spendingFx,autoReview:false,resetBaseUrl:'https://beta.example/reset',sendResetEmail:async(email,url)=>{emails.push({email,url});}});
  const server:Server=await new Promise(resolve=>{const s=bundle.app.listen(0,'127.0.0.1',()=>resolve(s));});
  cleanups.push(async()=>{await new Promise<void>((resolve,reject)=>server.close(e=>e?reject(e):resolve()));bundle.dispose();store.close();});
  const base=`http://127.0.0.1:${(server.address() as AddressInfo).port}/api/beta`;
@@ -22,6 +23,21 @@ async function setup(){
 }
 function withAccount(state:any,userId:string){const now=new Date().toISOString();state.accounts.push({id:'test-main',userId,name:'Main',institution:'Test Bank',currency:'EUR',purposes:['daily_spending'],fundsOwnership:'personal',personalAvailableAmount:null,isPrimary:true,notes:'',createdAt:now,updatedAt:now});return state;}
 describe('Authenticated beta HTTP integration',()=>{
+ it('requests spending quotes for only the authenticated profile currencies',async()=>{
+  const getSpendingRates=vi.fn().mockResolvedValue({});
+  const {request,register}=await setup({getSpendingRates});
+  const a=await register(), b=await register('Bob','bob@example.com');
+  const initial=(await request('/state','GET',undefined,a.token)).body;
+  const state=withAccount(initial.state,a.user.id);
+  state.accounts.push({...state.accounts[0],id:'second',currency:'HUF',isPrimary:false});
+  expect((await request('/state','PUT',{expectedVersion:initial.version,state,aiConsent:false},a.token)).status).toBe(200);
+  expect((await request('/analytics/spending-rates','GET')).status).toBe(401);
+  expect((await request('/analytics/spending-rates?base=USD&currencies=KGS','GET',undefined,a.token)).body).toEqual({base:'EUR',rates:{}});
+  expect(getSpendingRates).toHaveBeenLastCalledWith('EUR',expect.arrayContaining(['EUR','HUF']));
+  expect(getSpendingRates.mock.lastCall?.[1]).not.toContain('KGS');
+  expect((await request('/analytics/spending-rates','GET',undefined,b.token)).status).toBe(200);
+  expect(getSpendingRates.mock.lastCall?.[1]).not.toContain('HUF');
+ });
  it('returns safe field errors for invalid authentication inputs and preserves auth outcomes',async()=>{
   const {request,register}=await setup();
   for(const [field,value] of [['name',''],['email','invalid'],['password','short']]) {
@@ -40,7 +56,7 @@ describe('Authenticated beta HTTP integration',()=>{
   const {request,auth}=await setup();
   vi.spyOn(auth,'register').mockRejectedValueOnce(Object.assign(new Error('private validation value'),{name:'ZodError',issues:[{path:['password']}]}));
   const r=await request('/auth/register','POST',{name:'Synthetic',email:'synthetic@example.invalid',password});
-  expect(r.status).toBe(400);expect(r.body.error.fields.password).toContain('12');
+  expect(r.status).toBe(400);expect(r.body.error.fields.password).toBe('Password must be between 8 and 128 characters.');
   vi.spyOn(auth,'login').mockRejectedValueOnce(new Error('internal secret diagnostic'));
   const failed=await request('/auth/login','POST',{email:'synthetic@example.invalid',password});
   expect(failed.status).toBe(500);expect(JSON.stringify(failed.body)).not.toContain('internal secret');

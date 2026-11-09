@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Icon } from "../components/SoftGlass";
 import { colors, themedStyles } from "../theme";
@@ -8,15 +8,18 @@ export function ProfileScreen({
   email,
   currency,
   sections,
+  reveal,
 }: {
   name: string;
   email: string;
   currency: string;
   sections: { title: string; content: ReactNode }[];
+  reveal?:{section:string;key:string}|null;
 }) {
   const [expanded, setExpanded] = useState<string[]>(
-    sections.map((section) => section.title),
+    [],
   );
+  useEffect(()=>{if(reveal)setExpanded(value=>[...new Set([...value,reveal.section])]);},[reveal?.key]);
   return (
     <>
       <View style={{ gap: 6 }}>
@@ -99,5 +102,5 @@ const s = themedStyles({
     alignItems: "center",
     minHeight: 44,
   },
-  section: { fontSize: 14, fontWeight: "600", color: colors.ink },
+  section: { fontSize: 14, fontWeight: "600", color: colors.ink,flexShrink:1 },
 });

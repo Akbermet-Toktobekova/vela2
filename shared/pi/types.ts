@@ -40,6 +40,7 @@ export interface UserProfile {
 }
 
 export interface UserPreferences {
+  statementReviewMode?: 'automatic';
   userId: string;
   primaryConcern: PrimaryConcern | null;
   concernNotes: string;
@@ -102,7 +103,11 @@ export interface IncomeSource {
   createdAt: string;
 }
 
+export const essentialGroups = ['housing', 'food', 'utilities', 'transport', 'other'] as const;
+export type EssentialGroup = typeof essentialGroups[number];
+
 export interface ExpenseCommitment {
+  details?: { id: string; name: string; monthlyAmount: number; dueDate?: string; group?: EssentialGroup }[];
   id: string;
   userId: string;
   estimatedMonthlyAmount: number | null;
@@ -237,12 +242,17 @@ export type SpendingCategory =
   | 'shopping'
   | 'health'
   | 'education'
+  | 'entertainment'
+  | 'fees'
   | 'work_expense'
   | 'income'
   | 'transfer'
   | 'other';
 
 export interface TransactionRecord {
+  excluded?: boolean;
+  sourceStatementIds?: string[];
+  originalValues?: { accountId: string; date: string; amount: number; currency: string; description: string; counterparty: string };
   id: string;
   userId: string;
   accountId: string;
@@ -258,7 +268,16 @@ export interface TransactionRecord {
   createdAt: string;
 }
 
+export const spendingCategories = [
+  'rent_housing', 'utilities_energy', 'internet_telecom', 'groceries_food', 'dining_coffee',
+  'transport', 'subscriptions', 'shopping', 'health', 'education', 'entertainment', 'fees',
+  'work_expense', 'income', 'transfer', 'other',
+] as const satisfies readonly SpendingCategory[];
+
 export interface TransactionClassification {
+  displayName?: string;
+  merchantKey?: string;
+  isInternalTransferCandidate?: boolean;
   id: string;
   transactionId: string;
   economicType: TransactionEconomicType;

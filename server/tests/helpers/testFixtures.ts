@@ -416,6 +416,8 @@ export function createBaselineSolventFixture(overrides?: {
       shopping: 0,
       health: 0,
       education: 0,
+      entertainment: 0,
+      fees: 0,
       work_expense: 0,
       income: 1500,
       transfer: 0,

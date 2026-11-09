@@ -1,3 +1,5 @@
+import { spendingCategories } from '@shared/pi/types';
+import { bankOperationHint, localStatementLabel, modelMerchantKey, statementModels, type BankOperationHint } from './statementEnrichment';
 import { prompts } from '../ai/prompts';
 import { ModelProvenanceSchema } from '@shared/contracts/pipeline';
 import { z } from 'zod';
@@ -46,22 +48,8 @@ const LLMClassificationBatchSchema = z.object({
         'work_business_movement',
         'unknown',
       ]),
-      category: z.enum([
-        'rent_housing',
-        'utilities_energy',
-        'internet_telecom',
-        'groceries_food',
-        'dining_coffee',
-        'transport',
-        'subscriptions',
-        'shopping',
-        'health',
-        'education',
-        'work_expense',
-        'income',
-        'transfer',
-        'other',
-      ]),
+      category: z.enum(spendingCategories),
+      displayName: z.string().trim().min(1).max(200).optional(),
       confidence: z.enum(['high', 'medium', 'low']),
       isRecurringCandidate: z.boolean(),
       rationale: z.string(),
@@ -289,6 +277,7 @@ export class TransactionClassifier {
     snapshot: FinancialSnapshot;
     llmClient: LLMClient;
     patternSummary?: string;
+    bankOperationHints?: Readonly<Record<string, BankOperationHint>>;
   }): Promise<BehaviorAnalysisResult> {
     const { snapshot, llmClient } = params;
     const updatedClassifications: Record<string, TransactionClassification> = {
@@ -309,6 +298,8 @@ export class TransactionClassifier {
       unconfirmedTxs.push(tx);
     }
 
+    const automatic = snapshot.preferences.statementReviewMode === 'automatic';
+    const bankHint = (tx: TransactionRecord) => params.bankOperationHints?.[tx.id] ?? bankOperationHint(tx, snapshot.profile.nickname);
     const processedIds: string[] = [];
     const unresolvedIds: string[] = [];
     const models: BehaviorAnalysisResult['models'] = [];
@@ -323,7 +314,7 @@ export class TransactionClassifier {
         currency: tx.currency,
         counterparty: wrapUntrustedData(tx.counterparty || '', 'tx_counterparty'),
         description: wrapUntrustedData(tx.description || '', 'tx_description'),
-        prePassSuggestion: prePassMap.get(tx.id),
+        ...(automatic ? {bankOperationType: bankHint(tx)} : {prePassSuggestion: prePassMap.get(tx.id)}),
       }));
 
       const systemPrompt = prompts.classification.text;
@@ -335,13 +326,25 @@ export class TransactionClassifier {
         matchedTransfers: snapshot.transferMatches.filter(pair => pair.status === "matched" || pair.status === "user_confirmed"),
       });
 
+      const schema = automatic ? LLMClassificationBatchSchema.refine(
+        response => response.classifications.length === batchIds.size &&
+          new Set(response.classifications.map(item => item.transactionId)).size === batchIds.size &&
+          response.classifications.every(item => batchIds.has(item.transactionId) && item.displayName),
+        'Return exactly one named classification for each operation.',
+      ) : LLMClassificationBatchSchema;
       const llmRes = await llmClient.generateStructured({
         systemPrompt,
         userPrompt,
-        schema: LLMClassificationBatchSchema,
+        schema,
+        ...(automatic && { orderedGeminiModels: statementModels }),
         fallback: () => ({
           classifications: batch.map((tx) => {
             const det = prePassMap.get(tx.id)!;
+            if (automatic) return {
+              transactionId: tx.id,
+              ...localStatementLabel(tx, snapshot.profile.nickname, false, bankHint(tx)),
+              rationale: 'Local statement evidence used when model classification is unavailable.',
+            };
             return {
               transactionId: tx.id,
               economicType: det.economicType,
@@ -381,7 +384,25 @@ export class TransactionClassifier {
           isRecurringCandidate: false, rationale: 'Classification missing or ambiguous.',
         } as const;
         const classification = { ...item };
-        if (matched) Object.assign(classification, { economicType: 'internal_transfer', category: 'transfer', isRecurringCandidate: false });
+        const prior = updatedClassifications[tx.id];
+        const local = localStatementLabel(tx, snapshot.profile.nickname, matched, bankHint(tx));
+        const transferCandidate = automatic && local.economicType !== 'internal_transfer' && (local.isInternalTransferCandidate || prior?.isInternalTransferCandidate === true);
+        if (automatic) {
+          const previouslyEnriched = prior && statementModels.some(model => prior.classifierVersion.endsWith(':' + model));
+          if (!llmRes.liveCallUsed && previouslyEnriched && local.category === 'other' && !transferCandidate) {
+            if (prior.confidence === 'low' || prior.economicType === 'unknown') unresolvedIds.push(tx.id);
+            continue;
+          }
+          if (!llmRes.liveCallUsed || local.category !== 'other' || local.economicType === 'external_transfer') {
+            Object.assign(classification, local, {rationale: 'Classification based on local bank or merchant evidence.'});
+          } else if (classification.economicType === 'internal_transfer') {
+            Object.assign(classification, { economicType: 'unknown', category: 'transfer', confidence: 'low' });
+          }
+          if (transferCandidate) {
+            Object.assign(classification, { economicType: 'unknown', category: 'transfer', isRecurringCandidate: false });
+          }
+        }
+        else if (matched) Object.assign(classification, { economicType: 'internal_transfer', category: 'transfer', isRecurringCandidate: false });
         else if (item.economicType === 'internal_transfer') Object.assign(classification, { economicType: 'unknown', category: 'other', confidence: 'low', isRecurringCandidate: false });
         else if (candidates.length === 1 && (pre.economicType === 'interest_fee' || pre.category === 'internet_telecom')) {
           Object.assign(classification, pre);
@@ -400,6 +421,11 @@ export class TransactionClassifier {
           status: classification.confidence === 'low' ? 'needs_review' : 'auto_classified',
           classifierVersion: prompts.classification.version + ':' + llmRes.modelUsed,
           isRecurringCandidate: classification.isRecurringCandidate,
+          ...(automatic && {
+            isInternalTransferCandidate: transferCandidate,
+            displayName: ('displayName' in classification && classification.displayName) || local.displayName,
+            merchantKey: local.merchantKey || modelMerchantKey('displayName' in classification ? classification.displayName : undefined),
+          }),
           provenanceNote: classification.rationale,
           updatedAt: nowIso,
         };
@@ -415,7 +441,7 @@ export class TransactionClassifier {
     for (const tx of snapshot.transactions) {
       if (tx.amount >= 0) continue;
       const cls = updatedClassifications[tx.id];
-      const mName = (tx.counterparty || tx.description || 'Recurring Charge').trim();
+      const mName = (cls?.displayName || tx.counterparty || tx.description || 'Recurring Charge').trim();
       const mKey = JSON.stringify([tx.accountId, tx.currency, mName.toLowerCase()]);
       const isSubscriptionCandidate = cls?.category === 'subscriptions' && cls.economicType === 'expense';
       if (isSubscriptionCandidate && !recurringByMerchant.has(mKey)) {
@@ -470,7 +496,7 @@ export class TransactionClassifier {
       models,
       updatedClassifications,
       recurringDetected,
-      proposedConfirmations,
+      proposedConfirmations: snapshot.preferences.statementReviewMode === 'automatic' ? [] : proposedConfirmations,
       summaryText: params.patternSummary ? `${summaryText} ${params.patternSummary}` : summaryText,
     };
   }

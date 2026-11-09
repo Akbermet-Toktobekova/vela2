@@ -22,6 +22,7 @@ UserProfile,
 } from '../pi/types';
 
 export interface PIDatabaseSeed {
+  subscriptions?: ConfirmedSubscription[];
   user: User;
   profile: UserProfile;
   preferences: UserPreferences;
@@ -42,6 +43,24 @@ export interface PIDatabaseSeed {
   recommendations: RecommendationRecord[];
   actionFeedback?: ActionFeedback[];
   assistantMessages: AssistantMessage[];
+}
+
+export interface ConfirmedSubscription {
+  id: string;
+  name: string;
+  amount: number;
+  currency: string;
+  frequency?: 'monthly' | 'yearly' | 'weekly';
+  detected?: boolean;
+  merchantKey?: string;
+  nextDueDate?: string;
+  monthlyAmount?: number;
+  includedInEssentials: boolean;
+  status: 'active' | 'ended';
+  transactionIds: string[];
+  detailId?: string;
+  linkedObligationId?: string;
+  originAccountId?: string;
 }
 
 export function createBlankUserSeedData(): PIDatabaseSeed {

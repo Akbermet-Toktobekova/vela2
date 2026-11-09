@@ -122,11 +122,8 @@ export function AssistantScreen({
           </View>
         ))}
       </ScrollView>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ gap: 6 }}
+      {!messages.length && <View
+        style={{ gap: 6,flexDirection:'row',flexWrap:'wrap' }}
         accessibilityLabel="Suggested questions"
       >
         {prompts.map((prompt) => (
@@ -140,7 +137,7 @@ export function AssistantScreen({
             <Text style={s.promptText}>{prompt}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>}
       <View style={s.composer}>
         <TextInput
           accessibilityLabel="Message Vela"
@@ -202,6 +199,10 @@ const s = themedStyles({
   },
   body: { fontSize: 13, lineHeight: 20, color: colors.ink },
   prompt: {
+    maxWidth:'100%',
+    flexShrink:1,
+    minHeight:44,
+    justifyContent:'center',
     paddingHorizontal: 12,
     paddingVertical: 9,
     borderRadius: 20,

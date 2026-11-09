@@ -16,7 +16,7 @@ export interface BetaAuthOptions {
 }
 const settings = Object.freeze({ sessionMs: 30 * 86400_000, resetMs: 30 * 60_000, attemptWindowMs: 15 * 60_000, maxAttempts: 10, scryptN: 32768, scryptR: 8, scryptP: 1 });
 const emailSchema = z.string().trim().email().max(254).transform(s => s.toLowerCase());
-const passwordSchema = z.string().min(12).max(128);
+const passwordSchema = z.string().min(8).max(128);
 const hash = (text: string) => crypto.createHash('sha256').update(text).digest('hex');
 function derive(password: string, salt: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => crypto.scrypt(password, salt, 64,
@@ -25,7 +25,7 @@ function derive(password: string, salt: Buffer): Promise<Buffer> {
 }
 function validate<T>(schema: z.ZodType<T>, value: unknown): T {
   const parsed = schema.safeParse(value);
-  if (!parsed.success) throw new BetaAuthError('INVALID_INPUT', 'Please check the supplied name, email or password. Passwords require 12–128 characters.');
+  if (!parsed.success) throw new BetaAuthError('INVALID_INPUT', 'Please check the supplied name, email or password. Passwords require 8–128 characters.');
   return parsed.data;
 }
 

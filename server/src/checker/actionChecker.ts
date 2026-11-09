@@ -299,6 +299,16 @@ export class ActionChecker {
     // LAYER 2: DATA SUFFICIENCY (PI Freshness, FX Validity, Action Inputs)
     // ------------------------------------------------------------------------
     const liq = SharedFinancialCalculator.computeLiquidEmergencyFunds(snapshot, calculatorExtras);
+    if (snapshot.preferences.statementReviewMode === 'automatic' && ['A002','A012'].includes(candidate.actionId) &&
+        snapshot.goals.find(goal => goal.id === candidate.targetId)?.goalType !== 'emergency_cushion') {
+      const reserve = snapshot.goals.find(goal => goal.goalType === 'emergency_cushion');
+      if (!snapshot.essentialCommitment?.estimatedMonthlyAmount || !reserve?.targetAmount) missingFields.push('essential_monthly_expense');
+      else {
+        const target = SharedFinancialCalculator.convertToBaseCurrency(reserve.targetAmount, reserve.currency, snapshot.baseCurrency, calculatorExtras?.fxRates);
+        if (target.fxStatus !== 'OK' || target.converted === null) missingFields.push('verified_fx_rate_' + reserve.currency);
+        else if (liq.dedicatedEmergencyReserve < target.converted) failedChecks.push({layer: 'SAFETY_POLICY', code: 'PROTECTED_RESERVE_NOT_FUNDED', detail: 'D-025: fund the three-month essential reserve before optional other-goal contributions or additional debt payments.'});
+      }
+    }
 
     // Check stale balances on source account or primary accounts
     if (snapshot.dataQuality.staleBalanceAccountIds.length > 0 && candidate.actionType === 'FINANCIAL_ACTION') {

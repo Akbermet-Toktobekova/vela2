@@ -1,5 +1,5 @@
 import type { NormalizedResult,ParsingOptions,SourceCell,SourceRecord,StatementField } from './types';
-export const aliases:Record<StatementField,string[]>={date:['date','transaction date','booking date','completed date','started date','time'],description:['description','details','narrative','name','merchant','title','memo','counterparty','payee'],amount:['amount','value','total','signed amount','net amount'],debit:['debit','outflow','paid out','withdrawal','money out'],credit:['credit','inflow','paid in','deposit','money in'],currency:['currency','ccy','curr'],balance:['balance','closing balance','running balance'],reference:['reference','ref','id','transaction id']};
+export const aliases:Record<StatementField,string[]>={date:['date','transaction date','booking date','completed date','started date','time','дата операции','дата'],description:['description','details','narrative','name','merchant','title','memo','counterparty','payee','описание операции','назначение платежа'],amount:['amount','value','total','signed amount','net amount','сумма операции','сумма'],debit:['debit','outflow','paid out','withdrawal','money out'],credit:['credit','inflow','paid in','deposit','money in'],currency:['currency','ccy','curr'],balance:['balance','closing balance','running balance','остаток','баланс'],reference:['reference','ref','id','transaction id','transferwise id','payment reference']};
 function fail(code:string,message:string):never {throw Object.assign(new Error(message),{code});}
 function calendar(y:number,m:number,d:number):string {
  const leap=y%4===0&&(y%100!==0||y%400===0),days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
@@ -12,7 +12,7 @@ export function normalizeDate(raw:string|number,convention?:ParsingOptions['date
   const serial=Math.floor(raw);const date=new Date(Date.UTC(excel1904?1904:1899,excel1904?0:11,excel1904?1:31)+(serial-(!excel1904&&serial>60?1:0))*86400000);
   return calendar(date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate());
  }
- const value=raw.trim();
+ const value=raw.trim().replace(/^(\d{1,2}[/.-]\d{1,2}[/.-]\d{4})\s+\d{2}:\d{2}(?::\d{2})?$/, '$1');
  const iso=value.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+-](?:[01]\d|2[0-3]):?[0-5]\d)?)?$/);
  if(iso)return calendar(+iso[1],+iso[2],+iso[3]);
  const ymd=value.match(/^(\d{4})([/.\-])(\d{1,2})\2(\d{1,2})$/);
@@ -29,7 +29,7 @@ export function normalizeAmount(raw:string|number,convention?:ParsingOptions['nu
  let value=raw.trim().replace(/\u2212/g,'-').replace(/^[€$£¥]|[€$£¥]$/g,'').trim(),negative=false;
  if(/^\(.*\)$/.test(value)){negative=true;value=value.slice(1,-1).trim();}
  if(value.endsWith('-')){if(negative||/^[+-]/.test(value))return fail('INVALID_AMOUNT','Conflicting amount signs.');negative=true;value=value.slice(0,-1).trim();}
- if(/^[+-]/.test(value)){if(negative)return fail('INVALID_AMOUNT','Conflicting amount signs.');negative=value[0]==='-';value=value.slice(1);}
+ if(/^[+-]/.test(value)){if(negative)return fail('INVALID_AMOUNT','Conflicting amount signs.');negative=value[0]==='-';value=value.slice(1).trim();}
  if(!/^\d[\d., '\u00a0\u202f]*$/.test(value))return fail('INVALID_AMOUNT','Invalid amount.');
  const dot=value.lastIndexOf('.'),comma=value.lastIndexOf(',');let decimal:string|undefined=convention==='decimal-point'?'.':convention==='decimal-comma'?',':undefined;
  if(!decimal&&dot>=0&&comma>=0)decimal=dot>comma?'.':',';
@@ -55,13 +55,26 @@ export function readCSV(content:string,options:ParsingOptions):SourceRecord[]{
  return [',',';','\t'].map(d=>csvRecords(content,d)).sort((a,b)=>score(b)-score(a))[0];
  function score(records:SourceRecord[]){return Math.max(0,...records.slice(0,100).map(r=>Object.keys(mappingFor(r)).length));}
 }
-export function normalizeRecords(records:SourceRecord[],format:string,accountCurrency:string,options:ParsingOptions={},excludedRows:string[]=[],excel1904=false):NormalizedResult {
+export function normalizeRecords(records:SourceRecord[],format:string,accountCurrency:string,options:ParsingOptions={},excludedRows:string[]=[],excel1904=false,inferDateConvention=false):NormalizedResult {
  if(records.length>10000)throw new Error('Statement exceeds 10000 rows. Split it before uploading.');
  const result:NormalizedResult={rows:[],review:{format,options,headers:[],issues:[],mappingRequired:false,requiresDateConvention:false,requiresNumberConvention:false,reconciliation:[]}};
  const headerIndex=options.headerRow!==undefined?records.findIndex(r=>r.source.row===options.headerRow):records.findIndex(r=>{const m=mappingFor(r);return m.date!==undefined&&(m.amount!==undefined||m.debit!==undefined||m.credit!==undefined);});
  if(headerIndex<0){result.review.mappingRequired=true;result.review.headers=records[0]?.cells.map(c=>c.display)||[];return result;}
  const header=records[headerIndex];result.review.headers=header.cells.map(c=>c.display);const mapping={...mappingFor(header),...options.mapping};
  if(mapping.date===undefined||mapping.description===undefined||(mapping.amount===undefined&&mapping.debit===undefined&&mapping.credit===undefined)){result.review.mappingRequired=true;return result;}
+ if (inferDateConvention && !options.dateConvention) {
+  const conventions = new Set<NonNullable<ParsingOptions['dateConvention']>>();
+  for (const row of records.slice(headerIndex + 1)) {
+   const value = String(row.cells[mapping.date]?.value ?? '').trim();
+   const parts = /^(\d{1,2})[/.-](\d{1,2})[/.-]\d{4}(?:\s|$)/.exec(value);
+   if (parts && +parts[1] > 12 && +parts[2] <= 12) conventions.add('DMY');
+   if (parts && +parts[2] > 12 && +parts[1] <= 12) conventions.add('MDY');
+  }
+  if (conventions.size === 1) {
+   options = {...options, dateConvention: [...conventions][0]};
+   result.review.options = options;
+  }
+ }
  let detectedConventions=new Set<string>();
  // A mixture of unambiguous comma and point decimals requires an explicit choice.
  for(const record of records.slice(headerIndex+1))for(const field of ['amount','debit','credit','balance'] as StatementField[]){const c=record.cells[mapping[field]??-1];if(c&&typeof c.value==='string'){if(/\d,\d{1,2}(?:\)|-)?$/.test(c.value.trim()))detectedConventions.add('decimal-comma');if(/\d\.\d{1,2}(?:\)|-)?$/.test(c.value.trim()))detectedConventions.add('decimal-point');}}
@@ -85,12 +98,24 @@ export function normalizeRecords(records:SourceRecord[],format:string,accountCur
    const currency=String(val('currency')||accountCurrency).trim().toUpperCase();if(!/^[A-Z]{3}$/.test(currency))fail('INVALID_CURRENCY','Use a three-letter currency code.');
    if(currency!==accountCurrency)fail('CURRENCY_MAPPING','This currency does not match the selected account. Select its account or explicitly exclude this row.');
    const balanceRaw=val('balance');const balance=String(balanceRaw).trim()?normalizeAmount(balanceRaw,options.numberConvention):undefined;
-   result.rows.push({date,description,amount,currency,balance,reference:cell('reference')?.display||'',original,source:record.source});
+   const bankField = (...names: string[]) => {
+    const column = result.review.headers.findIndex(name => names.includes(name.trim().toLowerCase()));
+    return column < 0 ? undefined : record.cells[column]?.display.trim();
+   };
+   const feeText = inferDateConvention ? bankField('fee','total fees','transaction fee') : undefined;
+   let fee: number | undefined;
+   if (feeText) {
+    try { fee = Math.abs(normalizeAmount(feeText, options.numberConvention)); }
+    catch { /* The transaction remains readable when the fee format is unclear. */ }
+   }
+   result.rows.push({date,description,amount,currency,balance,fee,reference:cell('reference')?.display||'',
+    counterparty:bankField('merchant') || bankField('counterparty','payee','beneficiary') || bankField(amount < 0 ? 'payee name' : 'payer name'),
+    bankType:bankField('transaction details type') || bankField('type','transaction type'),original,source:record.source});
   }catch(error){const e=error as Error&{code?:string};issue(e.code||'INVALID_ROW',e.message);}
  }
  result.review.requiresDateConvention=result.review.issues.some(i=>!i.excluded&&i.code==='AMBIGUOUS_DATE');
  result.review.requiresNumberConvention=result.review.issues.some(i=>!i.excluded&&['AMBIGUOUS_NUMBER','NUMBER_CONFLICT'].includes(i.code));
  const dated=[...result.rows];const descending=dated.length>1&&dated[0].date>dated.at(-1)!.date;if(descending)dated.reverse();
- for(let i=1;i<dated.length;i++){const previous=dated[i-1],current=dated[i];if(previous.balance!==undefined&&current.balance!==undefined&&previous.currency===current.currency){const expected=previous.balance+current.amount,difference=Math.round((current.balance-expected)*1e8)/1e8;if(Math.abs(difference)>1e-8)result.review.reconciliation.push({currency:current.currency,sourceRow:current.source.row,expected,actual:current.balance,difference});}}
+ for(let i=1;i<dated.length;i++){const previous=dated[i-1],current=dated[i];if(previous.balance!==undefined&&current.balance!==undefined&&previous.currency===current.currency){const expected=previous.balance+current.amount,difference=Math.round((current.balance-expected)*1e8)/1e8;if(Math.abs(difference)>1e-8 && (current.fee === undefined || Math.abs(difference + current.fee) > 1e-8))result.review.reconciliation.push({currency:current.currency,sourceRow:current.source.row,expected,actual:current.balance,difference});}}
  return result;
 }

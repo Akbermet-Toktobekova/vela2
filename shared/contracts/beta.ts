@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { essentialGroups } from "../pi/types";
 const id = z.string().min(1);
 const n = z.number().finite();
 const money = n.nonnegative();
@@ -16,7 +17,7 @@ const date = z
 const entity = z.object({ id, userId: id }).passthrough();
 export const BetaCredentialsSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(12).max(128),
+  password: z.string().min(8).max(128),
 });
 export const BetaRegistrationSchema = BetaCredentialsSchema.extend({
   name: z.string().trim().min(1).max(120),
@@ -50,6 +51,7 @@ export const BetaSeedSchema = z.object({
       ])
       .nullable(),
     concernNotes: z.string(),
+    statementReviewMode: z.literal('automatic').optional(),
     notificationsEnabled: z.boolean(),
     reducedMotion: z.boolean(),
     updatedAt: date,
@@ -137,6 +139,7 @@ export const BetaSeedSchema = z.object({
       currency: ccy,
       notes: z.string(),
       updatedAt: date,
+      details: z.array(z.object({id, name: z.string().trim().min(1), monthlyAmount: money, dueDate: date.optional(), group: z.enum(essentialGroups).optional()})).max(100).optional(),
     })
     .nullable(),
   obligations: z.array(
@@ -207,6 +210,7 @@ export const BetaSeedSchema = z.object({
     }),
   ),
   statements: z.array(z.unknown()),
+  subscriptions: z.array(z.unknown()).optional(),
   transactions: z.array(z.unknown()),
   classifications: z.array(z.unknown()),
   transferMatches: z.array(z.unknown()),
@@ -221,6 +225,14 @@ export const BetaStateUpdateSchema = z.object({
   aiConsent: z.boolean(),
   experimentalRecommendations: z.boolean().optional(),
 });
+export const BetaSpendingRatesSchema = z.object({
+  base: ccy,
+  rates: z.record(ccy, z.object({
+    base: ccy, target: ccy, rate: money, rateDate: z.string().date(), fetchedAt: z.string().datetime(),
+    status: z.enum(['OK', 'STALE', 'UNAVAILABLE']), source: z.string(),
+  })),
+});
+
 export const BetaChatSchema = z.object({
   message: z.string().trim().min(1).max(12000),
   requestId: id,

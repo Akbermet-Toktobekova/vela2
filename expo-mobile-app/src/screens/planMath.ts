@@ -1,12 +1,18 @@
-import type { FinancialGoal,FinancialSnapshot } from '../../../shared/pi/types';
+import type { FinancialGoal, FinancialSnapshot, FXRateEntry } from '../../../shared/pi/types';
+import { SharedFinancialCalculator } from '../../../shared/calculator';
 
 /** Display-only aggregates: no recommendation, conversion, or affordability decisions. */
-export function deriveObservedPlan(snapshot: FinancialSnapshot, currency: string, month?: string) {
-  const rows = snapshot.transactions.filter(t => t.currency === currency && (!month || t.date.startsWith(month + '-')));
+export function deriveObservedPlan(snapshot: FinancialSnapshot, currency: string, month?: string, accountId?: string) {
+  const rows = snapshot.transactions.filter(row => row.currency === currency && (!month || row.date.startsWith(month + '-')) &&
+    (!accountId || row.accountId === accountId));
   const result = {income: 0, grossSpending: 0, refunds: 0, transfers: 0, debtPayments: 0, workMovements: 0, unknownCount: 0, count: rows.length, categories: {} as Record<string, number>};
   for (const row of rows) {
     const classification = snapshot.classifications[row.id];
     const type = classification?.economicType;
+    if (classification?.isInternalTransferCandidate || type === 'external_transfer') {
+      result.transfers += Math.abs(row.amount);
+      continue;
+    }
     const contradictory = ((type === 'income' || type === 'refund') && row.amount < 0) ||
       (['expense', 'interest_fee', 'cash_withdrawal', 'debt_payment'].includes(type || '') && row.amount > 0);
     if (contradictory) { result.unknownCount += 1; continue; }
@@ -26,6 +32,35 @@ export function deriveObservedPlan(snapshot: FinancialSnapshot, currency: string
     }
   }
   return {...result, netSpending: result.grossSpending - result.refunds};
+}
+
+export function deriveSpendingCategories(snapshot: FinancialSnapshot, options: {
+  currency: string | 'all';
+  accountId?: string;
+  rates?: Record<string, FXRateEntry>;
+}) {
+  const currency = options.currency === 'all' ? snapshot.baseCurrency : options.currency;
+  const sourceCurrencies = options.currency === 'all'
+    ? [...new Set(snapshot.transactions.filter(row => !options.accountId || row.accountId === options.accountId).map(row => row.currency))]
+    : [currency];
+  const categories: Record<string, number> = {};
+  const unconverted: {currency: string; amount: number}[] = [];
+  const quoteDates: Record<string, string> = {};
+  for (const source of sourceCurrencies) {
+    const observed = deriveObservedPlan(snapshot, source, undefined, options.accountId);
+    if (!(observed.grossSpending > 0)) continue;
+    const quote = options.rates?.[source];
+    if (source !== currency && (!quote || quote.base !== currency || quote.target !== source || quote.status !== 'OK' || !Number.isFinite(quote.rate) || quote.rate <= 0)) {
+      unconverted.push({currency: source, amount: observed.grossSpending});
+      continue;
+    }
+    if (source !== currency && quote) quoteDates[source] = quote.rateDate;
+    for (const [category, amount] of Object.entries(observed.categories)) {
+      const {converted} = SharedFinancialCalculator.convertToBaseCurrency(amount, source, currency, options.rates);
+      if (converted !== null) categories[category] = (categories[category] || 0) + converted;
+    }
+  }
+  return {currency, categories, unconverted, quoteDates};
 }
 
 export function goalAllocated(snapshot: FinancialSnapshot, goal: FinancialGoal) {

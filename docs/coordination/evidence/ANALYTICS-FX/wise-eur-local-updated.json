@@ -1,0 +1,192 @@
+{
+  "mappedRows": 41,
+  "other": 34,
+  "categoryStrict": {
+    "matched": 7,
+    "total": 27
+  },
+  "categoryAll": {
+    "matched": 12,
+    "total": 41
+  },
+  "economicType": {
+    "matched": 32,
+    "total": 32
+  },
+  "categoryMismatches": [
+    {
+      "csvRow": 2,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 3,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 5,
+      "expected": "shopping",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 8,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 9,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 10,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 11,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 12,
+      "expected": "entertainment",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 13,
+      "expected": "groceries_food",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 14,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 16,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 17,
+      "expected": "groceries_food",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 18,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 19,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 22,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 23,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 24,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 27,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 28,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 29,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 30,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 31,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 32,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 33,
+      "expected": "groceries_food",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 36,
+      "expected": "shopping",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 38,
+      "expected": "transport",
+      "actual": "other",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 39,
+      "expected": "dining_coffee",
+      "actual": "other",
+      "certainty": "category_ambiguous"
+    },
+    {
+      "csvRow": 40,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    },
+    {
+      "csvRow": 41,
+      "expected": "transfer",
+      "actual": "other",
+      "certainty": "transfer_candidate"
+    }
+  ]
+}

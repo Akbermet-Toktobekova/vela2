@@ -1,5 +1,5 @@
 import { describe,expect,it } from 'vitest';
-import { deriveObservedPlan,goalAllocated,goalTimeline } from '../../expo-mobile-app/src/screens/planMath';
+import { deriveObservedPlan,deriveSpendingCategories,goalAllocated,goalTimeline } from '../../expo-mobile-app/src/screens/planMath';
 import { buildFinancialSnapshot } from '../../shared/processing/snapshotBuilder';
 import { createDemoSeedData } from './fixtures/profile';
 
@@ -32,6 +32,24 @@ describe('Mobile planning display math',()=>{
   snapshot.transactions=rows.map(([id,amount])=>({...base,id,currency:'EUR',date:'2026-10-12',amount}));
   snapshot.classifications=Object.fromEntries(rows.map(([id])=>[id,{...classification,economicType:id==='refundBad'?'refund':id==='expenseBad'?'expense':id,category:'other'}]));
   const result=deriveObservedPlan(snapshot,'EUR');expect(result.netSpending).toBe(-40);expect(result.income).toBe(0);expect(result.refunds).toBe(50);expect(result.unknownCount).toBe(3);
+ });
+ it('filters accounts and currencies, and reports spending omitted from the combined estimate',()=>{
+  const snapshot=buildFinancialSnapshot(createDemoSeedData());
+  const base=snapshot.transactions[0];
+  const classification=Object.values(snapshot.classifications)[0];
+  snapshot.baseCurrency='EUR';
+  const rows=[['eur1','first','EUR',-20,'expense'],['eur2','second','EUR',-7,'expense'],
+   ['huf','first','HUF',-4000,'expense'],['kgs','third','KGS',-800,'expense'],
+   ['transfer','first','HUF',-8000,'external_transfer'],['refund','first','EUR',5,'refund']] as const;
+  snapshot.transactions=rows.map(([id,accountId,currency,amount])=>({...base,id,accountId,currency,amount}));
+  snapshot.classifications=Object.fromEntries(rows.map(([id,,, ,economicType])=>[id,{...classification,economicType,category:'groceries_food'}]));
+  const huf={base:'EUR',target:'HUF',rate:400,rateDate:'2026-11-06',fetchedAt:'2026-11-09T10:00:00Z',source:'Frankfurter',status:'OK'} as const;
+  expect(deriveSpendingCategories(snapshot,{currency:'EUR',accountId:'first'}).categories).toEqual({groceries_food:20});
+  expect(deriveSpendingCategories(snapshot,{currency:'HUF'}).categories).toEqual({groceries_food:4000});
+  expect(deriveSpendingCategories(snapshot,{currency:'all',rates:{HUF:huf}})).toEqual({
+   currency:'EUR',categories:{groceries_food:37},unconverted:[{currency:'KGS',amount:800}],quoteDates:{HUF:'2026-11-06'},
+  });
+  expect(deriveSpendingCategories(snapshot,{currency:'all',accountId:'first',rates:{HUF:huf}}).categories).toEqual({groceries_food:30});
  });
  it('uses only selected-goal matching-currency allocations',()=>{
   const snapshot=buildFinancialSnapshot(createDemoSeedData());const goal=snapshot.goals[0];const allocation=snapshot.goalAllocations[0];

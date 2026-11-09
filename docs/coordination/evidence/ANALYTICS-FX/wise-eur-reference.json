@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "source": "Wise EUR CSV, 41 rows, original order including the header offset",
+  "fileSha256": "148757eb8fbf08b91b65edbe01bea0e6c0add428d9a7091c481969a8ad668067",
+  "scoring": "Strict category accuracy uses grounded and category_ambiguous rows only. All-row agreement is reported separately. Economic-type scoring excludes rows with null type.",
+  "labels": [
+    {
+      "csvRow": 2,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 3,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 4,
+      "category": "other",
+      "economicType": "expense",
+      "certainty": "insufficient_detail",
+      "reason": "Airport descriptor does not identify what was purchased."
+    },
+    {
+      "csvRow": 5,
+      "category": "shopping",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 6,
+      "category": "other",
+      "economicType": "expense",
+      "certainty": "insufficient_detail",
+      "reason": "Street address does not identify a business or item."
+    },
+    {
+      "csvRow": 7,
+      "category": "other",
+      "economicType": "expense",
+      "certainty": "insufficient_detail",
+      "reason": "Street address does not identify a business or item."
+    },
+    {
+      "csvRow": 8,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 9,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 10,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 11,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 12,
+      "category": "entertainment",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 13,
+      "category": "groceries_food",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 14,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 15,
+      "category": "other",
+      "economicType": "expense",
+      "certainty": "insufficient_detail",
+      "reason": "Travel retail descriptor does not identify the item purchased."
+    },
+    {
+      "csvRow": 16,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 17,
+      "category": "groceries_food",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 18,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 19,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 20,
+      "category": "fees",
+      "economicType": "interest_fee",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 21,
+      "category": "transfer",
+      "economicType": "external_transfer",
+      "certainty": "grounded",
+      "reason": "Explicit outgoing transfer. The named payee differs from the cardholder."
+    },
+    {
+      "csvRow": 22,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 23,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 24,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Named payer matches the cardholder. Treat as possible own funds rather than earned income."
+    },
+    {
+      "csvRow": 25,
+      "category": "transfer",
+      "economicType": "internal_transfer",
+      "certainty": "grounded",
+      "reason": "Explicit currency conversion with both currencies supplied. This is not income."
+    },
+    {
+      "csvRow": 26,
+      "category": "fees",
+      "economicType": "interest_fee",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 27,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 28,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 29,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 30,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 31,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 32,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 33,
+      "category": "groceries_food",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 34,
+      "category": "transfer",
+      "economicType": "external_transfer",
+      "certainty": "grounded",
+      "reason": "Explicit outgoing transfer. The named payee differs from the cardholder."
+    },
+    {
+      "csvRow": 35,
+      "category": "other",
+      "economicType": "expense",
+      "certainty": "insufficient_detail",
+      "reason": "Personal-looking card descriptor does not identify the purchase."
+    },
+    {
+      "csvRow": 36,
+      "category": "shopping",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 37,
+      "category": "groceries_food",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 38,
+      "category": "transport",
+      "economicType": "expense",
+      "certainty": "grounded"
+    },
+    {
+      "csvRow": 39,
+      "category": "dining_coffee",
+      "economicType": "expense",
+      "certainty": "category_ambiguous",
+      "acceptedCategories": [
+        "dining_coffee",
+        "groceries_food"
+      ],
+      "reason": "Bakery purchase. Dining and groceries are both defensible without a receipt."
+    },
+    {
+      "csvRow": 40,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 41,
+      "category": "transfer",
+      "economicType": null,
+      "certainty": "transfer_candidate",
+      "reason": "Card payment to a financial wallet. Funding is plausible, but ownership and purpose need confirmation."
+    },
+    {
+      "csvRow": 42,
+      "category": "fees",
+      "economicType": "interest_fee",
+      "certainty": "grounded"
+    }
+  ]
+}

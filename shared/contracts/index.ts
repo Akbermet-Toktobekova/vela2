@@ -31,6 +31,7 @@ export type WeightProfileId = z.infer<typeof WeightProfileIdEnum>;
 // 2. Centralized Prototype Policy Configuration Schema (PROTOTYPE_ONLY)
 // ============================================================================
 export const PrototypePolicyBundleSchema = z.object({
+  productRules: z.object({ decisionRef: z.string(), essentialReserveMonths: z.number().positive() }).optional(),
   policyMeta: z.object({
     policyBundleVersion: z.string(),
     status: z.literal('PROTOTYPE_ONLY'),

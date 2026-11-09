@@ -1,0 +1,37 @@
+{
+  "models": [
+    {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    },
+    {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    }
+  ],
+  "reviewStatus": "failed",
+  "mappedRows": 41,
+  "other": 5,
+  "categoryStrict": {
+    "matched": 27,
+    "total": 27
+  },
+  "categoryAll": {
+    "matched": 40,
+    "total": 41
+  },
+  "economicType": {
+    "matched": 32,
+    "total": 32
+  },
+  "categoryMismatches": [
+    {
+      "csvRow": 24,
+      "expected": "transfer",
+      "actual": "income",
+      "certainty": "transfer_candidate"
+    }
+  ]
+}

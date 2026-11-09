@@ -147,7 +147,13 @@ export class BetaAnalysis {
    const result=await this.bounded(async()=>{
     if(this.options.runReview)return this.options.runReview(user,current.state,provider);
     await this.refreshMemory(user, version, provider);
-    return new ReviewOrchestrator({store:repository,fxService:this.options.fxService,llmClient:provider as LLMClient}).runReviewCycle({authenticatedUserId:user.id,targetUserId:user.id,forceRefresh,referenceNowIso:this.now().toISOString(),onStage:this.options.onStage});
+    return new ReviewOrchestrator({store:repository,fxService:this.options.fxService,llmClient:provider as LLMClient}).runReviewCycle({
+     authenticatedUserId:user.id,targetUserId:user.id,forceRefresh,referenceNowIso:this.now().toISOString(),onStage:this.options.onStage,
+     onStatementClassification:snapshot=>{
+      this.assertCurrent(user,version);
+      repository.syncFromSnapshot(snapshot,version);
+     },
+    });
    });
    this.assertCurrent(user,version);
    if(result.snapshot)repository.syncFromSnapshot(result.snapshot,version);

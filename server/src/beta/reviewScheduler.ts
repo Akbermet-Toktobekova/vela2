@@ -23,6 +23,8 @@ export class BetaReviewScheduler {
       BetaFinancial["get"]
     > | null;
     if (!stored?.aiConsent) return null;
+    if (stored.state.preferences.statementReviewMode === 'automatic' &&
+        (stored.state.onboarding.status !== 'completed' || ((this.store.get(user.id, 'uploads-v1') || []) as {status:string}[]).some(row => ['uploaded','processing'].includes(row.status)))) return null;
     const freshness = this.analysis.checkFreshness(user);
     if (freshness.needed) {
       return this.jobs.enqueue(

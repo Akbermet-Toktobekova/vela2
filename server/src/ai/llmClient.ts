@@ -301,12 +301,15 @@ export class LLMClient {
     jsonMode: boolean;
     temperature?: number;
     responseJsonSchema?: object;
+    candidates?: readonly string[];
+    validateResponse?: (text: string) => void;
+    failures?: string[];
   }): Promise<{ text: string; modelUsed: string }> {
     if (!this.geminiClient || !this.geminiApiKey) {
       throw new Error('GEMINI_API_KEY is not configured');
     }
 
-    const candidates = this.getOrderedEligibleGeminiModels();
+    const candidates = params.candidates ?? this.getOrderedEligibleGeminiModels();
     let lastError: unknown = new Error('No Gemini candidate models available');
 
     for (const modelId of candidates) {
@@ -318,8 +321,9 @@ export class LLMClient {
             systemInstruction: params.systemPrompt,
             temperature: params.temperature ?? 0.1,
             ...(params.jsonMode ? { responseMimeType: 'application/json' } : {}),
+            ...(params.candidates ? { abortSignal: AbortSignal.timeout(30_000) } : {}),
             ...(params.responseJsonSchema ? { responseJsonSchema: params.responseJsonSchema } : {}),
-            ...(this.geminiThinkingLevel ? { thinkingConfig: { thinkingLevel: this.geminiThinkingLevel } } : {}),
+            ...(this.geminiThinkingLevel && !(params.candidates && modelId.startsWith('gemma-')) ? { thinkingConfig: { thinkingLevel: this.geminiThinkingLevel } } : {}),
           },
         };
         let text = '';
@@ -332,11 +336,17 @@ export class LLMClient {
         if (!text.trim()) {
           throw new Error(`Empty response text from Gemini model ${modelId}`);
         }
+        params.validateResponse?.(text);
         this.recordModelSuccess(modelId);
         return { text, modelUsed: modelId };
       } catch (err) {
         this.recordModelFailure(modelId, err);
         lastError = err;
+        if (params.failures) {
+          const message = err instanceof Error ? err.message : '';
+          const status = message.match(/\b(?:429|503|504|500|404)\b/)?.[0];
+          params.failures.push(modelId + ': ' + (status || (err instanceof z.ZodError ? 'schema mismatch' : err instanceof SyntaxError ? 'invalid JSON' : err instanceof Error && /timeout|abort/i.test(err.name + ' ' + message) ? 'timeout' : 'request failed')));
+        }
       }
     }
 
@@ -405,6 +415,7 @@ export class LLMClient {
     temperature?: number;
     responseJsonSchema?: object;
     captureRawResponse?: boolean;
+    orderedGeminiModels?: readonly string[];
   }): Promise<LLMCallResult<T>> {
     const shouldUseMock = this.mockMode && !params.forceLive;
     if (shouldUseMock) {
@@ -417,10 +428,16 @@ export class LLMClient {
       };
     }
 
+    const failures: string[] = [];
+    const decode = (text: string): T => {
+      const parsed: unknown = JSON.parse(text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim());
+      return params.schema ? params.schema.parse(parsed) : parsed as T;
+    };
     let responseCapture: LLMCallResult<T>['responseCapture'];
     try {
+      const provider = params.orderedGeminiModels ? 'gemini' : this.provider;
       const raw =
-        this.provider === 'openai'
+        provider === 'openai'
           ? await this.callOpenAIRaw({
               systemPrompt: params.systemPrompt,
               userPrompt: params.userPrompt,
@@ -433,20 +450,17 @@ export class LLMClient {
               jsonMode: true,
               temperature: params.temperature,
               responseJsonSchema: params.responseJsonSchema,
+              candidates: params.orderedGeminiModels,
+              ...(params.orderedGeminiModels && { validateResponse: decode, failures }),
             });
       if (params.captureRawResponse) responseCapture = { model: raw.modelUsed, rawText: raw.text };
 
-      const cleaned = raw.text
-        .trim()
-        .replace(/^```(?:json)?\s*/i, '')
-        .replace(/\s*```$/i, '')
-        .trim();
-      const parsed = JSON.parse(cleaned) as unknown;
-      const validated = params.schema ? params.schema.parse(parsed) : (parsed as T);
+      const validated = decode(raw.text);
 
       return {
         data: validated,
-        provider: this.provider,
+        ...(failures.length && { fallbackReason: failures.join("; ") }),
+        provider,
         modelUsed: raw.modelUsed,
         liveCallUsed: true,
         ...(responseCapture ? { responseCapture } : {}),
@@ -458,7 +472,7 @@ export class LLMClient {
         provider: 'deterministic_fallback',
         modelUsed: 'deterministic_fallback_after_error',
         liveCallUsed: false,
-        fallbackReason: reason,
+        fallbackReason: failures.length ? failures.join("; ") : reason,
         ...(responseCapture ? { responseCapture } : {}),
       };
     }

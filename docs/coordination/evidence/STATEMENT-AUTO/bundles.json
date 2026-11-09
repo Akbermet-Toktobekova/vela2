@@ -1,0 +1,29 @@
+{
+  "healthStatus": 200,
+  "health": {
+    "status": "ok",
+    "runtime": "authenticated-beta"
+  },
+  "results": [
+    {
+      "platform": "android",
+      "manifestStatus": 200,
+      "bundleStatus": 200,
+      "bytes": 4796990,
+      "correctBackend": true,
+      "statementControls": true,
+      "essentialDetails": true,
+      "expoUri": "exp://c-dizbalanser-4xqnru-mw93g901la0zitgl.on.expo.app"
+    },
+    {
+      "platform": "ios",
+      "manifestStatus": 200,
+      "bundleStatus": 200,
+      "bytes": 4775490,
+      "correctBackend": true,
+      "statementControls": true,
+      "essentialDetails": true,
+      "expoUri": "exp://c-dizbalanser-4xqnru-mw93g901la0zitgl.on.expo.app"
+    }
+  ]
+}

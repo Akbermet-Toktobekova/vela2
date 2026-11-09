@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { AnalysisArtifactSchema, type AnalysisArtifact, type ChatMemory } from '@shared/contracts/pipeline';
 import { prompts, promptFingerprint } from '../ai/prompts';
 import { TransactionClassifier } from '../analyzer/transactionClassifier';
+import { bankOperationHint, type BankOperationHint } from '../analyzer/statementEnrichment';
 import { analyzePatterns, interpretBehavior } from '../analyzer/patternAgent';
 import { calculateFinancialMetrics } from '../analyzer/financialMetrics';
 import {
@@ -66,6 +67,7 @@ export interface ReviewCycleOptions {
   forceRefresh?: boolean;
   referenceNowIso?: string;
   onStage?: (artifact: AnalysisArtifact, input: unknown) => void;
+  onStatementClassification?: (snapshot: FinancialSnapshot) => void;
   onBeforePublish?: () => Promise<void> | void;
 }
 
@@ -462,14 +464,21 @@ export class ReviewOrchestrator {
       return { output, freshness };
     };
 
+    const bankOperationHints = workingSnapshot.preferences.statementReviewMode === 'automatic'
+      ? Object.fromEntries<BankOperationHint>(workingSnapshot.transactions.flatMap(tx => {
+          const hint = bankOperationHint(tx, workingSnapshot.profile.nickname);
+          return hint ? [[tx.id, hint] as const] : [];
+        }))
+      : undefined;
     const classificationInput = {
+      bankOperationHints,
       prompt: prompts.classification.version, transactions: minimizedSnapshot.transactions,
       matches: workingSnapshot.transferMatches,
       confirmations: workingSnapshot.confirmations,
       confirmed: Object.fromEntries(Object.entries(workingSnapshot.classifications).filter(([, row]) => row.status === 'user_confirmed')),
     };
     const classification = await cachedAnalysis('TransactionClassifier', classificationInput, () =>
-      TransactionClassifier.classify({ snapshot: minimizedSnapshot, llmClient }));
+      TransactionClassifier.classify({ snapshot: minimizedSnapshot, llmClient, bankOperationHints }));
     const classified = classification.output;
     record('classification', { snapshot: minimizedSnapshot }, classified, {
       promptVersion: prompts.classification.version, models: classified.models,
@@ -484,6 +493,10 @@ export class ReviewOrchestrator {
     }
     workingSnapshot.unresolvedConfirmations = workingSnapshot.confirmations.filter(row => row.userResponse === null);
     Object.assign(workingSnapshot, computeObservedAnalytics(workingSnapshot.transactions, workingSnapshot.classifications, workingSnapshot.baseCurrency));
+
+    if (workingSnapshot.preferences.statementReviewMode === 'automatic' && classified.processedIds.length) {
+      options.onStatementClassification?.(workingSnapshot);
+    }
 
     const classifiedSnapshot = SecurityService.minimizePIForLLM(workingSnapshot);
     const patternInput = {

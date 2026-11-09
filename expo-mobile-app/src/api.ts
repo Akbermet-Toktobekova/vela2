@@ -4,6 +4,8 @@ import type { ActionHistoryItem } from "../../shared/contracts/actionHistoryType
 import type { FindingsPacket } from "../../shared/contracts/findingsTypes";
 import type { PIDatabaseSeed } from "../../shared/profile/seed";
 export type StateEnvelope = {
+  uploads?: import('./components/StatementLibrary').UploadedFile[];
+  retainStatements?: boolean;
   actionHistory?: ActionHistoryItem[];
   findings?: FindingsPacket;
   reviewJob?: { id: string; status: string } | null;

@@ -11,6 +11,9 @@ import type { EngineRepository } from '../orchestrator/reviewWorkflow';
 import { SecurityService } from '../security/securityService';
 import { BetaError,BetaFinancial,BetaState } from './financial';
 import type { BetaStore } from './store';
+import { BetaFindings } from './findings';
+import { refreshDetectedSubscriptions } from './detectedSubscriptions';
+import { applyEssentialPlan } from '@shared/processing/essentialPlan';
 
 type User = { id: string; name: string; email: string };
 type Feedback = ActionFeedback & { actionId: string | null; snapshotId: string };
@@ -243,7 +246,9 @@ export class BetaEngineRepository implements EngineRepository {
     }
     const confirmations = new Map(current.state.confirmations.map(c => [c.id, c]));
     for (const confirmation of snapshot.confirmations) if (!confirmations.has(confirmation.id)) confirmations.set(confirmation.id, confirmation);
-    const result = { ...current, state: { ...current.state, classifications: [...existing.values()], confirmations: [...confirmations.values()] } };
+    const result = { ...current, state: { ...current.state, classifications: new BetaFindings(this.store, this.financial).applyMerchantPreferences(this.user.id, current.state.transactions, [...existing.values()]), confirmations: [...confirmations.values()] } };
+    refreshDetectedSubscriptions(result.state);
+    applyEssentialPlan(result.state);
     this.store.put(this.user.id, 'state', result);
     return result;
   }

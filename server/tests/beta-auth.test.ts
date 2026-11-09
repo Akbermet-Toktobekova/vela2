@@ -1,3 +1,4 @@
+import { BetaRegistrationSchema } from '../../shared/contracts/beta';
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach,describe,expect,it } from 'vitest';
 import { BetaAuth } from '../src/beta/auth';
@@ -15,4 +16,10 @@ describe('Beta persistent authentication',()=>{
  it('rejects expired reset links and cleans failed delivery tokens',async()=>{let sent='';const {auth,database}=setup(async(_,url)=>{sent=url;});await auth.register('Mira','mira@example.com',password);await auth.forgotPassword('mira@example.com');database.prepare('UPDATE auth_resets SET expires_at=0').run();await expect(auth.resetPassword(new URL(sent).searchParams.get('token')!,password)).rejects.toMatchObject({code:'INVALID_RESET_TOKEN'});const failed=setup(async()=>{throw new Error('unavailable');});await failed.auth.register('Mira','mira@example.com',password);await expect(failed.auth.forgotPassword('mira@example.com')).rejects.toMatchObject({code:'EMAIL_DELIVERY_FAILED'});expect(failed.database.prepare('SELECT * FROM auth_resets').all()).toHaveLength(0);});
  it('changes passwords, invalidates sessions and deletes credentials',async()=>{const {auth}=setup();const s=await auth.register('Mira','mira@example.com',password);await auth.changePassword(s.token,password,'New-password-value-123');expect(()=>auth.authenticate(s.token)).toThrow();const fresh=await auth.login('mira@example.com','New-password-value-123');auth.deleteUser(fresh.user.id);expect(()=>auth.authenticate(fresh.token)).toThrow();});
  it('validates input and reset transport',async()=>{const {auth,database}=setup();await expect(auth.register('','bad','short')).rejects.toMatchObject({code:'INVALID_INPUT'});expect(()=>new BetaAuth({database,resetBaseUrl:'http://public.example/reset'})).toThrow();});
+});
+
+it('accepts eight characters and rejects seven at registration', () => {
+  const input = {name:'Fixture',email:'fixture@example.test'};
+  expect(BetaRegistrationSchema.safeParse({...input,password:'1234567'}).success).toBe(false);
+  expect(BetaRegistrationSchema.safeParse({...input,password:'12345678'}).success).toBe(true);
 });

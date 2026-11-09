@@ -6,6 +6,8 @@ createBlankUserSeedData,
 PIDatabaseSeed,
 } from "../../../shared/profile/seed";
 import type { BetaStore } from "./store";
+import { refreshDetectedSubscriptions } from './detectedSubscriptions';
+import { applyEssentialPlan } from '../../../shared/processing/essentialPlan';
 export class BetaError extends Error {
   constructor(
     public code: string,
@@ -53,6 +55,8 @@ export class BetaFinancial {
     return result;
   }
   persist(userId: string, envelope: BetaState): void {
+    refreshDetectedSubscriptions(envelope.state);
+    applyEssentialPlan(envelope.state);
     const engine = this.store.get(userId, 'engine') as { feedback?: PIDatabaseSeed['actionFeedback'] } | null;
     this.store.put(userId, 'state', engine?.feedback
       ? { ...envelope, state: { ...envelope.state, actionFeedback: [] } }
@@ -71,6 +75,10 @@ export class BetaFinancial {
         409,
       );
     const state = parsed.state as unknown as PIDatabaseSeed;
+    const details = state.expenseCommitment?.details || [];
+    if (new Set(details.map(row => row.id)).size !== details.length ||
+        details.reduce((sum, row) => sum + row.monthlyAmount, 0) > (state.expenseCommitment?.estimatedMonthlyAmount ?? 0) + 0.001)
+      throw new BetaError('INVALID_ESSENTIAL_DETAILS', 'Details must fit within the essential monthly total and have unique IDs.');
     if (
       state.user.id !== user.id ||
       state.profile.userId !== user.id ||
@@ -147,8 +155,10 @@ export class BetaFinancial {
       "assistantMessages",
       "goalAllocations",
       "actionFeedback",
+      "subscriptions",
     ] as const)
       (state as any)[key] = current.state[key];
+    if (state.preferences.statementReviewMode === 'automatic') state.confirmations = state.confirmations.filter(row=>row.userResponse!==null);
     state.user = { ...current.state.user, email: user.email };
     state.profile.nickname = user.name;
     const result = {

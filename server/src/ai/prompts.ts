@@ -4,12 +4,13 @@ const interpretation = 'Return JSON {findings:[{evidenceIds,text,certainty:OBSER
 
 export const prompts = {
   classification: {
-    version: 'classification.v3',
+    version: 'classification.v6',
     text: [
       'Classify each supplied unconfirmed operation exactly once. Use its ID and the supplied enums. Read amounts, currencies and dates from the input and return classification fields only.',
-      'Separate income, refund, expense, fee, debt payment and transfers. An own-account transfer requires matched evidence. A repeated merchant is not evidence of a subscription.',
+      'Separate income, refund, expense, fee, debt payment and transfer candidates. Select exactly one category. An own-account transfer label is only a candidate until the user confirms. Use other for uncertainty. Repeated merchants alone do not establish subscriptions; identify subscription candidates from service evidence without assuming usage or cancellation eligibility.',
+      'When present, bankOperationType is a validated hint from the bank record. Use merchant and purchase evidence for retail categories: a restaurant or cafe is dining, a grocery retailer is groceries, and passenger fares and parking are transport. A location alone does not say what was purchased.',
       'For example, an account service charge is a fee, and home internet is telecom. When an inflow could be either income or a transfer, return unknown with low confidence.',
-      'Return JSON {classifications:[{transactionId,economicType,category,confidence,isRecurringCandidate,rationale}]}. Set isRecurringCandidate only for a plausible recurring charge, never for cancellation eligibility.',
+      'Return JSON {classifications:[{transactionId,displayName,economicType,category,confidence,isRecurringCandidate,rationale}]}. Use a short readable merchant name grounded in the bank descriptor for displayName. Keep the payment processor name when the underlying merchant is unknown. Use other when a marketplace descriptor does not establish what was bought. Match the sign to the economic type and never invent a payment date or subscription schedule. Return confidence as the string high, medium or low. Set isRecurringCandidate only for a plausible recurring charge, never for cancellation eligibility.',
       trust, evidence,
     ].join('\n'),
   },

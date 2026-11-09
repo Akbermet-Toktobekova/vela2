@@ -264,7 +264,7 @@ describe('FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite'
         body: JSON.stringify({
           userId,
           snapshot: snap,
-          calculatorExtras: {debtTerms:{debt_visa:{debtId:'debt_visa',interestAccruing:true}}},
+          calculatorExtras: {referenceDateIso:'2026-11-05',debtTerms:{debt_visa:{debtId:'debt_visa',interestAccruing:true}}},
           eventType: 'pi_updated',
         }),
       });

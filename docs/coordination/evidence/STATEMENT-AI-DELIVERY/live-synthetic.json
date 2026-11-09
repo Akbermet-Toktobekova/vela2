@@ -1,0 +1,145 @@
+{
+  "synthetic": true,
+  "executedAt": "2026-11-09T13:42:13.239Z",
+  "financialReferenceDate": "2026-11-09",
+  "promptVersion": "classification.v6",
+  "input": {
+    "transactions": [
+      {
+        "id": "subscription-example",
+        "accountId": "checking",
+        "amount": -15,
+        "description": "Netflix monthly subscription",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T13:42:13.239Z"
+      },
+      {
+        "id": "own-transfer-out",
+        "accountId": "checking",
+        "amount": -100,
+        "description": "Transfer to my own savings account REF-SYNTHETIC",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T13:42:13.239Z"
+      },
+      {
+        "id": "own-transfer-in",
+        "accountId": "savings",
+        "amount": 100,
+        "description": "Transfer from my own checking account REF-SYNTHETIC",
+        "userId": "user_local_new",
+        "statementId": "synthetic-statement",
+        "date": "2026-11-09",
+        "currency": "EUR",
+        "counterparty": "",
+        "reference": "",
+        "rawRow": {},
+        "createdAt": "2026-11-09T13:42:13.239Z"
+      }
+    ],
+    "matchedTransfers": [
+      {
+        "id": "synthetic-match",
+        "userId": "user_local_new",
+        "outgoingTransactionId": "own-transfer-out",
+        "incomingTransactionId": "own-transfer-in",
+        "outgoingAccountId": "checking",
+        "incomingAccountId": "savings",
+        "amount": 100,
+        "currency": "EUR",
+        "date": "2026-11-09",
+        "description": "Synthetic matched evidence",
+        "status": "matched"
+      }
+    ]
+  },
+  "output": {
+    "categorizedCount": 1,
+    "processedIds": [
+      "subscription-example",
+      "own-transfer-out",
+      "own-transfer-in"
+    ],
+    "unresolvedIds": [
+      "own-transfer-out",
+      "own-transfer-in"
+    ],
+    "models": [
+      {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.5-flash-lite",
+        "liveCallUsed": true
+      }
+    ],
+    "updatedClassifications": {
+      "subscription-example": {
+        "id": "cls_subscription-example",
+        "transactionId": "subscription-example",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v6:gemini-3.5-flash-lite",
+        "isRecurringCandidate": true,
+        "isInternalTransferCandidate": false,
+        "displayName": "Netflix",
+        "merchantKey": "netflix",
+        "provenanceNote": "Classification based on local bank or merchant evidence.",
+        "updatedAt": "2026-11-09T13:42:14.944Z"
+      },
+      "own-transfer-out": {
+        "id": "cls_own-transfer-out",
+        "transactionId": "own-transfer-out",
+        "economicType": "unknown",
+        "category": "transfer",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v6:gemini-3.5-flash-lite",
+        "isRecurringCandidate": false,
+        "isInternalTransferCandidate": true,
+        "displayName": "Transfer to my own savings account REF-SYNTHETIC",
+        "merchantKey": "name:transfer to my own savings account ref synthetic",
+        "provenanceNote": "Classification based on local bank or merchant evidence.",
+        "updatedAt": "2026-11-09T13:42:14.944Z"
+      },
+      "own-transfer-in": {
+        "id": "cls_own-transfer-in",
+        "transactionId": "own-transfer-in",
+        "economicType": "unknown",
+        "category": "transfer",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v6:gemini-3.5-flash-lite",
+        "isRecurringCandidate": false,
+        "isInternalTransferCandidate": true,
+        "displayName": "Transfer from my own checking account REF-SYNTHETIC",
+        "merchantKey": "name:transfer from my own checking account ref synthetic",
+        "provenanceNote": "Classification based on local bank or merchant evidence.",
+        "updatedAt": "2026-11-09T13:42:14.944Z"
+      }
+    },
+    "recurringDetected": [
+      {
+        "merchant": "Netflix",
+        "observedAmount": 15,
+        "currency": "EUR",
+        "transactionId": "subscription-example"
+      }
+    ],
+    "proposedConfirmations": [],
+    "summaryText": "Analyzed 3 transactions (1 classified; user_confirmed preserved). Detected 1 recurring subscription candidate(s) (Netflix: EUR 15) requiring user confirmation before any cancellation proposal (R010)."
+  },
+  "storage": "Report file only; no user PI changed.",
+  "limitations": "AI labels remain candidates. No subscription or internal transfer is user-confirmed in this capture."
+}

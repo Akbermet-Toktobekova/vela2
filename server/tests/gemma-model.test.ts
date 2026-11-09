@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import { statementModels } from '../src/analyzer/statementEnrichment';
 import { afterEach, expect, it, vi } from 'vitest';
 import { BetaStore } from '../src/beta/store';
 import { BetaFinancial } from '../src/beta/financial';
@@ -37,4 +39,26 @@ it('invalidates a published analysis after the configured model changes', async 
   } finally {
     store.close();
   }
+});
+
+it('uses the ordered statement fallback after quota and schema failures, accepting a valid Other', async () => {
+  const client = new LLMClient({geminiApiKey:'fixture',mockMode:false});
+  const generateContent = vi.fn()
+    .mockRejectedValueOnce(new Error('429 quota exceeded'))
+    .mockResolvedValueOnce({text:'{"category":12}'})
+    .mockResolvedValueOnce({text:'{"category":"other"}'});
+  Object.assign(client,{geminiClient:{models:{generateContent}}});
+  const result = await client.generateStructured({
+    systemPrompt:'Synthetic test',userPrompt:'{}',orderedGeminiModels:statementModels,
+    schema:z.object({category:z.literal('other')}),fallback:()=>({category:'other' as const}),
+  });
+  expect(generateContent.mock.calls.map(([request])=>request.model)).toEqual([...statementModels]);
+  expect(result).toMatchObject({modelUsed:'gemma-4-31b-it',liveCallUsed:true,data:{category:'other'}});
+  expect(result.fallbackReason).toContain('429');
+  expect(result.fallbackReason).toContain('schema mismatch');
+  generateContent.mockReset().mockRejectedValue(new Error('503 unavailable'));
+  const offline = await client.generateStructured({systemPrompt:'Synthetic test',userPrompt:'{}',
+    orderedGeminiModels:statementModels,fallback:()=>({category:'other'})});
+  expect(offline.liveCallUsed).toBe(false);
+  expect(generateContent.mock.calls.map(([request])=>request.model)).toEqual([...statementModels]);
 });

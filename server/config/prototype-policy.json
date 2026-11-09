@@ -1,6 +1,7 @@
 {
+  "productRules": { "decisionRef": "D-025", "essentialReserveMonths": 3 },
   "policyMeta": {
-    "policyBundleVersion": "prototype_policy_bundle_v1.4",
+    "policyBundleVersion": "prototype_policy_bundle_v1.5",
     "status": "PROTOTYPE_ONLY",
     "empiricallyValidated": false,
     "evidenceGapRefs": [

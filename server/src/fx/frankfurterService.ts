@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { PrototypePolicyBundle } from '@shared/contracts';
 import { FXRateEntry } from '@shared/pi/types';
 import { loadPrototypePolicy } from '../config/policyLoader';
@@ -64,6 +65,7 @@ export class FrankfurterFXService {
   private referenceNowIso?: string;
   private timeoutMs: number;
   private memoryCache = new Map<string, FXRateEntry>();
+  private spendingCache = new Map<string, FXRateEntry>();
 
   constructor(options?: FrankfurterServiceOptions) {
     this.policy = options?.policy || loadPrototypePolicy();
@@ -134,7 +136,7 @@ export class FrankfurterFXService {
     }
   }
 
-  private async fetchWithTimeout(url: string): Promise<FrankfurterApiResponse | null> {
+  private async fetchJson(url: string): Promise<unknown> {
     if (!this.fetchFn) return null;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
@@ -147,16 +149,49 @@ export class FrankfurterFXService {
       if (!response.ok) {
         return null;
       }
-      const data = (await response.json()) as FrankfurterApiResponse;
-      if (!data || typeof data.rates !== 'object') {
-        return null;
-      }
-      return data;
+      return await response.json();
     } catch {
       return null;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  private async fetchWithTimeout(url: string): Promise<FrankfurterApiResponse | null> {
+    const data = await this.fetchJson(url) as FrankfurterApiResponse | null;
+    return data && typeof data.rates === 'object' ? data : null;
+  }
+
+  /** Fetch display-only quotes separately from the engine's ECB cache. */
+  async getSpendingRates(base: string, currencies: string[]): Promise<Record<string, FXRateEntry>> {
+    const now = this.referenceNowIso || new Date().toISOString();
+    const asOf = now.slice(0, 10);
+    const quoteSchema = z.object({
+      date: z.string().date(),
+      base: z.string(),
+      quote: z.string(),
+      rate: z.number().finite().positive(),
+    });
+    const targets = [...new Set(currencies)].filter(target => target !== base);
+    const source = 'https://api.frankfurter.dev/v2/rate';
+    const entries = await Promise.all(targets.map(async target => {
+      const key = base + ':' + target;
+      const cached = this.spendingCache.get(key);
+      if (cached && this.evaluateFreshnessStatus(cached, now) === 'OK') return [target, cached] as const;
+      const raw = await this.fetchJson(source + '/' + encodeURIComponent(base) + '/' + encodeURIComponent(target) + '?date=' + asOf);
+      const parsed = quoteSchema.safeParse(raw);
+      if (parsed.success && parsed.data.base === base && parsed.data.quote === target && parsed.data.date <= asOf) {
+        const quote: FXRateEntry = {
+          base, target, rate: parsed.data.rate, rateDate: parsed.data.date,
+          fetchedAt: now, status: 'OK', source,
+        };
+        this.spendingCache.set(key, quote);
+        return [target, quote] as const;
+      }
+      const unavailable: FXRateEntry = {base, target, rate: 0, rateDate: asOf, fetchedAt: now, status: 'UNAVAILABLE', source};
+      return [target, unavailable] as const;
+    }));
+    return Object.fromEntries(entries);
   }
 
   /**

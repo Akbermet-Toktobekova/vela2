@@ -1,0 +1,29 @@
+{
+  "publicApi": 200,
+  "health": {
+    "status": "ok",
+    "runtime": "authenticated-beta"
+  },
+  "unauthenticatedSpendingRates": 401,
+  "remoteExpoManifest": 200,
+  "bundles": [
+    {
+      "platform": "android",
+      "manifest": 200,
+      "bundle": 200,
+      "bytes": 4782570,
+      "hasSpendingFilters": true,
+      "correctBackend": true,
+      "uri": "exp://c-dizbalanser-4xqnru-mw93g901la0zitgl.on.expo.app"
+    },
+    {
+      "platform": "ios",
+      "manifest": 200,
+      "bundle": 200,
+      "bytes": 4761070,
+      "hasSpendingFilters": true,
+      "correctBackend": true,
+      "uri": "exp://c-dizbalanser-4xqnru-mw93g901la0zitgl.on.expo.app"
+    }
+  ]
+}

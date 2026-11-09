@@ -1,0 +1,2 @@
+{"baseline":"D-025 offline rule","expectedRows":6,"before":{"rows":6,"names":4,"categories":2,"types":3},"after":{"rows":6,"names":6,"categories":6,"types":6},"subscription":"Netflix","pendingTransferQuestions":1}
+{"live":{"rows":6,"names":6,"categories":5,"types":6},"models":[{"provider":"gemini","modelUsed":"gemini-3.5-flash-lite","liveCallUsed":true}]}

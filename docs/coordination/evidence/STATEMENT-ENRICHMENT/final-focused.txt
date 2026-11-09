@@ -1,0 +1,25 @@
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela-ui-integration/server
+
+(node:24824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3432) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/gemma-model.test.ts (5 tests) 410ms
+   ✓ invalidates a published analysis after the configured model changes  345ms
+ ✓ tests/e2e/finagent-14-scenarios.test.ts (14 tests) 1569ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 10: PI snapshot version advances mid-evaluation — Stale Snapshot Publication Guard blocks overwriting Today, and unchanged repeat run is DUPLICATE_SUPPRESSED  316ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 11: User Feedback Loop — Accept (no premature balance deduction), Adjust re-validated by Checker (unsafe €950 rejected, safe €60 accepted), and Decline suppresses repeat  363ms
+ ✓ tests/automatic-statements.test.ts (18 tests) 1176ms
+   ✓ D-026 automatic statements and protected essential plan > enters Today before automatically processing the staged queue, without model consent  643ms
+(node:3112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/reliable-imports.test.ts (13 tests) 308ms
+
+ Test Files  4 passed (4)
+      Tests  50 passed (50)
+   Start at  13:52:28
+   Duration  11.48s (transform 9.64s, setup 0ms, collect 19.38s, tests 3.46s, environment 3ms, prepare 3.57s)
+

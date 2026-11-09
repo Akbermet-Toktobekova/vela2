@@ -72,6 +72,17 @@ function addMonthsIso(startIso: string, months: number): string {
 }
 
 export class SharedFinancialCalculator {
+  /** D-025 product target; canonical AS formulas and scoring coefficients are unchanged. */
+  static essentialReserveTarget(monthly: number | null | undefined): number | null {
+    return monthly !== null && monthly !== undefined && Number.isFinite(monthly) && monthly > 0
+      ? Math.round(monthly * prototypePolicy.productRules.essentialReserveMonths * 100) / 100 : null;
+  }
+  /** Yearly billing uses the inverse of the monthly-to-annual conversion in F011.
+   * Weekly billing needs a user-confirmed monthly equivalent rather than an invented convention. */
+  static confirmedMonthlySubscriptionCost(amount: number, frequency: 'monthly'|'yearly'|'weekly', confirmedMonthly?: number): number | null {
+    const monthly = frequency === 'monthly' ? amount : frequency === 'yearly' ? amount / 12 : confirmedMonthly;
+    return monthly !== undefined && Number.isFinite(monthly) && monthly > 0 ? Math.round(monthly * 100) / 100 : null;
+  }
   static getScheduledOccurrenceDates(startIso: string, frequency: string, referenceDateIso: string, horizonDays: number): string[] {
     if (!Number.isFinite(Date.parse(startIso)) || !Number.isFinite(Date.parse(referenceDateIso))) return [];
     const dates: string[] = [];
