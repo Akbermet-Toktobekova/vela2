@@ -1,3 +1,4 @@
+import { mockCatalogFallbackClient } from './catalogFallbackFixture';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SQLiteStore } from '../../src/db/sqliteStore';
 import { ReviewOrchestrator } from '../../src/orchestrator/reviewWorkflow';
@@ -10,7 +11,11 @@ describe('Core feedback commitments and manual execution', () => {
   let store:SQLiteStore, workflow:ReviewOrchestrator, user:string, recommendationId:string;
   beforeEach(async()=>{
     const f=createBaselineSolventFixture(); user=f.snapshot.userId;
-    store=new SQLiteStore(':memory:'); workflow=new ReviewOrchestrator({store,llmClient:new LLMClient({mockMode:true})});
+    // Keep this lifecycle scenario focused on a reserve allocation with no accruing debt.
+    for (const debt of f.snapshot.debts) {
+      f.extras.debtTerms![debt.id] = { ...f.extras.debtTerms![debt.id], interestAccruing: false };
+    }
+    store=new SQLiteStore(':memory:'); workflow=new ReviewOrchestrator({store,llmClient:mockCatalogFallbackClient()});
     store.savePIState(user,user,{snapshot:f.snapshot,calculatorExtras:f.extras});
     recommendationId=(await workflow.runReviewCycle({authenticatedUserId:user,targetUserId:user})).recommendation.id;
   });

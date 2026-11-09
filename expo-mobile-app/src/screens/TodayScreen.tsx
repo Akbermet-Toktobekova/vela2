@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from "react-native";
 import {
   GlassCard,
   GlassButton,
@@ -52,11 +52,15 @@ export function TodayScreen(props: Props) {
   const hasError =
     props.job?.status === "failed" ||
     props.analysis?.status === "PROVIDER_UNAVAILABLE";
+  const clarification = props.experimental && props.analysis?.decisionStatus === "NEEDS_DATA"
+    ? recommendation?.clarification : undefined;
   const title = active
     ? recommendation.title
     : processing
       ? "Updating your financial picture"
-      : hasError
+      : clarification
+        ? recommendation?.title || "Confirm financial information"
+        : hasError
         ? "Your review needs another try"
         : props.analysis?.decisionStatus === "NEEDS_DATA"
           ? "A little more clarity first"
@@ -65,7 +69,9 @@ export function TodayScreen(props: Props) {
     ? recommendation.description
     : processing
       ? "Vela is checking your latest information. Your saved records remain available."
-      : hasError
+      : clarification
+        ? clarification.question
+        : hasError
         ? "The review could not finish. You can retry when the connection is ready."
         : snapshot?.readinessReason ||
           "Add your accounts and upcoming bills, then let Vela review your financial picture.";
@@ -112,6 +118,18 @@ export function TodayScreen(props: Props) {
           {title}
         </Text>
         <Text style={styles.description}>{description}</Text>
+        {clarification?.route === "accounts" && (
+          <GlassButton title="Update balances" onPress={() => props.onOpen("accounts")} />
+        )}
+        {active && recommendation.sourceAdvice?.sources.map(source => (
+          <TouchableOpacity
+            key={source.claimId}
+            accessibilityRole="link"
+            onPress={() => { void Linking.openURL(source.url).catch(() => {}); }}
+          >
+            <Text style={styles.link}>{source.title}</Text>
+          </TouchableOpacity>
+        ))}
         {props.experimental && (
           <Text style={styles.beta}>
             EXPERIMENTAL BETA · PRELIMINARY POLICY

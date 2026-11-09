@@ -1,0 +1,129 @@
+{
+  "stage": "postgres-mock",
+  "status": "COMPLETED",
+  "input": {
+    "betaEvaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+    "draft": "See ../../../PI-STORAGE.md."
+  },
+  "output": {
+    "simulated": true,
+    "pi.debts": [],
+    "analysis.stage_artifacts": [
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:fx",
+        "stage": "fx",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:classification",
+        "stage": "classification",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": "Analyzed 159 transactions (141 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pattern-recognition",
+        "stage": "pattern-recognition",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": "Observed account service charge outflows on the main EUR account. Observed fee outflows on the huf account. Observed largest transactions on the main EUR account including outflows and inflows. Observed largest transactions on the huf account including large outflows and inflows."
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:behavior-agent",
+        "stage": "behavior-agent",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": "Account service charge outflows were observed on the main EUR account. Fee outflows were observed on the huf account. Largest transactions on the main EUR account include specified outflows and inflows. Largest transactions on the huf account include specified large outflows and inflows. A general savings goal of 6000 EUR by 2027-06-30 is stated."
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:financial-calculator",
+        "stage": "financial-calculator",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-calculator",
+        "stage": "debt-calculator",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-agent",
+        "stage": "debt-agent",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": "No debt records are present in this snapshot."
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:suggestion-generator",
+        "stage": "suggestion-generator",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": ""
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:catalog-selector",
+        "stage": "catalog-selector",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:checker",
+        "stage": "checker",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:critical-coverage",
+        "stage": "critical-coverage",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:ai-evaluation",
+        "stage": "ai-evaluation",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:weights",
+        "stage": "weights",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:decision-engine",
+        "stage": "decision-engine",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f"
+      },
+      {
+        "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:explanation",
+        "stage": "explanation",
+        "input_snapshot_id": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "summary_text": "This information is needed before choosing a useful next action."
+      }
+    ],
+    "analysis.conversation_memory": {
+      "inputHash": "6f513cd688a8915139415085963a8247b5813b0b2b58fe7ea06ae7a6232680bb",
+      "promptVersion": "chat-memory.v2",
+      "status": "CURRENT",
+      "updatedAt": "2026-11-08T21:19:24.372Z",
+      "entries": [
+        {
+          "messageIds": [
+            "strong-context"
+          ],
+          "kind": "STATEMENT",
+          "text": "The user would like to understand their saved financial information."
+        },
+        {
+          "messageIds": [
+            "strong-context"
+          ],
+          "kind": "TENTATIVE_PLAN",
+          "text": "The user may review their budget later."
+        }
+      ],
+      "summaryText": "The user would like to understand their saved financial information. The user may review their budget later.",
+      "model": {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.5-flash-lite",
+        "liveCallUsed": true
+      }
+    },
+    "analysis.decisions": {
+      "id": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+      "status": "NEEDS_DATA",
+      "selected_action_id": null
+    }
+  },
+  "calls": []
+}

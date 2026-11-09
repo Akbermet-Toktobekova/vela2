@@ -1,0 +1,143 @@
+{
+  "stage": "postgres-mock",
+  "status": "COMPLETED",
+  "input": {
+    "betaEvaluationId": "eval_9da84682-91ea-43c9-922d-0ae5df097f73",
+    "draft": "See ../../../PI-STORAGE.md."
+  },
+  "output": {
+    "simulated": true,
+    "pi.debts": [
+      {
+        "id": "card",
+        "userId": "0ccde9ad-5c1e-4463-8b19-a8247f6f4856",
+        "name": "Credit card",
+        "debtType": "credit_card",
+        "currency": "EUR",
+        "remainingBalance": 900,
+        "apr": 24,
+        "minimumPayment": 65,
+        "nextDueDate": "2026-11-08",
+        "paymentFrequency": "monthly",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "analysis.stage_artifacts": [
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:fx",
+        "stage": "fx",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:classification",
+        "stage": "classification",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "Analyzed 0 transactions (0 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:pattern-recognition",
+        "stage": "pattern-recognition",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "Pattern Recognition found no statement activity to compare."
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:behavior-agent",
+        "stage": "behavior-agent",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "Pattern Recognition found no statement activity to compare."
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:financial-calculator",
+        "stage": "financial-calculator",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:debt-calculator",
+        "stage": "debt-calculator",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:debt-agent",
+        "stage": "debt-agent",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "Debt 1: APR 24%, next due 2026-11-08, baseline interest EUR 46.99 over the analysis horizon, estimated payoff 16.37 months."
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:suggestion-generator",
+        "stage": "suggestion-generator",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "The generator returned fewer than three proposals."
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:catalog-selector",
+        "stage": "catalog-selector",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:checker",
+        "stage": "checker",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:critical-coverage",
+        "stage": "critical-coverage",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:ai-evaluation",
+        "stage": "ai-evaluation",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:weights",
+        "stage": "weights",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:decision-engine",
+        "stage": "decision-engine",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c"
+      },
+      {
+        "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73:explanation",
+        "stage": "explanation",
+        "input_snapshot_id": "snap_beta_0ccde9ad-5c1e-4463-8b19-a8247f6f4856_v2_0e5b999df7f5ce6c",
+        "summary_text": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]"
+      }
+    ],
+    "analysis.conversation_memory": {
+      "inputHash": "6c892a34dffb2ecf5cfbdcc3f2880ab8c7687ee117e8ed71ac08c3c1feabf33f",
+      "promptVersion": "chat-memory.v1",
+      "status": "CURRENT",
+      "updatedAt": "2026-11-08T16:31:15.923Z",
+      "entries": [
+        {
+          "messageIds": [
+            "debt-context"
+          ],
+          "kind": "PREFERENCE",
+          "text": "The user wants to understand their saved financial information."
+        },
+        {
+          "messageIds": [
+            "debt-context"
+          ],
+          "kind": "TENTATIVE_PLAN",
+          "text": "The user may review their budget later."
+        }
+      ],
+      "summaryText": "The user wants to understand their saved financial information. The user may review their budget later.",
+      "model": {
+        "provider": "gemini",
+        "modelUsed": "gemma-4-31b-it",
+        "liveCallUsed": true
+      }
+    },
+    "analysis.decisions": {
+      "id": "eval_9da84682-91ea-43c9-922d-0ae5df097f73",
+      "status": "RECOMMENDATION_READY",
+      "selected_action_id": "A005"
+    }
+  },
+  "calls": []
+}

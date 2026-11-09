@@ -1,0 +1,1932 @@
+{
+  "stage": "run",
+  "output": {
+    "profile": "Nora Kovacs",
+    "asOf": "2026-11-05T12:00:00.000Z",
+    "mode": "live_requested"
+  }
+}
+{
+  "stage": "statement_preview",
+  "output": {
+    "file": "daily.csv",
+    "statement": {
+      "id": "stmt_1793882416485_8mqs",
+      "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+      "accountId": "main",
+      "fileName": "daily.csv.csv",
+      "fileFormat": "csv",
+      "fileHash": "hash_acb4f636_4002",
+      "periodStart": "2026-08-03",
+      "periodEnd": "2026-10-28",
+      "currency": "EUR",
+      "transactionCount": 45,
+      "duplicateCountSkipped": 0,
+      "status": "needs_review",
+      "closingBalance": 3577.01,
+      "importedAt": "2026-11-05T12:40:16.485Z"
+    },
+    "status": "needs_review",
+    "parsedTransactions": 45,
+    "rejectedRows": []
+  }
+}
+{
+  "stage": "statement_preview",
+  "output": {
+    "file": "reserve.csv",
+    "statement": {
+      "id": "stmt_1793882416503_8zo1",
+      "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+      "accountId": "savings",
+      "fileName": "reserve.csv.csv",
+      "fileFormat": "csv",
+      "fileHash": "hash_bc62e127_326",
+      "periodStart": "2026-08-28",
+      "periodEnd": "2026-10-28",
+      "currency": "EUR",
+      "transactionCount": 3,
+      "duplicateCountSkipped": 0,
+      "status": "needs_review",
+      "closingBalance": 600,
+      "importedAt": "2026-11-05T12:40:16.503Z"
+    },
+    "status": "needs_review",
+    "parsedTransactions": 3,
+    "rejectedRows": []
+  }
+}
+{
+  "stage": "imported_state",
+  "output": {
+    "transactions": 48,
+    "balances": [
+      {
+        "id": "6a6ad442-e3f0-427a-8762-99f7be242306",
+        "accountId": "main",
+        "amount": 3577.01,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1793882416496_mev0",
+        "createdAt": "2026-11-05T12:40:16.499Z"
+      },
+      {
+        "id": "73c722de-d60b-4574-8f5b-208142b83f6b",
+        "accountId": "savings",
+        "amount": 600,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1793882416507_gic8",
+        "createdAt": "2026-11-05T12:40:16.509Z"
+      }
+    ],
+    "transferMatches": [
+      {
+        "id": "match_single_txn_stmt_1793882416496_mev0_15",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_15",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1793882416496_mev0_30",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_30",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1793882416496_mev0_45",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_45",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_txn_stmt_1793882416496_mev0_15_txn_stmt_1793882416507_gic8_1",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_15",
+        "incomingTransactionId": "txn_stmt_1793882416507_gic8_1",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1793882416496_mev0_30_txn_stmt_1793882416507_gic8_2",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_30",
+        "incomingTransactionId": "txn_stmt_1793882416507_gic8_2",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1793882416496_mev0_45_txn_stmt_1793882416507_gic8_3",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "outgoingTransactionId": "txn_stmt_1793882416496_mev0_45",
+        "incomingTransactionId": "txn_stmt_1793882416507_gic8_3",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      }
+    ],
+    "confirmations": [
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_6",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_6",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-08-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_11",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_11",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-08-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416496_mev0_15",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416496_mev0_15",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_21",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_21",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-09-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_26",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_26",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-09-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416496_mev0_30",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416496_mev0_30",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_36",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_36",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-10-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1793882416496_mev0_41",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1793882416496_mev0_41",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-10-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416496_mev0_45",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416496_mev0_45",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416507_gic8_1",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416507_gic8_1",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416507_gic8_2",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416507_gic8_2",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1793882416507_gic8_3",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1793882416507_gic8_3",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      }
+    ]
+  }
+}
+{
+  "stage": "BehaviorAgent",
+  "output": {
+    "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+    "agentName": "BehaviorAgent",
+    "inputHash": "5b429ffba44575d7bbd12245a4b20fead55cb2b820c38c2da60704b2931441c7",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "output": {
+      "categorizedCount": 48,
+      "recurringDetected": [
+        {
+          "merchant": "Fiber Home",
+          "monthlyAmount": 32,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882416496_mev0_5"
+        },
+        {
+          "merchant": "Sound Library",
+          "monthlyAmount": 10.99,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882416496_mev0_6"
+        },
+        {
+          "merchant": "Screen Library",
+          "monthlyAmount": 15.99,
+          "currency": "EUR",
+          "transactionId": "txn_stmt_1793882416496_mev0_11"
+        }
+      ],
+      "proposedConfirmations": [
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_6",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_6",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-08-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_11",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_11",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-08-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416496_mev0_15",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416496_mev0_15",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-08-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_21",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_21",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-09-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_26",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_26",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-09-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416496_mev0_30",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416496_mev0_30",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-09-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_36",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_36",
+          "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 10.99/mo · 2026-10-12",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_41",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_41",
+          "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+          "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+          "amountLabel": "EUR 15.99/mo · 2026-10-21",
+          "field": "subscriptionActive",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416496_mev0_45",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416496_mev0_45",
+          "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+          "amountLabel": "EUR 150.00 · 2026-10-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416507_gic8_1",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416507_gic8_1",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-08-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416507_gic8_2",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416507_gic8_2",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-09-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_trf_txn_stmt_1793882416507_gic8_3",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "transfer",
+          "subjectId": "txn_stmt_1793882416507_gic8_3",
+          "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+          "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+          "amountLabel": "EUR 150.00 · 2026-10-28",
+          "field": "economicType",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        },
+        {
+          "id": "conf_sub_txn_stmt_1793882416496_mev0_5",
+          "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+          "subjectType": "subscription",
+          "subjectId": "txn_stmt_1793882416496_mev0_5",
+          "questionText": "We detected a recurring charge of EUR 32.00/month at Fiber Home. Are you still actively using this subscription, and can it be cancelled without exit fees?",
+          "impactReason": "Rule R010 requires confirming whether a recurring subscription is still wanted and checking exit terms before suggesting cancellation (A015).",
+          "amountLabel": "EUR 32.00/mo",
+          "field": "subscription_active_use",
+          "userResponse": null,
+          "confirmedValue": null,
+          "confirmedAt": null
+        }
+      ],
+      "summaryText": "Analyzed 48 transactions (48 classified; user_confirmed preserved). Detected 3 recurring subscription candidate(s) (Fiber Home: EUR 32, Sound Library: EUR 10.99, Screen Library: EUR 15.99) requiring user confirmation before any cancellation proposal (R010).",
+      "updatedClassifications": {
+        "txn_stmt_1793882416496_mev0_1": {
+          "id": "cls_txn_stmt_1793882416496_mev0_1",
+          "transactionId": "txn_stmt_1793882416496_mev0_1",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring monthly rent payment to Harbor Properties.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_2": {
+          "id": "cls_txn_stmt_1793882416496_mev0_2",
+          "transactionId": "txn_stmt_1793882416496_mev0_2",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Standard grocery purchase.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_3": {
+          "id": "cls_txn_stmt_1793882416496_mev0_3",
+          "transactionId": "txn_stmt_1793882416496_mev0_3",
+          "economicType": "expense",
+          "category": "transport",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Metro pass purchase for transit.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_4": {
+          "id": "cls_txn_stmt_1793882416496_mev0_4",
+          "transactionId": "txn_stmt_1793882416496_mev0_4",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring monthly utility bill.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_5": {
+          "id": "cls_txn_stmt_1793882416496_mev0_5",
+          "transactionId": "txn_stmt_1793882416496_mev0_5",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring monthly internet service.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_6": {
+          "id": "cls_txn_stmt_1793882416496_mev0_6",
+          "transactionId": "txn_stmt_1793882416496_mev0_6",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring music streaming subscription.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_7": {
+          "id": "cls_txn_stmt_1793882416496_mev0_7",
+          "transactionId": "txn_stmt_1793882416496_mev0_7",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring credit card debt repayment.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_8": {
+          "id": "cls_txn_stmt_1793882416496_mev0_8",
+          "transactionId": "txn_stmt_1793882416496_mev0_8",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Standard grocery purchase.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_9": {
+          "id": "cls_txn_stmt_1793882416496_mev0_9",
+          "transactionId": "txn_stmt_1793882416496_mev0_9",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Coffee shop transaction.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_10": {
+          "id": "cls_txn_stmt_1793882416496_mev0_10",
+          "transactionId": "txn_stmt_1793882416496_mev0_10",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Restaurant dining expense.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_11": {
+          "id": "cls_txn_stmt_1793882416496_mev0_11",
+          "transactionId": "txn_stmt_1793882416496_mev0_11",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring video streaming subscription.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_12": {
+          "id": "cls_txn_stmt_1793882416496_mev0_12",
+          "transactionId": "txn_stmt_1793882416496_mev0_12",
+          "economicType": "expense",
+          "category": "health",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Pharmacy purchase categorized as health.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_13": {
+          "id": "cls_txn_stmt_1793882416496_mev0_13",
+          "transactionId": "txn_stmt_1793882416496_mev0_13",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Standard grocery purchase.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_14": {
+          "id": "cls_txn_stmt_1793882416496_mev0_14",
+          "transactionId": "txn_stmt_1793882416496_mev0_14",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring salary payroll deposit.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_15": {
+          "id": "cls_txn_stmt_1793882416496_mev0_15",
+          "transactionId": "txn_stmt_1793882416496_mev0_15",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "behavior_agent_v1.1_gemini-3.1-flash-lite",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Internal transfer between accounts.",
+          "updatedAt": "2026-11-05T12:40:20.356Z"
+        },
+        "txn_stmt_1793882416496_mev0_16": {
+          "id": "cls_txn_stmt_1793882416496_mev0_16",
+          "transactionId": "txn_stmt_1793882416496_mev0_16",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Housing / rent payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_17": {
+          "id": "cls_txn_stmt_1793882416496_mev0_17",
+          "transactionId": "txn_stmt_1793882416496_mev0_17",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_18": {
+          "id": "cls_txn_stmt_1793882416496_mev0_18",
+          "transactionId": "txn_stmt_1793882416496_mev0_18",
+          "economicType": "expense",
+          "category": "transport",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Transport & mobility",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_19": {
+          "id": "cls_txn_stmt_1793882416496_mev0_19",
+          "transactionId": "txn_stmt_1793882416496_mev0_19",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Utility bill payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_20": {
+          "id": "cls_txn_stmt_1793882416496_mev0_20",
+          "transactionId": "txn_stmt_1793882416496_mev0_20",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Telecom / internet recurring payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_21": {
+          "id": "cls_txn_stmt_1793882416496_mev0_21",
+          "transactionId": "txn_stmt_1793882416496_mev0_21",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring subscription candidate",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_22": {
+          "id": "cls_txn_stmt_1793882416496_mev0_22",
+          "transactionId": "txn_stmt_1793882416496_mev0_22",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Debt / credit card servicing payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_23": {
+          "id": "cls_txn_stmt_1793882416496_mev0_23",
+          "transactionId": "txn_stmt_1793882416496_mev0_23",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_24": {
+          "id": "cls_txn_stmt_1793882416496_mev0_24",
+          "transactionId": "txn_stmt_1793882416496_mev0_24",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Dining & coffee",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_25": {
+          "id": "cls_txn_stmt_1793882416496_mev0_25",
+          "transactionId": "txn_stmt_1793882416496_mev0_25",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Dining & coffee",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_26": {
+          "id": "cls_txn_stmt_1793882416496_mev0_26",
+          "transactionId": "txn_stmt_1793882416496_mev0_26",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring subscription candidate",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_27": {
+          "id": "cls_txn_stmt_1793882416496_mev0_27",
+          "transactionId": "txn_stmt_1793882416496_mev0_27",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Classified by local deterministic rules",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_28": {
+          "id": "cls_txn_stmt_1793882416496_mev0_28",
+          "transactionId": "txn_stmt_1793882416496_mev0_28",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_29": {
+          "id": "cls_txn_stmt_1793882416496_mev0_29",
+          "transactionId": "txn_stmt_1793882416496_mev0_29",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Matched earned income / scholarship inflow",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_30": {
+          "id": "cls_txn_stmt_1793882416496_mev0_30",
+          "transactionId": "txn_stmt_1793882416496_mev0_30",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Matched transfer to savings",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_31": {
+          "id": "cls_txn_stmt_1793882416496_mev0_31",
+          "transactionId": "txn_stmt_1793882416496_mev0_31",
+          "economicType": "expense",
+          "category": "rent_housing",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Housing / rent payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_32": {
+          "id": "cls_txn_stmt_1793882416496_mev0_32",
+          "transactionId": "txn_stmt_1793882416496_mev0_32",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_33": {
+          "id": "cls_txn_stmt_1793882416496_mev0_33",
+          "transactionId": "txn_stmt_1793882416496_mev0_33",
+          "economicType": "expense",
+          "category": "transport",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Transport & mobility",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_34": {
+          "id": "cls_txn_stmt_1793882416496_mev0_34",
+          "transactionId": "txn_stmt_1793882416496_mev0_34",
+          "economicType": "expense",
+          "category": "utilities_energy",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Utility bill payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_35": {
+          "id": "cls_txn_stmt_1793882416496_mev0_35",
+          "transactionId": "txn_stmt_1793882416496_mev0_35",
+          "economicType": "expense",
+          "category": "internet_telecom",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Telecom / internet recurring payment",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_36": {
+          "id": "cls_txn_stmt_1793882416496_mev0_36",
+          "transactionId": "txn_stmt_1793882416496_mev0_36",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring subscription candidate",
+          "updatedAt": "2026-11-05T12:40:16.497Z"
+        },
+        "txn_stmt_1793882416496_mev0_37": {
+          "id": "cls_txn_stmt_1793882416496_mev0_37",
+          "transactionId": "txn_stmt_1793882416496_mev0_37",
+          "economicType": "debt_payment",
+          "category": "other",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Debt / credit card servicing payment",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_38": {
+          "id": "cls_txn_stmt_1793882416496_mev0_38",
+          "transactionId": "txn_stmt_1793882416496_mev0_38",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_39": {
+          "id": "cls_txn_stmt_1793882416496_mev0_39",
+          "transactionId": "txn_stmt_1793882416496_mev0_39",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Dining & coffee",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_40": {
+          "id": "cls_txn_stmt_1793882416496_mev0_40",
+          "transactionId": "txn_stmt_1793882416496_mev0_40",
+          "economicType": "expense",
+          "category": "dining_coffee",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Dining & coffee",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_41": {
+          "id": "cls_txn_stmt_1793882416496_mev0_41",
+          "transactionId": "txn_stmt_1793882416496_mev0_41",
+          "economicType": "expense",
+          "category": "subscriptions",
+          "confidence": "high",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Recurring subscription candidate",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_42": {
+          "id": "cls_txn_stmt_1793882416496_mev0_42",
+          "transactionId": "txn_stmt_1793882416496_mev0_42",
+          "economicType": "expense",
+          "category": "other",
+          "confidence": "medium",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Classified by local deterministic rules",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_43": {
+          "id": "cls_txn_stmt_1793882416496_mev0_43",
+          "transactionId": "txn_stmt_1793882416496_mev0_43",
+          "economicType": "expense",
+          "category": "groceries_food",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Grocery merchant",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_44": {
+          "id": "cls_txn_stmt_1793882416496_mev0_44",
+          "transactionId": "txn_stmt_1793882416496_mev0_44",
+          "economicType": "income",
+          "category": "income",
+          "confidence": "high",
+          "status": "auto_classified",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": true,
+          "provenanceNote": "Matched earned income / scholarship inflow",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416496_mev0_45": {
+          "id": "cls_txn_stmt_1793882416496_mev0_45",
+          "transactionId": "txn_stmt_1793882416496_mev0_45",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Matched transfer to savings",
+          "updatedAt": "2026-11-05T12:40:16.498Z"
+        },
+        "txn_stmt_1793882416507_gic8_1": {
+          "id": "cls_txn_stmt_1793882416507_gic8_1",
+          "transactionId": "txn_stmt_1793882416507_gic8_1",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Matched transfer from main",
+          "updatedAt": "2026-11-05T12:40:16.508Z"
+        },
+        "txn_stmt_1793882416507_gic8_2": {
+          "id": "cls_txn_stmt_1793882416507_gic8_2",
+          "transactionId": "txn_stmt_1793882416507_gic8_2",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Matched transfer from main",
+          "updatedAt": "2026-11-05T12:40:16.508Z"
+        },
+        "txn_stmt_1793882416507_gic8_3": {
+          "id": "cls_txn_stmt_1793882416507_gic8_3",
+          "transactionId": "txn_stmt_1793882416507_gic8_3",
+          "economicType": "internal_transfer",
+          "category": "transfer",
+          "confidence": "medium",
+          "status": "needs_review",
+          "classifierVersion": "1.0",
+          "isRecurringCandidate": false,
+          "provenanceNote": "Matched transfer from main",
+          "updatedAt": "2026-11-05T12:40:16.508Z"
+        }
+      }
+    },
+    "createdAt": "2026-11-05T12:40:20.358Z"
+  }
+}
+{
+  "stage": "DebtAgent",
+  "output": {
+    "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+    "agentName": "DebtAgent",
+    "inputHash": "60535d1a409411fb00845bd2455269d72fc5ab1c87fb8511876aeb1e72e73322",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "output": {
+      "debtsAnalyzed": [
+        {
+          "debtId": "card",
+          "name": "Credit card",
+          "apr": 21.9,
+          "urgency": "high",
+          "interest90dBaseline": 41.82,
+          "interest12mBaseline": 126.43,
+          "payoffMonths": 18.32
+        }
+      ],
+      "highestPriorityDebtId": "card",
+      "summaryText": "The Credit card debt carries a 21.9% APR and is projected to be paid off in 18.32 months. It accrues €41.82 in interest over a 90-day baseline and €126.43 over a 12-month period."
+    },
+    "createdAt": "2026-11-05T12:40:28.689Z"
+  }
+}
+{
+  "stage": "analysis",
+  "output": {
+    "status": "COMPLETED",
+    "readiness": "state_a_action_ready",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "policyVersion": "prototype_policy_bundle_v1.2",
+    "provenance": [
+      {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.1-flash-lite",
+        "liveCallUsed": true
+      },
+      {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.1-flash-lite-preview",
+        "liveCallUsed": true
+      },
+      {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.1-flash-lite",
+        "liveCallUsed": true
+      },
+      {
+        "provider": "gemini",
+        "modelUsed": "gemini-3.1-flash-lite-preview",
+        "liveCallUsed": true
+      }
+    ],
+    "freshness": {
+      "BehaviorAgent": {
+        "agentName": "BehaviorAgent",
+        "stale": true,
+        "inputChanged": true,
+        "policyChanged": true,
+        "expired": true,
+        "inputHash": "5b429ffba44575d7bbd12245a4b20fead55cb2b820c38c2da60704b2931441c7",
+        "policyVersion": "prototype_policy_bundle_v1.2",
+        "cachedReused": false
+      },
+      "DebtAgent": {
+        "agentName": "DebtAgent",
+        "stale": true,
+        "inputChanged": true,
+        "policyChanged": true,
+        "expired": true,
+        "inputHash": "60535d1a409411fb00845bd2455269d72fc5ab1c87fb8511876aeb1e72e73322",
+        "policyVersion": "prototype_policy_bundle_v1.2",
+        "cachedReused": false
+      }
+    }
+  }
+}
+{
+  "stage": "decision_trace",
+  "output": {
+    "trace": {
+      "evaluationId": "eval_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_0_1793882416581",
+      "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+      "snapshotId": "snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+      "snapshotVersion": "3.0",
+      "createdAt": "2026-11-05T12:40:34.000Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.2",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Emergency reserve coverage M = 0.00 months is below entry threshold 1.00 months.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A007_snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Add EUR 360 to your emergency reserve",
+            "description": "Earmark EUR 360 from uncommitted available cash (EUR 3005.01 safe after upcoming bills) into your accessible emergency cushion.",
+            "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": "savings",
+            "amount": 360,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:liquid_balance",
+            "stale_account_balance",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "STALE"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2645.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A002_card",
+            "actionId": "A002",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Pay an extra EUR 850 toward Credit card",
+            "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+            "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+            "targetId": "card",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 850,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R001",
+              "R002",
+              "R006"
+            ],
+            "supportingClaimIds": [
+              "C014",
+              "C015"
+            ],
+            "supportingSourceIds": [
+              "S002",
+              "S003"
+            ],
+            "requiredPiInputs": [
+              "extra_amount",
+              "apr",
+              "balance",
+              "cash_flow"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:cash_flow",
+            "stale_account_balance",
+            "verified_debt_interest_terms",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "extra_amount",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "apr",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "cash_flow",
+              "status": "STALE"
+            }
+          ],
+          "projectedMinCashAfterAction": 2155.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A015_txn_stmt_1793882416496_mev0_6",
+            "actionId": "A015",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+            "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+            "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+            "targetId": "txn_stmt_1793882416496_mev0_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "merchant",
+              "monthly_fee",
+              "exit_terms"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "required_pi:monthly_fee",
+            "required_pi:exit_terms",
+            "stale_account_balance",
+            "subscription_usage_and_exit_terms_confirmation"
+          ],
+          "inputEvidence": [
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "monthly_fee",
+              "status": "MISSING"
+            },
+            {
+              "field": "exit_terms",
+              "status": "MISSING"
+            }
+          ],
+          "projectedMinCashAfterAction": 3005.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "verify_A014_txn_stmt_1793882416496_mev0_6",
+            "actionId": "A014",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review recurring subscription before cancellation",
+            "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+            "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+            "targetId": "txn_stmt_1793882416496_mev0_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": null,
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "transactions",
+              "merchant",
+              "frequency"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "transactions",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "frequency",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 3005.01,
+          "unlocksActionIds": [
+            "A015"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "verify_A014_txn_stmt_1793882416496_mev0_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1793882416496_mev0_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "selectedActionType": "VERIFICATION_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "missingDataFields": [
+        "fresh_account_balance",
+        "stale_pi:liquid_balance",
+        "stale_account_balance",
+        "dated_essential_outflows",
+        "stale_pi:cash_flow",
+        "verified_debt_interest_terms",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+    },
+    "decision": {
+      "evaluationId": "eval_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_0_1793882416581",
+      "snapshotId": "snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+      "snapshotVersion": "3.0",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "selectedActionId": "A014",
+      "selectedActionType": "VERIFICATION_ACTION",
+      "candidate": {
+        "candidateId": "verify_A014_txn_stmt_1793882416496_mev0_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1793882416496_mev0_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "title": "Review recurring subscription before cancellation",
+      "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+      "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+      "expectedEffectSummary": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.2",
+      "sourceIds": [
+        "S001"
+      ],
+      "ruleIds": [
+        "R010"
+      ],
+      "claimIds": [
+        "C004"
+      ],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+      "missingFields": [
+        "fresh_account_balance",
+        "stale_pi:liquid_balance",
+        "stale_account_balance",
+        "dated_essential_outflows",
+        "stale_pi:cash_flow",
+        "verified_debt_interest_terms",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "trace": {
+        "evaluationId": "eval_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_0_1793882416581",
+        "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+        "snapshotId": "snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+        "snapshotVersion": "3.0",
+        "createdAt": "2026-11-05T12:40:34.000Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.2",
+        "priorityClass": "VERIFICATION_UNLOCK",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Emergency reserve coverage M = 0.00 months is below entry threshold 1.00 months.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "cand_A007_snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+              "actionId": "A007",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Add EUR 360 to your emergency reserve",
+              "description": "Earmark EUR 360 from uncommitted available cash (EUR 3005.01 safe after upcoming bills) into your accessible emergency cushion.",
+              "rationale": "Organizes existing liquid funds for an emergency goal; liquid coverage is 2.88 months. Earmarking equally liquid cash does not itself increase liquidity. Checker must verify obligations over the 90-day horizon.",
+              "targetId": "reserve",
+              "sourceAccountId": "main",
+              "destinationAccountId": "savings",
+              "amount": 360,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R003",
+                "R011"
+              ],
+              "supportingClaimIds": [
+                "C001",
+                "C002"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "liquid_balance",
+                "mandatory_outflows",
+                "amount"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "stale_pi:liquid_balance",
+              "stale_account_balance",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "liquid_balance",
+                "status": "STALE"
+              },
+              {
+                "field": "mandatory_outflows",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "amount",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 2645.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A002_card",
+              "actionId": "A002",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Pay an extra EUR 850 toward Credit card",
+              "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+              "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+              "targetId": "card",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 850,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R001",
+                "R002",
+                "R006"
+              ],
+              "supportingClaimIds": [
+                "C014",
+                "C015"
+              ],
+              "supportingSourceIds": [
+                "S002",
+                "S003"
+              ],
+              "requiredPiInputs": [
+                "extra_amount",
+                "apr",
+                "balance",
+                "cash_flow"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "stale_pi:cash_flow",
+              "stale_account_balance",
+              "verified_debt_interest_terms",
+              "dated_essential_outflows"
+            ],
+            "inputEvidence": [
+              {
+                "field": "extra_amount",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "apr",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "cash_flow",
+                "status": "STALE"
+              }
+            ],
+            "projectedMinCashAfterAction": 2155.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "cand_A015_txn_stmt_1793882416496_mev0_6",
+              "actionId": "A015",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+              "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+              "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+              "targetId": "txn_stmt_1793882416496_mev0_6",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 10.99,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R010"
+              ],
+              "supportingClaimIds": [
+                "C004"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "merchant",
+                "monthly_fee",
+                "exit_terms"
+              ],
+              "origin": "AI_SUGGESTION"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "fresh_account_balance",
+              "required_pi:monthly_fee",
+              "required_pi:exit_terms",
+              "stale_account_balance",
+              "subscription_usage_and_exit_terms_confirmation"
+            ],
+            "inputEvidence": [
+              {
+                "field": "merchant",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "monthly_fee",
+                "status": "MISSING"
+              },
+              {
+                "field": "exit_terms",
+                "status": "MISSING"
+              }
+            ],
+            "projectedMinCashAfterAction": 3005.01,
+            "unlocksActionIds": []
+          },
+          {
+            "candidate": {
+              "candidateId": "verify_A014_txn_stmt_1793882416496_mev0_6",
+              "actionId": "A014",
+              "actionType": "VERIFICATION_ACTION",
+              "title": "Review recurring subscription before cancellation",
+              "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+              "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+              "targetId": "txn_stmt_1793882416496_mev0_6",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 10.99,
+              "currency": "EUR",
+              "proposedTiming": null,
+              "supportingRuleIds": [
+                "R010"
+              ],
+              "supportingClaimIds": [
+                "C004"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "transactions",
+                "merchant",
+                "frequency"
+              ],
+              "origin": "CATALOG_FALLBACK"
+            },
+            "status": "VALID",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [],
+            "inputEvidence": [
+              {
+                "field": "transactions",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "merchant",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "frequency",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 3005.01,
+            "unlocksActionIds": [
+              "A015"
+            ]
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": {
+          "candidateId": "verify_A014_txn_stmt_1793882416496_mev0_6",
+          "actionId": "A014",
+          "actionType": "VERIFICATION_ACTION",
+          "title": "Review recurring subscription before cancellation",
+          "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+          "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+          "targetId": "txn_stmt_1793882416496_mev0_6",
+          "sourceAccountId": "main",
+          "destinationAccountId": null,
+          "amount": 10.99,
+          "currency": "EUR",
+          "proposedTiming": null,
+          "supportingRuleIds": [
+            "R010"
+          ],
+          "supportingClaimIds": [
+            "C004"
+          ],
+          "supportingSourceIds": [
+            "S001"
+          ],
+          "requiredPiInputs": [
+            "transactions",
+            "merchant",
+            "frequency"
+          ],
+          "origin": "CATALOG_FALLBACK"
+        },
+        "selectedActionType": "VERIFICATION_ACTION",
+        "decisionStatus": "RECOMMENDATION_READY",
+        "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "missingDataFields": [
+          "fresh_account_balance",
+          "stale_pi:liquid_balance",
+          "stale_account_balance",
+          "dated_essential_outflows",
+          "stale_pi:cash_flow",
+          "verified_debt_interest_terms",
+          "required_pi:monthly_fee",
+          "required_pi:exit_terms",
+          "subscription_usage_and_exit_terms_confirmation"
+        ],
+        "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+      }
+    }
+  }
+}
+{
+  "stage": "recommendation",
+  "output": {
+    "id": "rec_A014_eval_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_0_1793882416581",
+    "userId": "2aabf1f9-1a69-49be-80dd-4ebd3c44516d",
+    "snapshotId": "snap_beta_2aabf1f9-1a69-49be-80dd-4ebd3c44516d_v3_13f6fc0141be1017",
+    "actionType": "review_recurring_subscription",
+    "title": "Review recurring subscription before cancellation",
+    "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+    "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+    "suggestedAmount": 10.99,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "txn_stmt_1793882416496_mev0_6",
+    "sourceAccountId": "main",
+    "priority": "clarification",
+    "status": "proposed",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-05T12:40:34.006Z",
+    "updatedAt": "2026-11-05T12:40:34.006Z"
+  }
+}

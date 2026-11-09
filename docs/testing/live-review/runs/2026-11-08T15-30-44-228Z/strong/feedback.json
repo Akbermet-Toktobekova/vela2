@@ -1,0 +1,17 @@
+{
+  "stage": "feedback",
+  "status": "COMPLETED",
+  "input": {
+    "recommendationId": "rec_A012_eval_033bfb28-6cee-4237-9c6c-c113d54fbeef",
+    "action": "accept",
+    "expectedVersion": 3,
+    "requestId": "strong-accept"
+  },
+  "output": {
+    "error": {
+      "code": "ACCEPTANCE_REVALIDATION_FAILED",
+      "message": "The action requires fresh validation before acceptance."
+    }
+  },
+  "calls": []
+}

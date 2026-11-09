@@ -277,6 +277,14 @@ export const TodayView: React.FC = () => {
               </button>
             </div>
           </div>
+        ) : currentRecommendation.clarification ? (
+          <div className="mt-3">
+            <h1 id="recommended-step-title" className="text-[18px] font-bold text-[#272e23]">{currentRecommendation.title}</h1>
+            <p className="mt-1.5 text-[13px] text-[#74766d]">{currentRecommendation.clarification.question}</p>
+            <button type="button" onClick={() => navigate('/my-plan')} className="secondary-action mt-4 rounded-[16px] px-4 py-2.5 text-[12px] font-semibold">
+              Open My Plan
+            </button>
+          </div>
         ) : currentRecommendation.status === 'completed' ? (
           <div className="mt-3">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-[#386641]/12 px-2.5 py-0.5 text-[11px] font-bold text-[#386641]">
@@ -358,6 +366,12 @@ export const TodayView: React.FC = () => {
               </p>
             )}
 
+            {currentRecommendation.sourceAdvice?.sources.map(source => (
+              <a key={source.claimId} href={source.url} target="_blank" rel="noreferrer" className="mt-2 block text-xs underline">
+                {source.title}
+              </a>
+            ))}
+
             {/* FinAgent Decision Engine & AS Provenance Pill (Review Points 6 & 9) */}
             {recommendationSource === 'backend' && currentRecommendation.finAgentMeta && (
               <div className="mt-2 rounded-xl bg-white/55 px-3 py-2 text-[10px] leading-[15px] text-[#4a4235] border border-white/75 space-y-1">
@@ -402,7 +416,14 @@ export const TodayView: React.FC = () => {
             )}
 
             <fieldset disabled={feedbackDisabled} className="mt-4 flex flex-wrap items-center justify-between gap-2 disabled:opacity-60">
-              {isFinancialAction ? (
+              {currentRecommendation.sourceAdvice ? (
+                <>
+                  <button type="button" onClick={() => canComplete ? completeRecommendationAllocation(0, '') : acceptCurrentRecommendation()} className="primary-action min-h-[42px] flex-1 rounded-[18px] px-4 py-2.5 text-[12px] font-semibold">
+                    {canComplete ? 'Mark as completed' : 'Accept this step'}
+                  </button>
+                  <button type="button" onClick={declineCurrentRecommendation} className="quiet-action min-h-[42px] rounded-[18px] px-2.5 py-2.5 text-[12px]">Not now</button>
+                </>
+              ) : isFinancialAction ? (
                 <>
                   {!canComplete && (
                     <button type="button" onClick={acceptCurrentRecommendation} className="secondary-action min-h-[42px] rounded-[18px] px-3 py-2.5 text-[12px] font-semibold">Accept</button>

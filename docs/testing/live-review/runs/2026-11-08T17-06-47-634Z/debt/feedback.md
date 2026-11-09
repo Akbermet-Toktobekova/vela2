@@ -1,0 +1,541 @@
+# 01 Debt · feedback
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | SQLite beta_documents.payload → engine.feedback and feedback-request:&lt;id&gt;; state.actionFeedback is an API projection when accepted. Draft PostgreSQL pi.action_feedback. | — |
+
+## Input
+
+~~~~json
+{
+  "recommendationId": "rec_A005_eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+  "action": "accept",
+  "expectedVersion": 2,
+  "requestId": "debt-accept"
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "status": "ACCEPTED",
+  "accepted": true,
+  "recommendation": {
+    "id": "rec_A005_eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+    "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+    "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+    "actionType": "confirm_upcoming_bill",
+    "title": "Contact Credit card issuer for hardship payment options",
+    "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+    "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+    "suggestedAmount": 20,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "card",
+    "sourceAccountId": null,
+    "priority": "priority",
+    "status": "accepted",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-08T17:12:30.385Z",
+    "updatedAt": "2026-11-08T17:13:36.878Z"
+  },
+  "decision": {
+    "evaluationId": "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+    "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+    "snapshotVersion": "2.0",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "priorityClass": "CRITICAL",
+    "selectedActionId": "A005",
+    "selectedActionType": "FINANCIAL_ACTION",
+    "candidate": {
+      "candidateId": "crit_A005_card",
+      "actionId": "A005",
+      "actionType": "FINANCIAL_ACTION",
+      "title": "Contact Credit card issuer for hardship payment options",
+      "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+      "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+      "targetId": "card",
+      "sourceAccountId": null,
+      "destinationAccountId": null,
+      "amount": 20,
+      "currency": "EUR",
+      "proposedTiming": "2026-11-05",
+      "supportingRuleIds": [
+        "R008"
+      ],
+      "supportingClaimIds": [
+        "C017",
+        "C018"
+      ],
+      "supportingSourceIds": [
+        "S004"
+      ],
+      "requiredPiInputs": [
+        "issuer_contact",
+        "minimum_due",
+        "affordable_payment"
+      ],
+      "origin": "CRITICAL_COVERAGE"
+    },
+    "title": "Contact Credit card issuer for hardship payment options",
+    "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+    "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+    "expectedEffectSummary": "Addresses imminent payment or cash-flow shortfall directly (A005).",
+    "weightProfileId": "liquidity_protection",
+    "weights": {
+      "resilience": 0.5,
+      "financial_benefit": 0.35,
+      "goal_progress": 0.15
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [
+      "S004"
+    ],
+    "ruleIds": [
+      "R008"
+    ],
+    "claimIds": [
+      "C017",
+      "C018"
+    ],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": null,
+    "missingFields": [],
+    "trace": {
+      "evaluationId": "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+      "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+      "snapshotVersion": "2.0",
+      "createdAt": "2026-11-08T17:12:30.370Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "CRITICAL",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Liquid expense coverage M = 0.02 months is below entry threshold 1.00 months.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "crit_A005_card",
+            "actionId": "A005",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contact Credit card issuer for hardship payment options",
+            "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+            "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 20,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R008"
+            ],
+            "supportingClaimIds": [
+              "C017",
+              "C018"
+            ],
+            "supportingSourceIds": [
+              "S004"
+            ],
+            "requiredPiInputs": [
+              "issuer_contact",
+              "minimum_due",
+              "affordable_payment"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 1,
+          "resolvesCriticalProblemDirectly": true,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "issuer_contact",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "minimum_due",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "affordable_payment",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "crit_A020_deficit",
+            "actionId": "A020",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review projected EUR 45 cash shortfall before 2026-11-08",
+            "description": "Projected cash drops below required obligations by 2026-11-08 (Credit card minimum). Review upcoming bills and available balances.",
+            "rationale": "Diagnostic alert (F004, F019, R009): flags upcoming payment shortfall for user verification without assuming automatic resolution.",
+            "targetId": "card",
+            "sourceAccountId": null,
+            "destinationAccountId": null,
+            "amount": 45,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-08",
+            "supportingRuleIds": [
+              "R009"
+            ],
+            "supportingClaimIds": [
+              "C004",
+              "C009"
+            ],
+            "supportingSourceIds": [
+              "S001",
+              "S007"
+            ],
+            "requiredPiInputs": [
+              "cash",
+              "due_obligations",
+              "confirmed_income"
+            ],
+            "origin": "CRITICAL_COVERAGE"
+          },
+          "status": "VALID",
+          "isCritical": true,
+          "criticalPriorityRank": 3,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "cash",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "due_obligations",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "confirmed_income",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -110,
+          "unlocksActionIds": [
+            "A001",
+            "A005",
+            "A011"
+          ]
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "crit_A005_card",
+        "actionId": "A005",
+        "actionType": "FINANCIAL_ACTION",
+        "title": "Contact Credit card issuer for hardship payment options",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+        "rationale": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+        "targetId": "card",
+        "sourceAccountId": null,
+        "destinationAccountId": null,
+        "amount": 20,
+        "currency": "EUR",
+        "proposedTiming": "2026-11-05",
+        "supportingRuleIds": [
+          "R008"
+        ],
+        "supportingClaimIds": [
+          "C017",
+          "C018"
+        ],
+        "supportingSourceIds": [
+          "S004"
+        ],
+        "requiredPiInputs": [
+          "issuer_contact",
+          "minimum_due",
+          "affordable_payment"
+        ],
+        "origin": "CRITICAL_COVERAGE"
+      },
+      "stageArtifactIds": [
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:pi",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:fx",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:classification",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:pattern-recognition",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:behavior-agent",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:financial-calculator",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:debt-calculator",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:debt-agent",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:suggestion-generator",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:catalog-selector",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:checker",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:critical-coverage",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:ai-evaluation",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:weights",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:decision-engine",
+        "eval_484b49e1-5671-47d0-bfae-e0fa0546cd41:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Malformed proposal",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "MODEL",
+            "factIds": [],
+            "claimIds": [],
+            "status": "REJECTED",
+            "reason": "Malformed proposal: missingInfo.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Malformed proposal",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "MODEL",
+            "factIds": [],
+            "claimIds": [],
+            "status": "REJECTED",
+            "reason": "Malformed proposal: missingInfo.",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Malformed proposal",
+            "description": "",
+            "rationale": "",
+            "actionId": null,
+            "origin": "MODEL",
+            "factIds": [],
+            "claimIds": [],
+            "status": "REJECTED",
+            "reason": "Malformed proposal: missingInfo.",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "Insufficient verified claims to support EXECUTE actions for debt or obligation management; behavior data is incomplete.",
+        "fallbackReason": "NO_VALID_PRIMARY",
+        "criticalCoverageAddedIds": [
+          "A005",
+          "A020"
+        ]
+      },
+      "selectedActionType": "FINANCIAL_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met.",
+      "supportingSourceIds": [
+        "S004"
+      ],
+      "supportingRuleIds": [
+        "R008"
+      ],
+      "supportingClaimIds": [
+        "C017",
+        "C018"
+      ],
+      "missingDataFields": [],
+      "clarificationQuestion": null
+    }
+  },
+  "feedbackRecord": {
+    "id": "fb_1794158016907_accept",
+    "recommendationId": "rec_A005_eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+    "actionId": "A005",
+    "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+    "action": "accept",
+    "amount": 20,
+    "note": "User accepted recommendation (pending execution).",
+    "timestamp": "2026-11-08T17:13:36.878Z"
+  },
+  "version": 2,
+  "state": {
+    "user": {
+      "id": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "email": "debt@example.test",
+      "authStatus": "unverified",
+      "isDemoMode": false,
+      "createdAt": "2026-11-08T17:06:48.783Z"
+    },
+    "profile": {
+      "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "nickname": "01 Debt",
+      "locale": "en",
+      "baseCurrency": "EUR",
+      "country": "EU",
+      "updatedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "preferences": {
+      "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "primaryConcern": null,
+      "concernNotes": "",
+      "notificationsEnabled": true,
+      "reducedMotion": false,
+      "updatedAt": "2026-11-08T17:06:48.783Z"
+    },
+    "onboarding": {
+      "id": "076519a8-4e70-41da-b67f-f25b629e54c8",
+      "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "currentStep": 1,
+      "completedSteps": [],
+      "debtQuestionAnswer": "yes",
+      "status": "completed",
+      "startedAt": "2026-11-08T17:06:48.783Z",
+      "completedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "accounts": [
+      {
+        "id": "main",
+        "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+        "name": "Current account",
+        "institution": "Synthetic bank",
+        "currency": "EUR",
+        "purposes": [
+          "daily_spending"
+        ],
+        "fundsOwnership": "personal",
+        "personalAvailableAmount": null,
+        "isPrimary": true,
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z",
+        "updatedAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "balances": [
+      {
+        "id": "balance-main",
+        "accountId": "main",
+        "amount": 20,
+        "currency": "EUR",
+        "asOf": "2026-11-05T12:00:00.000Z",
+        "sourceType": "user_reported",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "incomes": [
+      {
+        "id": "salary",
+        "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+        "name": "Salary",
+        "pattern": "regular",
+        "estimatedMonthlyAmount": 1800,
+        "currency": "EUR",
+        "frequency": "monthly",
+        "sourceType": "salary",
+        "nextExpectedDate": "2026-11-25",
+        "receivingAccountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "expenseCommitment": {
+      "id": "essentials",
+      "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+      "estimatedMonthlyAmount": 950,
+      "currency": "EUR",
+      "notes": "",
+      "updatedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "obligations": [
+      {
+        "id": "utility",
+        "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+        "name": "Utilities",
+        "amount": 65,
+        "currency": "EUR",
+        "dueDate": "2026-11-18",
+        "recurrence": "monthly",
+        "category": "energy",
+        "status": "unpaid",
+        "accountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "debts": [
+      {
+        "id": "card",
+        "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+        "name": "Credit card",
+        "debtType": "credit_card",
+        "currency": "EUR",
+        "remainingBalance": 900,
+        "apr": 24,
+        "minimumPayment": 65,
+        "nextDueDate": "2026-11-08",
+        "paymentFrequency": "monthly",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "goals": [],
+    "goalAllocations": [],
+    "statements": [],
+    "transactions": [],
+    "classifications": [],
+    "transferMatches": [],
+    "confirmations": [],
+    "recommendations": [
+      {
+        "id": "rec_A005_eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+        "userId": "4f49a4d9-80fd-496f-9f22-11aa7d9597a2",
+        "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+        "actionType": "confirm_upcoming_bill",
+        "title": "Contact Credit card issuer for hardship payment options",
+        "description": "Required minimum of EUR 65 is due on 2026-11-08, but available liquid funds are insufficient.",
+        "reasoning": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]",
+        "suggestedAmount": 20,
+        "adjustedAmount": null,
+        "currency": "EUR",
+        "targetGoalId": "card",
+        "sourceAccountId": null,
+        "priority": "priority",
+        "status": "accepted",
+        "readinessState": "state_a_action_ready",
+        "createdAt": "2026-11-08T17:12:30.385Z",
+        "updatedAt": "2026-11-08T17:13:36.878Z"
+      }
+    ],
+    "assistantMessages": [],
+    "actionFeedback": [
+      {
+        "id": "fb_1794158016907_accept",
+        "recommendationId": "rec_A005_eval_484b49e1-5671-47d0-bfae-e0fa0546cd41",
+        "actionId": "A005",
+        "snapshotId": "snap_beta_4f49a4d9-80fd-496f-9f22-11aa7d9597a2_v2_4f0502439afb0c1a",
+        "action": "accept",
+        "amount": 20,
+        "note": "User accepted recommendation (pending execution).",
+        "timestamp": "2026-11-08T17:13:36.878Z"
+      }
+    ]
+  },
+  "aiConsent": true,
+  "experimentalRecommendations": true,
+  "requestHash": "73ae811e7d0bb96c18dc614026cf0e7db1fad419a8c1d4c17a7053bf51f3be60"
+}
+~~~~

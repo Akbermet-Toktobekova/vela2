@@ -721,7 +721,7 @@ The certainty score represents subjective evidence confidence based on executabl
 - **Developed & Working Scope:** Standalone embedded root HTML plus Python design/demo builders, SVG/assets/thumbnail/design source.
 - **Tested & Evidence:** Source/artifact inspection; no browser run of root artifact this review.
 - **Remaining / Still Planned / Gaps:** Root build predates current backend wiring and lacks current metadata markers; generators include simulated upload/sync handlers. Old double-click/ten-step instructions do not describe current v1.1 web source.
-- **Source Reference:** [index.html:1](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/index.html#L1>); [build_html.py:1525](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/build_html.py#L1525>); [build_full_app.py:1667](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/build_full_app.py#L1667>); [ИНСТРУКЦИЯ.md:1](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/ИНСТРУКЦИЯ.md#L1>)
+- **Source Reference:** [index.html:1](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/index.html#L1>); [build_html.py:1525](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/build_html.py#L1525>); [build_full_app.py:1667](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/build_full_app.py#L1667>); [Original instruction document:1](<file:///c:/Users/sanat/OneDrive/Desktop/vela1/ИНСТРУКЦИЯ.md#L1>)
 
 ### Delivery
 

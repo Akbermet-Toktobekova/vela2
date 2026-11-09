@@ -1,0 +1,157 @@
+# 01 Debt · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_fe88c641-b456-481d-a275-90745095eedd",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [
+    {
+      "id": "card",
+      "userId": "f8b4bd21-3df9-4f4a-8cae-d475d50fc271",
+      "name": "Credit card",
+      "debtType": "credit_card",
+      "currency": "EUR",
+      "remainingBalance": 900,
+      "apr": 24,
+      "minimumPayment": 65,
+      "nextDueDate": "2026-11-08",
+      "paymentFrequency": "monthly",
+      "createdAt": "2026-11-05T12:00:00.000Z"
+    }
+  ],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "Analyzed 0 transactions (0 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "For the period referenced on 2026-11-05, the utility obligation date of 2026-11-18 occurs before the salary income date of 2026-11-25 in EUR."
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "For the period referenced on 2026-11-05, the utility obligation date of 2026-11-18 occurs before the salary income date of 2026-11-25 in EUR."
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "Debt 1: next due 2026-11-08, APR 24%, baseline interest EUR 46.99 over the analysis horizon, estimated payoff 16.37 months."
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "There is a projected shortfall of 65 EUR for the utility obligation due on 2026-11-18 because the payment date occurs before the incoming salary on 2026-11-25."
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d"
+    },
+    {
+      "id": "eval_fe88c641-b456-481d-a275-90745095eedd:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_f8b4bd21-3df9-4f4a-8cae-d475d50fc271_v2_d33f1441b5f73b9d",
+      "summary_text": "Timely minimum payment prevents late fees and contractual penalty consequences (R001, R005). Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R001, R005; Sources: S002]"
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "4c2bfbe8624369873d92670ba693cd0d37e2271e085d5c68ff66615b946f6bed",
+    "promptVersion": "chat-memory.v2",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T20:48:39.803Z",
+    "entries": [
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "STATEMENT",
+        "text": "The user would like to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget later."
+      }
+    ],
+    "summaryText": "The user would like to understand their saved financial information. The user may review their budget later.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_fe88c641-b456-481d-a275-90745095eedd",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": "A001"
+  }
+}
+~~~~

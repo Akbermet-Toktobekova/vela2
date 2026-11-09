@@ -1,0 +1,157 @@
+# 03 Nora · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [
+    {
+      "id": "card",
+      "userId": "2e4f3475-7aa1-43f0-be51-345483301d42",
+      "name": "Credit card",
+      "debtType": "credit_card",
+      "currency": "EUR",
+      "remainingBalance": 850,
+      "apr": 21.9,
+      "minimumPayment": 55,
+      "nextDueDate": "2026-11-15",
+      "paymentFrequency": "monthly",
+      "createdAt": "2026-11-05T12:00:00.000Z"
+    }
+  ],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": "Analyzed 48 transactions (48 classified; user_confirmed preserved). Detected 2 recurring subscription candidate(s) (Sound Library: EUR 10.99, Screen Library: EUR 15.99) requiring user confirmation before any cancellation proposal (R010)."
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": "Multiple recurring transactions were observed in the main account between August and October 2026, including monthly outflows to Harbor Properties, City Transit, Bright Energy, Fiber Home, Sound Library, Fictional Card Services, Corner Coffee, Maple Kitchen, Screen Library, Oak Pharmacy, and monthly inflows from Danube Studio. Unconfirmed: Based on the observed pattern of income and obligations, it is a HYPOTHESIS that recurring bills for rent, energy, and internet will continue to be due before the expected salary inflow in November 2026."
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": "Multiple recurring transactions were observed in the main account between August and October 2026, including monthly outflows to Harbor Properties, City Transit, Bright Energy, Fiber Home, Sound Library, Fictional Card Services, Corner Coffee, Maple Kitchen, Screen Library, Oak Pharmacy, and monthly inflows from Danube Studio. Unconfirmed: Based on the observed pattern of income and obligations, it is a HYPOTHESIS that recurring bills for rent, energy, and internet will continue to be due before the expected salary inflow in November 2026."
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": "Debt 1: APR 21.9%, next due 2026-11-15, baseline interest unavailable, payoff horizon unavailable. Missing: interestAccruing."
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": ""
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde"
+    },
+    {
+      "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_2e4f3475-7aa1-43f0-be51-345483301d42_v3_b7144666f30c6bde",
+      "summary_text": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:liquid_balance, stale_account_balance, dated_essential_outflows, stale_pi:cash_flow, verified_debt_interest_terms, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001."
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "fa4d155c52a4bb2403a3ecceef3ab7bed420054c4517bb080ffccae458cb46bf",
+    "promptVersion": "chat-memory.v1",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T15:26:37.537Z",
+    "entries": [
+      {
+        "messageIds": [
+          "nora-context"
+        ],
+        "kind": "STATEMENT",
+        "text": "The user would like to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "nora-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget later."
+      }
+    ],
+    "summaryText": "The user would like to understand their saved financial information. The user may review their budget later.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_fe5c03b9-d105-4e2f-8373-9d98b36a4623",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": "A014"
+  }
+}
+~~~~

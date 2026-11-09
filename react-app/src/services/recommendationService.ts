@@ -112,7 +112,7 @@ export class RecommendationService {
     existingRecommendations: RecommendationRecord[]
   ): RecommendationRecord | null {
     const now = new Date().toISOString();
-    const active = existingRecommendations.filter((r) => !r.finAgentMeta).find(
+    const active = existingRecommendations.filter((r) => !r.finAgentMeta && !r.sourceAdvice).find(
       (r) => r.status === 'proposed' || r.status === 'adjusted' || r.status === 'accepted'
     );
 
@@ -147,7 +147,7 @@ export class RecommendationService {
     }
 
     // If user already completed or declined the active one, check if we have a completed record to show or generate a next step
-    const recentlyHandled = existingRecommendations.find((r) => !r.finAgentMeta);
+    const recentlyHandled = existingRecommendations.find((r) => !r.finAgentMeta && !r.sourceAdvice);
     if (
       recentlyHandled &&
       (recentlyHandled.status === 'completed' || recentlyHandled.status === 'declined')

@@ -1,0 +1,230 @@
+
+> vela-finagent-server@1.1.0 test
+> vitest run --exclude tests/e2e/live-ai-integration.test.ts
+
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela1/server
+
+(node:23400) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8572) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6900) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-store.test.ts (7 tests) 4009ms
+   ✓ BetaStore encrypted persistent documents > protects the persistent key with real Windows DPAPI and restores a protected backup  2964ms
+   ✓ BetaStore encrypted persistent documents > does not reset existing data when its protected key is missing  936ms
+(node:8836) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-auth.test.ts (9 tests) 5559ms
+   ✓ Beta persistent authentication > rejects forged IDs, invalid passwords, expired and revoked sessions  560ms
+   ✓ Beta persistent authentication > keeps two accounts separate  484ms
+   ✓ Beta persistent authentication > limits failed login attempts  1964ms
+   ✓ Beta persistent authentication > sends a single-use reset link, revokes sessions, and hides absent accounts  973ms
+   ✓ Beta persistent authentication > rejects expired reset links and cleans failed delivery tokens  590ms
+   ✓ Beta persistent authentication > changes passwords, invalidates sessions and deletes credentials  718ms
+ ✓ tests/beta-http.test.ts (7 tests) 3905ms
+   ✓ Authenticated beta HTTP integration > confirms imported transaction classification with version checks and owner isolation  691ms
+   ✓ Authenticated beta HTTP integration > registers without a code, logs in, rejects user-id spoofing and revokes logout sessions  610ms
+   ✓ Authenticated beta HTTP integration > saves a blank-owned profile with CAS and does not expose another account through spoof headers  406ms
+   ✓ Authenticated beta HTTP integration > isolates import previews, confirmations and jobs, and does not make AI calls without consent  449ms
+   ✓ Authenticated beta HTTP integration > delivers only an injected reset link and rejects token reuse and old sessions  807ms
+   ✓ Authenticated beta HTTP integration > exports only the current profile and deletion revokes every session without affecting other accounts  651ms
+(node:24324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22404) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/e2e/feedback-regressions.test.ts (12 tests | 4 failed) 2793ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects an unknown explicit ID without modifying latest recommendation  391ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > requires acceptance or validated Adjust before completing 153ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects stale feedback and refreshes Today to one consistent version 282ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects a superseded recommendation when the PI version is unchanged 274ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects unvalidated completion amount without recording or changing PI 134ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > applies completion once, rebuilds allocations and produces fresh Today  407ms
+   × Feedback lifecycle and snapshot consistency through HTTP > completes the stored adjusted amount rather than the original amount 283ms
+     → expected [] to have a length of 1 but got +0
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rolls back completion and feedback if the PI write fails 192ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > reports committed completion as success when the next review fails and retries safely 275ms
+   × Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when goal facts are missing or inconsistent 156ms
+     → expected 'A002' to be 'A007' // Object.is equality
+   × Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when source facts are missing or inconsistent 123ms
+     → expected 'A002' to be 'A007' // Object.is equality
+   × Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when currency facts are missing or inconsistent 120ms
+     → expected 'A002' to be 'A007' // Object.is equality
+ ✓ tests/source-advice.test.ts (11 tests) 1597ms
+(node:16632) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6832) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/e2e/feedback-core-regressions.test.ts (7 tests | 1 failed) 1647ms
+   ✓ Core feedback commitments and manual execution > reserves accepted cash once without changing actual balances or goal allocations  317ms
+   × Core feedback commitments and manual execution > changes pending amount on adjust and releases after completion 257ms
+     → expected 3.63 to be +0 // Object.is equality
+   ✓ Core feedback commitments and manual execution > cancels a superseded pending commitment without stale PI mutation and replays safely  374ms
+   ✓ Core feedback commitments and manual execution > rolls back acceptance when feedback write fails 180ms
+   ✓ Core feedback commitments and manual execution > requires verification rather than falsely completing real-world cancellation 140ms
+   ✓ Core feedback commitments and manual execution > records confirmed A011 pause without creating cash or changing balances 263ms
+   ✓ Core feedback commitments and manual execution > keeps declined actions excluded across snapshots until configured cooldown expires 113ms
+ ✓ tests/beta-imports.test.ts (11 tests) 1423ms
+   ✓ Beta real-file imports > extracts text PDF with page provenance and requires mapping rather than inventing records  1101ms
+ ✓ tests/beta-engine-repository.test.ts (5 tests) 1610ms
+   ✓ Persistent beta engine repository > reuses cached agents and decision after storage restart  879ms
+   ✓ Persistent beta engine repository > refreshes time-dependent freshness without mutating the original source snapshot  686ms
+(node:10952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7052) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/e2e/http-workflow-and-security.test.ts (3 tests | 1 failed) 765ms
+   ✓ FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite > 1. Enforces 401 UNAUTHENTICATED when x-user-id is missing and 403 FORBIDDEN on cross-user access 141ms
+   × FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite > 2. Executes full HTTP workflow: PUT /api/pi -> GET /api/today -> GET /api/decisions/trace -> POST /api/feedback (accept, adjust, decline, complete) -> SQLite restart persistence 618ms
+     → expected 'A002' to be 'A007' // Object.is equality
+   ✓ FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite > 3. Scrubs PII across nickname, concernNotes, account names, obligations, debts, goals, and transactions in minimizePIForLLM 3ms
+ ❯ tests/e2e/finagent-14-scenarios.test.ts (14 tests | 1 failed) 1276ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 1: Imminent mandatory bill shortfall blocks optional saving/debt actions and selects a CRITICAL protective action 202ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 2: High-APR credit card debt (24% APR) with insufficient liquid cash to pay minimum selects A005 (Hardship contact) over A002 117ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 3: Debt with unknown APR / minimum payment triggers NEEDS_DATA on A002 and selects VERIFICATION_ACTION A004 without fake R/F/G scores 15ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 4: Internal transfer between equally liquid accessible personal accounts yields Delta R = 0 (v_R = 0) 6ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 5: User with 0 active financial goals does not select goal_advancement, rejects A012 (R012), and keeps v_G = 0 14ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 6: Suggestion Generator omits Critical Action during risky auto-transfer deficit — Critical Coverage independently recovers A011 9ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 7: AI Evaluation Call returns invalid or UNKNOWN T/S/D/O scores — ComplexityEvaluator falls back deterministically to catalog baseline (F016) 2ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 8: VERIFICATION_ACTION A014 unlocks FINANCIAL_ACTION A015 (Subscription cancellation) in the subsequent evaluation cycle 30ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 9: Multiple simultaneous Critical Actions (A011, A001, A020) — Step 5A ranks direct problem resolution (A011, A001) strictly above diagnostic A020 14ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 10: PI snapshot version advances mid-evaluation — Stale Snapshot Publication Guard blocks overwriting Today, and unchanged repeat run is DUPLICATE_SUPPRESSED  301ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 11: User Feedback Loop — Accept (no premature balance deduction), Adjust re-validated by Checker (unsafe €950 rejected, safe €60 accepted), and Decline suppresses repeat  327ms
+   × FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 12: Robustness F018 close-decision tie-breaker (Delta S < 0.03) & Liquidity Hysteresis (M=1.15) 29ms
+     → expected 'expensive_debt' to be 'liquidity_protection' // Object.is equality
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 13: Multi-currency account with unsupported KGS & stale HUF FX rates flags FX_WARNING and never invents a 1:1 rate 88ms
+   ✓ FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 14: Security — Cross-user data access throws 403 Forbidden, SQLite encrypts PI at rest (AES-256-GCM), and minimizePIForLLM strips PII/notes before LLM calls 114ms
+ ✓ tests/beta-cycle.test.ts (1 test) 1120ms
+   ✓ Seven-block cycle through authenticated beta HTTP > publishes an opted-in checked action and preserves trace, feedback and session after restart  1116ms
+(node:22572) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/local-access.test.ts (12 tests) 1075ms
+   ✓ D-011 local-only transport boundary > mounts the boundary on the actual API before any public diagnostics route  835ms
+ ✓ tests/beta-analysis.test.ts (13 tests) 716ms
+   ✓ Beta actual seven-block orchestration > persists a checked critical recommendation, reuses cached evaluation, and records idempotent acceptance  552ms
+ ✓ tests/web-core-regressions.test.ts (14 tests) 674ms
+(node:8164) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/phase1-foundation.test.ts (18 tests) 193ms
+ ✓ tests/clock-regressions.test.ts (6 tests) 609ms
+   ✓ Core clock and freshness regression > does not suppress a same-PI review on a different evaluation day  531ms
+ ✓ tests/ai-reliability.test.ts (26 tests) 671ms
+ ✓ tests/financial-core-regressions.test.ts (13 tests) 230ms
+(node:4976) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17508) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-jobs.test.ts (8 tests) 135ms
+ ✓ tests/web-feedback-regressions.test.ts (13 tests) 109ms
+ ✓ tests/pipeline-v2.test.ts (10 tests) 392ms
+ ✓ tests/checker-core-regressions.test.ts (8 tests) 82ms
+(node:5352) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-financial.test.ts (8 tests) 86ms
+ ✓ tests/statement-parser.test.ts (38 tests) 49ms
+(node:19080) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-review-scheduler.test.ts (4 tests) 40ms
+ ✓ tests/ui-zero-fixtures.test.ts (7 tests) 34ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/feedback-core-regressions.test.ts > Core feedback commitments and manual execution > changes pending amount on adjust and releases after completion
+AssertionError: expected 3.63 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 3.63
+
+ ❯ tests/e2e/feedback-core-regressions.test.ts:36:68
+     34|     expect(adjusted.decision.candidate!.amount).toBe(60);
+     35|     expect(adjusted.decision.score).toBeNull(); expect(adjusted.decisi…
+     36|     expect(adjusted.decision.rawImpacts!.financialBenefitCurrency).toB…
+       |                                                                    ^
+     37|     expect((await send('complete')).status).toBe('COMPLETED');
+     38|     expect(store.listPendingFinancialCommitments(user,user)).toEqual([…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/e2e/feedback-regressions.test.ts > Feedback lifecycle and snapshot consistency through HTTP > completes the stored adjusted amount rather than the original amount
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/e2e/feedback-regressions.test.ts:108:23
+    106|     const current = store.getPIState(user, user, false)!.snapshot;
+    107|     const additions = current.goalAllocations.filter((item) => !initia…
+    108|     expect(additions).toHaveLength(1);
+       |                       ^
+    109|     expect(additions[0].amount).toBe(60);
+    110|     expect(current.primaryCurrencySummary.allocatedToGoals).toBe(initi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/e2e/feedback-regressions.test.ts > Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when goal facts are missing or inconsistent
+ FAIL  tests/e2e/feedback-regressions.test.ts > Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when source facts are missing or inconsistent
+ FAIL  tests/e2e/feedback-regressions.test.ts > Feedback lifecycle and snapshot consistency through HTTP > does not create a dangling saving allocation when currency facts are missing or inconsistent
+AssertionError: expected 'A002' to be 'A007' // Object.is equality
+
+Expected: "A007"
+Received: "A002"
+
+ ❯ tests/e2e/feedback-regressions.test.ts:145:45
+    143|   it.each(['goal', 'source', 'currency'])('does not create a dangling …
+    144|     const saved = store.getRecommendationById(user, user, recId)!;
+    145|     expect(saved.decision.selectedActionId).toBe('A007');
+       |                                             ^
+    146|     if (missing === 'goal') saved.decision.candidate!.targetId = 'miss…
+    147|     if (missing === 'source') saved.decision.candidate!.sourceAccountI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/e2e/finagent-14-scenarios.test.ts > FinAgent v1.1 — 14 Mandatory End-to-End Scenarios > Scenario 12: Robustness F018 close-decision tie-breaker (Delta S < 0.03) & Liquidity Hysteresis (M=1.15)
+AssertionError: expected 'expensive_debt' to be 'liquidity_protection' // Object.is equality
+
+Expected: "liquidity_protection"
+Received: "expensive_debt"
+
+ ❯ tests/e2e/finagent-14-scenarios.test.ts:888:39
+    886|       calculatorExtras: extras,
+    887|     });
+    888|     expect(stayInLiquidity.profileId).toBe('liquidity_protection');
+       |                                       ^
+    889|     expect(stayInLiquidity.hysteresisApplied).toBe(true);
+    890| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/e2e/http-workflow-and-security.test.ts > FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite > 2. Executes full HTTP workflow: PUT /api/pi -> GET /api/today -> GET /api/decisions/trace -> POST /api/feedback (accept, adjust, decline, complete) -> SQLite restart persistence
+AssertionError: expected 'A002' to be 'A007' // Object.is equality
+
+Expected: "A007"
+Received: "A002"
+
+ ❯ tests/e2e/http-workflow-and-security.test.ts:281:49
+    279|       };
+    280|       expect(putData.version).toBeTruthy();
+    281|       expect(putData.decision.selectedActionId).toBe('A007');
+       |                                                 ^
+    282|       expect(putData.recommendation.status).toBe('proposed');
+    283| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  4 failed | 22 passed (26)
+      Tests  7 failed | 278 passed (285)
+   Start at  16:37:54
+   Duration  28.25s (transform 3.95s, setup 0ms, collect 20.12s, tests 30.80s, environment 12ms, prepare 12.11s)
+

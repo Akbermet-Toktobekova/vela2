@@ -1,0 +1,157 @@
+# 03 Nora · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [
+    {
+      "id": "card",
+      "userId": "4580d11c-121b-43fc-ad1c-4a54a2e02af6",
+      "name": "Credit card",
+      "debtType": "credit_card",
+      "currency": "EUR",
+      "remainingBalance": 850,
+      "apr": 21.9,
+      "minimumPayment": 55,
+      "nextDueDate": "2026-11-15",
+      "paymentFrequency": "monthly",
+      "createdAt": "2026-11-05T12:00:00.000Z"
+    }
+  ],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": "Analyzed 48 transactions (48 classified; user_confirmed preserved). Detected 2 recurring subscription candidate(s) (Sound Library: EUR 10.99, Screen Library: EUR 15.99) requiring user confirmation before any cancellation proposal (R010)."
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": "Pattern Recognition observed 12 groups with movements on multiple dates and 0 comparable full-month outflow pairs. Recurrence, purpose and future timing require separate evidence."
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": "Pattern Recognition observed 12 groups with movements on multiple dates and 0 comparable full-month outflow pairs. Recurrence, purpose and future timing require separate evidence."
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": "Debt 1: APR 21.9%, next due 2026-11-15, baseline interest unavailable, payoff horizon unavailable. Missing: interestAccruing."
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": ""
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4"
+    },
+    {
+      "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_4580d11c-121b-43fc-ad1c-4a54a2e02af6_v4_59e13370cd4f57b4",
+      "summary_text": "Account balances are marked as stale, requiring verification before planning cash allocation or bill fulfillment."
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "5348287ea1264eb05df95041478f10b4463c1bac28a340de099b8f831d541abe",
+    "promptVersion": "chat-memory.v2",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T20:08:45.038Z",
+    "entries": [
+      {
+        "messageIds": [
+          "nora-context"
+        ],
+        "kind": "STATEMENT",
+        "text": "The user would like to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "nora-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget later."
+      }
+    ],
+    "summaryText": "The user would like to understand their saved financial information. The user may review their budget later.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_9301c02d-a2d5-4816-8c3e-082398ae1832",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": null
+  }
+}
+~~~~

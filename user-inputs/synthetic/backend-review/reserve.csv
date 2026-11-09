@@ -1,0 +1,4 @@
+Date,Description,Counterparty,Amount,Currency,Reference,Balance
+2026-08-28,Transfer from Daily Account,Fictional Retail Bank,150.00,EUR,OWN-08,300.00
+2026-09-28,Transfer from Daily Account,Fictional Retail Bank,150.00,EUR,OWN-09,450.00
+2026-10-28,Transfer from Daily Account,Fictional Retail Bank,150.00,EUR,OWN-10,600.00

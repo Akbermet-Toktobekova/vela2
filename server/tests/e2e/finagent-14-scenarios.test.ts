@@ -1,3 +1,4 @@
+import { mockCatalogFallbackClient } from './catalogFallbackFixture';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -161,6 +162,7 @@ describe('FinAgent v1.1 — 14 Mandatory End-to-End Scenarios', () => {
 
     const { snapshot, extras } = createImminentBillShortfallFixture();
     snapshot.id = 'snap_s2_hardship';
+    snapshot.profile.country = 'US';
     // Rent already paid, but liquid cash is only €20 and credit card minimum due in 3 days is €65 at 24% APR
     snapshot.obligations = snapshot.obligations.map((o) => ({ ...o, status: 'paid' }));
     snapshot.upcomingUnpaidObligations = [];
@@ -790,7 +792,7 @@ describe('FinAgent v1.1 — 14 Mandatory End-to-End Scenarios', () => {
     const store = new SQLiteStore({ filename: ':memory:' });
     const orchestrator = new ReviewOrchestrator({
       store,
-      llmClient: new LLMClient({ mockMode: true }),
+      llmClient: mockCatalogFallbackClient(),
       policy,
     });
 
@@ -878,7 +880,14 @@ describe('FinAgent v1.1 — 14 Mandatory End-to-End Scenarios', () => {
     const { snapshot, extras } = createBaselineSolventFixture();
 
     // Part A: Verify Liquidity Protection Hysteresis at M = 1.15 (between 1.0 and 1.25)
-    const snapHysteresis = { ...snapshot, emergencyCoverageMonths: 1.15 };
+    const snapHysteresis = structuredClone(snapshot);
+    const essentialMonthly = snapHysteresis.essentialCommitment!.estimatedMonthlyAmount!;
+    snapHysteresis.accountSummaries = snapHysteresis.accountSummaries.map((account, index) => ({
+      ...account,
+      account: { ...account.account, currency: snapHysteresis.baseCurrency },
+      personalAccessibleBalance: index === 0 ? 1.15 * essentialMonthly : 0,
+    }));
+    expect(WeightCalculator.computeEffectiveCoverageMonths(snapHysteresis, extras)).toBe(1.15);
     const stayInLiquidity = WeightCalculator.selectWeightProfile({
       snapshot: snapHysteresis,
       policy,

@@ -1,92 +1,93 @@
-# Проверка Vela с нуля: инструкция для вас и друзей
+# Vela from an empty profile — historical manual verification guide
 
-Все суммы, имена и операции в этом наборе вымышлены. Это входные данные теста, а не новые финансовые правила. Дата основного прогона: 4 ноября 2026. Для более позднего теста перенесите будущие даты платежей/дохода/цели относительно дня проверки; архивные CSV оставляйте историческими. Нельзя обещать ту же рекомендацию после изменения дат.
+This guide records the interface and synthetic test plan prepared on 2026-11-04. Later authenticated beta behavior is documented in BETA-TEST-RU.md and D-013/D-014. The filename is retained for existing links.
 
-## 1. Какую версию проверяем
+All amounts, names and operations are fictional test inputs. For a later review date, shift future payment, income and goal dates relative to that day. Keep historical CSV data historical. Date changes may change the recommendation.
 
-**Expo на телефоне:** проверка внешнего вида, пустой формы регистрации, клавиатуры, переходов по 10 экранам и трёх вкладок демо. Финансовые экраны после регистрации пока демонстрационные. Реальные аккаунты, серверная регистрация и сохранение профиля не реализованы. Полный перезапуск заново открывает приветствие. Не вводите настоящие банковские данные или пароли.
+## 1. Version under review
 
-**Веб:** полный ввод с нуля, семь рабочих шагов онбординга, CSV, счета, цели, долги, Today, Assistant и локальное сохранение. Некоторые старые подписи интерфейса говорят «10-step», хотя рабочий веб-процесс содержит 7 шагов. Это известная несогласованность текста.
+The original Expo interface review covered appearance, the empty registration form, keyboard behavior, ten onboarding screens and three demo tabs. Financial screens were demonstrational at that checkpoint. Server authentication and profile persistence were still pending. A full restart reopened Welcome.
 
-## 2. Телефон и друзья
+The web review covered a fresh profile, seven working onboarding steps, CSV import, accounts, goals, debts, Today, Assistant and local persistence. Some old labels referred to ten steps despite the seven-step web flow.
 
-1. Установите совместимый с SDK 58 Expo Go. Откройте переданную ссылку Expo или отсканируйте QR в Expo Go. На iPhone ссылку можно открыть через камеру.
-2. Ссылка через tunnel работает, пока компьютер автора включён и Expo запущен; она может измениться после перезапуска. Не пересылайте localhost:8081 — на телефоне это сам телефон.
-3. Если используете LAN-ссылку exp://<IP>:8081, телефон и компьютер должны быть в одной Wi-Fi сети. Гостевая/корпоративная сеть может блокировать связь.
-4. На первом экране нажмите Get started. Поля Name и Email должны быть пустыми.
-5. Нажмите Continue без данных: должен остаться экран с ошибкой. Введите Mira Test и mira@example.com, продолжите.
-6. Проверьте шаги вперёд/назад, прокрутку, отсутствие перекрытия кнопок клавиатурой и нижней панелью телефона. На шаге 10 откройте Dashboard.
-7. Проверьте Today, My Plan, Assistant. Запишите, где кнопка ничего не делает или показан демонстрационный текст. Эти проверки не подтверждают работу серверного финансового процесса.
-8. Полностью перезапустите приложение для нового прогона; Fast Refresh при разработке может сохранять состояние экрана.
+## 2. Phone and friends
 
-Для независимого устанавливаемого приложения без работающего компьютера потребуется отдельная тестовая сборка. Expo-ссылка сейчас предназначена для демонстрационного теста интерфейса.
+1. Install Expo Go compatible with SDK 58. Open the supplied Expo link or scan its QR in Expo Go. On iPhone the camera can open the link.
+2. A tunnel requires the author's computer and Expo to remain running. Restart can change its address. Use the reachable tunnel address on the phone.
+3. A LAN link such as exp://<IP>:8081 requires the same Wi-Fi network. Guest or corporate networks may prevent connectivity.
+4. Press Get started. Name and Email must be empty.
+5. Press Continue with empty fields and verify the error. Enter Mira Test and mira@example.com and continue.
+6. Verify forward/back navigation, scrolling, keyboard overlap and the phone bottom bar. Open Dashboard on step 10.
+7. Check Today, My Plan and Assistant. Record inactive buttons or demo text. These historical UI checks did not establish server financial-workflow acceptance.
+8. Fully restart for a fresh run. Development Fast Refresh may preserve screen state.
 
-## 3. Чистый веб-профиль
+An independently installable app requires its own test build. The original Expo link served interface demonstrations.
 
-1. Автор запускает server и react-app по README. Адрес на компьютере: http://127.0.0.1:5173. Сервер остаётся локальным по D-011; эта ссылка не даёт удалённый веб-доступ друзьям.
-2. Откройте отдельный профиль браузера для теста. При первом открытии появится демо Alex — это ещё не нулевое состояние.
-3. Шестерёнка Settings → Demo / Data → Start Fresh Blank Profile →. На рабочем профиле предварительно сохраните Export PI Database (.json); сброс заменяет текущие локальные данные. Очистку настоящих данных для теста не используйте.
-4. Должен открыться шаг 1. Никаких счетов Alex, выписок и резервов в новом профиле быть не должно. Пустой старт означает отсутствие введённых данных, а не неизвестные суммы, автоматически приравненные к нулю.
-5. В отдельном пустом прогоне нажмите Skip to App. Today должен сообщать о недостатке данных/предлагать ввод, без готовой рекомендации перевести деньги. Затем снова начните пустой тест.
+## 3. Empty web profile
 
-## 4. Основной веб-прогон — ввод вручную
+1. Start server and react-app according to README. The local address was http://127.0.0.1:5173 under D-011. Remote friends require the separate beta configuration.
+2. Use a separate browser profile. The initial Alex demo is populated data.
+3. Open Settings → Demo / Data → Start Fresh Blank Profile. Export PI Database (.json) before replacing any working profile. Use disposable test data for resets.
+4. Verify step 1 opens without Alex's accounts, statements or reserve allocations. Missing values must retain their missing state.
+5. In a separate empty run press Skip to App. Today should request data rather than publish an unsupported transfer. Then begin the main empty-profile test.
 
-Полная карточка ввода: profile.json рядом с CSV. JSON является справочником для тестировщика, в интерфейсе нет загрузки этого файла как профиля.
+## 4. Main manual web input
 
-1. Шаг 1: Get started.
-2. Шаг 2 Create Account: Mira Test, mira@example.com. Проверьте пустое имя, неверный email и неверный код; переход должен блокироваться. Для локальной демонстрационной проверки код 8492. Это не отправка письма и не настоящая аутентификация.
-3. Шаг 3: I'm saving for something specific. Цель Test Safety Cushion, 1000 EUR, 2027-05-04. Проверьте возврат назад и сохранение выбора.
-4. Шаг 4: добавьте Test Main / Test Bank / EUR / 1800 / дата 2026-11-04 / Personal / Daily spending / Primary. Второй счёт Test Savings / Test Savings Bank / EUR / 700 / та же дата / Personal / Savings. Всего два счёта, личные EUR 2500 до дальнейших изменений. Проверьте редактирование и отмену без сохранения. Не выбирайте готовые демопресеты вместо этих данных.
-5. Шаг 5: Test Salary / Regular / 2400 EUR / Monthly / Salary / следующий доход 2026-11-05 / счёт Test Main. Сохраните источник и убедитесь, что он привязан к выбранному счёту.
-6. Шаг 6: essential monthly expenses 1200 EUR. Это месячная оценка, а не дополнительный счёт на оплату. Добавьте отдельно Test Rent 800 на 2026-11-06, Test Energy 120 на 2026-11-08, Test Internet 30 на 2026-11-09; все monthly, unpaid, EUR, Test Main. На вопрос о долге выберите Yes. Добавьте Test Card / Credit card / 600 EUR / APR 19.9 / Minimum 35 / Due 2026-11-10. Не дублируйте минимум карты ещё одним обычным счётом.
-7. Шаг 7: загрузите 01-main.csv в Test Main и 02-savings.csv в Test Savings. Используйте файловый выбор, не встроенные примеры Wise/Revolut. Ожидаются 8 и 1 операций, всего 9. Балансы CSV относятся к последней строке истории, а не автоматически к сегодняшнему дню.
-8. Завершите онбординг. Откройте Today, My Plan и Assistant; обновите страницу и убедитесь, что введённые сущности сохранились, вместо возврата к Alex.
+The profile.json next to the CSV files is a tester reference. The historical UI did not import it as a complete profile.
 
-## 5. Полный чек-лист веб-интерфейса
+1. Step 1 — Get started.
+2. Step 2 — Create Account with Mira Test and mira@example.com. Empty name, malformed email or an invalid code blocks continuation. The local demo code was 8492 and did not represent email delivery or real authentication.
+3. Step 3 — Select I'm saving for something specific. Add Test Safety Cushion, 1000 EUR, due 2027-05-04. Verify back navigation preserves the selection.
+4. Step 4 — Add Test Main / Test Bank / EUR / 1800 / 2026-11-04 / Personal / Daily spending / Primary. Add Test Savings / Test Savings Bank / EUR / 700 / the same date / Personal / Savings. The initial total is 2500 personal EUR across two accounts. Verify editing and cancellation. Enter these fixtures explicitly.
+5. Step 5 — Add Test Salary / Regular / 2400 EUR / Monthly / Salary / next receipt 2026-11-05 / Test Main. Verify its account link.
+6. Step 6 — Enter estimated monthly essential expenses of 1200 EUR. Add separate unpaid monthly EUR obligations to Test Main for Test Rent 800 due 2026-11-06, Test Energy 120 due 2026-11-08, and Test Internet 30 due 2026-11-09. Answer Yes for debt. Add Test Card / Credit card / 600 EUR / APR 19.9 / minimum 35 / due 2026-11-10. Record the minimum through the debt entry only.
+7. Step 7 — Upload 01-main.csv to Test Main and 02-savings.csv to Test Savings through the file picker. Expect eight and one operations, nine total. CSV balances describe their dated history.
+8. Finish onboarding. Open Today, My Plan and Assistant. Reload and verify the entered records persist.
 
-Отмечайте PASS / FAIL / BLOCKED; рядом записывайте фактический результат. Этот список — план ручной проверки, а не заявление, что все пункты уже пройдены.
+## 5. Web manual checklist
 
-- [ ] Все семь шагов: вперёд, назад, Skip to App, возврат в Onboarding, перезагрузка на середине.
-- [ ] Регистрация: пустые/невалидные значения, корректный ввод, понятная ошибка; отсутствие заявления о настоящем входе.
-- [ ] Счета: добавление, отмена, изменение имени/баланса, смена primary, удаление специально созданного Test Disposable. Основные счета удалять только в отдельном прогоне.
-- [ ] Доход: добавление, неизвестная сумма, выбор счёта, удаление тестового дополнительного источника.
-- [ ] Обязательства: добавить Test Temporary 1 EUR; открыть детали, изменить на 2 EUR, отменить/сохранить, удалить с подтверждением. Проверить unpaid/paid без двойного списания баланса.
-- [ ] Долги: No / Yes / Add later; пустые APR/минимум остаются неизвестными. Редактирование через доступный экран онбординга; не ожидать отдельной кнопки, если её нет.
-- [ ] Today: статус подключения к серверу, состояние достаточности данных, не более одной основной рекомендации, объяснение и доступные подтверждения.
-- [ ] Если рекомендация доступна: Accept не равен Completed; Adjust повторно проверяет сумму; Decline не перемещает деньги; повторный клик не дублирует эффект. Если рекомендации нет — BLOCKED для ветки, а не PASS. Не обещать конкретный action ID на этом наборе: у мобильного/веб-ввода нет всех серверных подтверждений условий действия.
-- [ ] My Plan: добавить/изменить цель, отменить форму, выделить тестовую сумму 50 EUR на цель, проверить отсутствие фиктивного роста общих денег; симулятор не должен молча изменять баланс. Удаление проверять на отдельной Test Disposable Goal.
-- [ ] Assistant: «Каких данных не хватает?», «Объясни мой доступный остаток», «Это перевод между моими счетами или доход?». Сверить ответ с введённым профилем. При недоступном AI фиксировать сообщение/ошибку; не засчитывать как успешный ответ модели.
-- [ ] Settings: Profile, Accounts, CSV, Demo / Data; сохранение имени/валюты, закрытие модального окна, экспорт JSON. В экспорте должны быть ваши 2 счёта и 9 операций до дополнительных импортов. Импорт экспортированного JSON интерфейсом не обещается.
-- [ ] Обновление страницы и повторное открытие браузера: данные сохраняются, демо не подмешивается.
-- [ ] Узкий экран 360–390 px и широкий экран: прокрутка, нижняя навигация, поля, клавиатура, модальные окна, отсутствие обрезанных основных кнопок.
-- [ ] Переходы клавишей Tab, видимый фокус, Enter на формах, читаемые ошибки.
-- [ ] Сервер недоступен: UI показывает ошибку/отключение, не выдаёт локальный выдуманный результат за подтверждённую серверную рекомендацию.
+Record PASS, FAIL or BLOCKED with the actual outcome. These are intended checks, not historical claims of completed acceptance.
 
-## 6. Выписки, дубликаты и ошибки — после основного прогона
+- [ ] All seven steps support forward/back navigation, Skip to App, onboarding return and reload midway.
+- [ ] Registration handles missing/invalid inputs and explains the historical local demo's identity limitations.
+- [ ] Accounts support add, cancel, name/balance edit, primary-account change and deletion of a disposable account. Use a separate run for deleting baseline accounts.
+- [ ] Income supports add, unknown amount, account selection and deletion of a temporary source.
+- [ ] Obligations support Test Temporary 1 EUR, details, change to 2 EUR, cancel/save and confirmed deletion. Paid/unpaid changes must avoid duplicate balance effects.
+- [ ] Debt question supports No, Yes and Add later. Missing APR and minimum stay unknown. Use available onboarding controls for edits.
+- [ ] Today shows connection status, readiness, at most one main recommendation, explanation and available confirmations.
+- [ ] For a published recommendation, verify separate Accept and Complete states, checked Adjust, Decline without money movement and replay-safe repeated clicks. Mark unavailable branches BLOCKED. This UI fixture lacks some server-side execution-term confirmations, so it does not guarantee an action ID.
+- [ ] My Plan supports add/edit goal, cancel, and a synthetic allocation of 50 EUR without creating money or silently changing account balances. Delete only a Test Disposable Goal.
+- [ ] Assistant answers questions such as “What information is missing?”, “Explain my accessible balance” and “Is this my own transfer or income?” Verify against the entered profile. Record provider unavailability explicitly.
+- [ ] Settings Profile, Accounts, CSV and Demo / Data preserve name/currency changes, modal closure and JSON export. Before additional imports, expect two accounts and nine operations. JSON reimport was outside the historical UI promise.
+- [ ] Browser reload/reopen preserves the profile without injecting demo records.
+- [ ] Check 360–390 px and wide layouts, scrolling, keyboard, fields, modals and complete visibility of primary controls.
+- [ ] Verify Tab order, visible focus, Enter submission and readable errors.
+- [ ] With the server unavailable, UI exposes the disconnected/error state and does not claim a locally invented recommendation was server-checked.
 
-1. Импортируйте 01-main.csv повторно в Test Main: новых операций 0, сообщение о дубликате. Исходных операций по двум счетам остаётся 9.
-2. Импортируйте 03-overlap.csv в Test Main: одна повторная операция пропущена, одна новая Test Coffee -5 EUR добавлена. Всего 10 операций по двум счетам. Не воспринимайте 1795 как предсказание текущего остатка: это явный Balance последней строки файла.
-3. Откройте Review / Transaction Review & Provenance: проверьте дату, знак, валюту, описание и исходную строку. OWN-1015: -300 на Main и +300 на Savings — один внутренний перевод, не новый доход и не личный расход. Подтвердите классификацию через доступный контроль.
-4. 04-invalid.csv импортируйте только в отдельном тестовом прогоне/счёте: одна валидная операция -12.50, две ошибочные строки должны быть показаны как отклонённые, статус needs_review. Ошибки не должны молча превращаться в ноль.
-5. 05-unsupported.txt: явный unsupported/failed, никаких фиктивных операций.
-6. Для удаления выписки и связанных операций сначала зафиксируйте экспорт; проверьте поведение на специально созданном Test Disposable, а не на базовом прогоне. Если интерфейс оставляет операции/не объясняет последствия, запишите дефект.
+## 6. Statements, duplicates and errors
 
-## 7. Дополнительные чистые прогоны
+1. Reimport 01-main.csv into Test Main. Expect zero new operations and a duplicate notice. Keep nine operations across both accounts.
+2. Import 03-overlap.csv into Test Main. Expect one duplicate skipped and one new Test Coffee −5 EUR, ten operations total. The reported 1795 balance is the last dated row's explicit balance.
+3. Inspect Review / Transaction Review & Provenance. Verify date, sign, currency, description and source row. OWN-1015 has −300 on Main and +300 on Savings as one own-account transfer. Confirm classification through available controls.
+4. Import 04-invalid.csv only in a separate test run/account. Expect one accepted −12.50 operation, two rejected rows and needs_review. Invalid amounts must retain errors.
+5. Import 05-unsupported.txt. Expect explicit unsupported/failed status without fabricated operations.
+6. Export before deleting a statement and associated operations. Test on a disposable account and record any unclear consequences or retained operations.
 
-Каждый вариант начинает отдельный пустой профиль; значения основного сценария не смешивать.
+## 7. Additional isolated profiles
 
-- UNKNOWN: данные долга без APR и минимального платежа. Система должна запросить недостающие данные или не выдавать неподтверждённую финансовую рекомендацию; не подменять неизвестное нулём.
-- Дефицит: только Test Main 20 EUR, без подтверждённого будущего дохода, прежние обязательства и долг. Не должно быть рекомендации направить недоступные деньги на накопление. Диагностическое действие не означает устранение дефицита.
-- Нет целей: не создавайте ни одной цели. Не должно быть «прогресса» несуществующей цели.
-- Смешанные средства: Test Work 100000 HUF / Mixed / личная доля неизвестна. Не считать весь счёт личными EUR; неизвестный FX не заменять выдуманным курсом.
+Start each variation from a separate blank profile.
 
-## 8. Как присылать результат
+- **UNKNOWN** — Debt lacks APR and minimum. Request the facts or withhold unsupported financial advice.
+- **Shortfall** — Only Test Main 20 EUR, no confirmed future income, the original obligations and debt. Prevent allocations exceeding available funds. A diagnostic shortfall action does not close the deficit.
+- **No goals** — Create no goals. The engine cannot claim progress toward a missing goal.
+- **Mixed ownership** — Test Work 100000 HUF / Mixed / personal share unknown. Preserve ownership and currency uncertainty.
 
-Для каждого дефекта: устройство и ОС; версия Expo Go/браузера; номер шага; точный ввод; ожидаемое; фактическое; скриншот; повторяется ли после перезапуска. Используйте только синтетические данные. Для ручных пунктов сохраняйте PASS/FAIL/BLOCKED; автоматические серверные тесты сами по себе не подтверждают успешный проход UI на телефоне.
+## 8. Defect reports
 
-## Запуск для друзей
+Record device/OS, Expo Go or browser version, step, exact synthetic input, expected and actual results, screenshot and reproducibility after restart. Keep PASS/FAIL/BLOCKED for manual items. Server automation alone does not establish physical-phone acceptance.
 
-Из expo-mobile-app: `npm run friends`. Скопируйте выведенную Expo-ссылку или QR. Компьютер должен работать весь тест. У каждого телефона отдельное состояние в памяти. Новый полный запуск открывает Welcome → Get started → пустую локальную демоформу Name/Email. Дальнейшие финансовые экраны пока демонстрационные; настоящий вход и сохранение пользовательских данных не реализованы.
+## Historical friend demo launch
 
-На момент подготовки набора ссылка: exp://c-dizbalanser-4xqnru-mw2p5srqosr2dwqd.on.expo.app . После перезапуска используйте новую ссылку из вывода Expo.
-QR: ../../docs/coordination/evidence/UI-ZERO-1/expo-qr.png (от корня проекта: docs/coordination/evidence/UI-ZERO-1/expo-qr.png).
+From expo-mobile-app, run `npm run friends` and share its current Expo link or QR. The author's computer must remain running. At the original checkpoint a full launch reopened Welcome → Get started → an empty local Name/Email demo form. Financial screens were demonstrational and genuine authentication and persistence were pending.
+
+The historical address was exp://c-dizbalanser-4xqnru-mw2p5srqosr2dwqd.on.expo.app . Use the new address printed after restart. The recorded QR is docs/coordination/evidence/UI-ZERO-1/expo-qr.png from the repository root.

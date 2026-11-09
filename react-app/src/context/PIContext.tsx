@@ -149,7 +149,7 @@ export const PIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       .then((loaded) => {
         if (mounted) {
           setPiState(loaded);
-          if (loaded.recommendations.some((r) => r.finAgentMeta)) setRecommendationSource('backend');
+          if (loaded.recommendations.some((r) => r.finAgentMeta || r.sourceAdvice)) setRecommendationSource('backend');
           setIsLoading(false);
         }
       })

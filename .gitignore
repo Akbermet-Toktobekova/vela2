@@ -22,3 +22,5 @@ desktop.ini
 server/.env.beta.local
 server/data/*.key*
 server/data/*.dpapi*
+
+server/.env.postgres.local

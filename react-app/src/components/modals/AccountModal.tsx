@@ -230,7 +230,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 <option value="USD">USD ($)</option>
                 <option value="GBP">GBP (£)</option>
                 <option value="HUF">HUF (Ft)</option>
-                <option value="KGS">KGS (сом)</option>
+                <option value="KGS">KGS (som)</option>
                 <option value="PLN">PLN (zł)</option>
                 <option value="CHF">CHF (Fr)</option>
               </select>

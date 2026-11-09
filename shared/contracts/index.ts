@@ -461,6 +461,54 @@ export const DecisionStatusEnum = z.enum([
 ]);
 export type DecisionStatus = z.infer<typeof DecisionStatusEnum>;
 
+export const SourceAdviceSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  rationale: z.string(),
+  sources: z.array(z.object({
+    claimId: z.string(),
+    sourceId: z.string(),
+    title: z.string(),
+    url: z.string().url(),
+  })),
+});
+export type SourceAdvice = z.infer<typeof SourceAdviceSchema>;
+
+export const PrimarySuggestionTraceSchema = z.object({
+  proposals: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    rationale: z.string(),
+    actionId: z.string().nullable(),
+    intent: z.enum(['EXECUTE', 'REVIEW', 'CLARIFY']).optional(),
+    origin: z.enum(['MODEL', 'SYSTEM_CLARIFICATION', 'SYSTEM_UNAVAILABLE']).optional(),
+    targetFactId: z.string().optional(),
+    mappedCandidateId: z.string().optional(),
+    contradictionRefs: z.array(z.string()).optional(),
+    usefulness: z.enum(['USEFUL', 'WEAK', 'NOT_ELIGIBLE']).optional(),
+    usefulnessReason: z.string().optional(),
+    prerequisites: z.array(z.string()).optional(),
+    missingInfo: z.array(z.string()).optional(),
+    factIds: z.array(z.string()),
+    claimIds: z.array(z.string()),
+    status: z.enum(['VALID', 'REJECTED', 'NEEDS_DATA']),
+    reason: z.string(),
+    evidence: z.array(z.object({
+      claimId: z.string(),
+      sourceId: z.string(),
+      text: z.string(),
+      jurisdiction: z.string(),
+      population: z.string(),
+      limitations: z.string(),
+    })),
+  })),
+  shortfallReason: z.string().optional(),
+  fallbackReason: z.enum(['GENERATION_UNAVAILABLE', 'NO_PROPOSALS', 'NO_VALID_PRIMARY', 'ALL_PRIMARY_REJECTED', 'NO_USEFUL_PRIMARY']).nullable(),
+  criticalCoverageAddedIds: z.array(z.string()),
+});
+
 export const DecisionTraceSchema = z.object({
   evaluationId: z.string(),
   userId: z.string(),
@@ -475,6 +523,9 @@ export const DecisionTraceSchema = z.object({
   scoredCandidates: z.array(ScoredCandidateSchema),
   robustness: RobustnessResultSchema.nullable(),
   selectedCandidate: CandidateActionSchema.nullable(),
+  sourceAdvice: SourceAdviceSchema.optional(),
+  stageArtifactIds: z.array(z.string()).optional(),
+  primarySuggestions: PrimarySuggestionTraceSchema.optional(),
   selectedActionType: ActionTypeEnum.nullable(),
   decisionStatus: DecisionStatusEnum,
   decisionReason: z.string(),
@@ -495,6 +546,7 @@ export const RecommendationDecisionSchema = z.object({
   selectedActionId: z.string().nullable(),
   selectedActionType: ActionTypeEnum.nullable(),
   candidate: CandidateActionSchema.nullable(),
+  sourceAdvice: SourceAdviceSchema.optional(),
   title: z.string(),
   description: z.string(),
   reasoning: z.string(),
@@ -533,6 +585,7 @@ export const RecommendationDecisionSchema = z.object({
   dataQualityStatus: z.enum(['PROTOTYPE_POLICY', 'NEEDS_DATA', 'FX_WARNING']),
   clarificationQuestion: z.string().nullable(),
   missingFields: z.array(z.string()),
+  clarificationRoute: z.literal('accounts').optional(),
   trace: DecisionTraceSchema,
 });
 export type RecommendationDecision = z.infer<typeof RecommendationDecisionSchema>;

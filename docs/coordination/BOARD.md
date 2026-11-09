@@ -1,16 +1,16 @@
-# Доска координации задач FinAgent MVP (`BOARD.md`)
+# FinAgent MVP coordination board (`BOARD.md`)
 
-| ID | Фаза / Задача | Владелец | Статус | Файлы (строгое владение) | Зависимости |
+| ID | Phase / Task | Owner | Status | Owned files | Dependencies |
 |---|---|---|---|---|---|
-| `T-00` | Инфраструктура, скилы, `prototype-policy.json`, распаковка `AS` | `coordinator` | `DONE` | `AGENTS.md`, `.agents/skills/**`, `server/config/prototype-policy.json`, `server/data/as/**` | — |
-| `T-01` | Общие контракты (`shared/contracts/`) и типы `PI` | `coordinator` | `DONE` | `shared/contracts/index.ts`, `shared/pi/types.ts` | `T-00` |
+| `T-00` | Infrastructure, skills, `prototype-policy.json`, extraction of `AS` | `coordinator` | `DONE` | `AGENTS.md`, `.agents/skills/**`, `server/config/prototype-policy.json`, `server/data/as/**` | — |
+| `T-01` | Shared contracts (`shared/contracts/`) and types `PI` | `coordinator` | `DONE` | `shared/contracts/index.ts`, `shared/pi/types.ts` | `T-00` |
 | `T-02` | `SharedFinancialCalculator` (`F001–F015, F019, F020`) | `coordinator` | `DONE` | `shared/calculator/index.ts` | `T-01` |
-| `T-03` | Загрузчик `AS + Action Catalog` (`A001–A026`) и `Checker + Critical Coverage` | `coordinator` | `DONE` | `server/src/config/policyLoader.ts`, `server/src/catalog/asCatalogRepository.ts`, `server/src/checker/actionChecker.ts` | `T-01, T-02` |
+| `T-03` | Loader for `AS + Action Catalog` (`A001–A026`) and `Checker + Critical Coverage` | `coordinator` | `DONE` | `server/src/config/policyLoader.ts`, `server/src/catalog/asCatalogRepository.ts`, `server/src/checker/actionChecker.ts` | `T-01, T-02` |
 | `T-04` | `Decision Engine` (`5A–5E`: Priority, Weights + Hysteresis, Impact 90d, Complexity `T/S/D/O`, Scoring `F017`, Robustness `F018`) | `subagent-decision` | `DONE` | `server/src/decision/**`, `docs/coordination/handoffs/T-04.md` | `T-01..T-03` |
 | `T-05` | `LLM Client` (Gemini 3.1/3.5 Flash Lite + OpenAI), `Behavior Agent`, `Debt Agent`, `Suggestion Generator`, `AI Evaluation Call`, `Assistant Agent` | `subagent-ai` | `DONE` | `server/src/ai/**`, `server/src/analyzer/**`, `server/src/suggestion/**`, `docs/coordination/handoffs/T-05.md` | `T-01..T-03` |
-| `T-06` | `SQLite DB`, `Security / Auth / Encryption / PI Minimization`, `Frankfurter FX Service`, `Orchestrator` и HTTP Routes | `subagent-backend` | `DONE` | `server/src/security/**`, `server/src/fx/**`, `server/src/db/**`, `server/src/orchestrator/**`, `server/src/routes/**`, `server/src/index.ts`, `docs/coordination/handoffs/T-06.md` | `T-01..T-05` |
-| `T-07A` | Unit-тесты Фазы 1 (`F001–F020`, `AS`, `Checker`) и подготовка тест-сьюта 14 обязательных E2E-сценариев | `subagent-qa` | `DONE` | `server/tests/phase1-foundation.test.ts`, `server/tests/helpers/**`, `docs/coordination/handoffs/T-07A.md` | `T-01..T-03` |
-| `T-07B` | Интеграционное ревью, запуск 14 E2E-сценариев и подключение Web UI (`react-app/`) | `coordinator` | `DONE` | `server/tests/e2e/**`, `react-app/src/**`, `docs/coordination/synthetic-report.md` | `T-04..T-07A` |
+| `T-06` | `SQLite DB`, `Security / Auth / Encryption / PI Minimization`, `Frankfurter FX Service`, `Orchestrator` and HTTP Routes | `subagent-backend` | `DONE` | `server/src/security/**`, `server/src/fx/**`, `server/src/db/**`, `server/src/orchestrator/**`, `server/src/routes/**`, `server/src/index.ts`, `docs/coordination/handoffs/T-06.md` | `T-01..T-05` |
+| `T-07A` | Phase 1 unit tests (`F001–F020`, `AS`, `Checker`) and preparation of the 14 mandatory E2E scenarios | `subagent-qa` | `DONE` | `server/tests/phase1-foundation.test.ts`, `server/tests/helpers/**`, `docs/coordination/handoffs/T-07A.md` | `T-01..T-03` |
+| `T-07B` | Integration review, 14 E2E scenarios and web UI integration (`react-app/`) | `coordinator` | `DONE` | `server/tests/e2e/**`, `react-app/src/**`, `docs/coordination/synthetic-report.md` | `T-04..T-07A` |
 | `T-08` | Current development state inventory and evidence review (documentation only) | `coordinator` | `DONE` | `docs/coordination/BOARD.md`, `docs/coordination/current-development-state.md`, `docs/coordination/current-development-state.json`, `docs/coordination/handoffs/T-08.md`, `docs/coordination/evidence/T-08/**` | `T-00..T-07B` |
 | `T-08A` | Read-only inventory: financial calculations, catalog, checker, decision engine | `review-financial` | `DONE` | Read only; findings returned to coordinator | `T-08` |
 | `T-08B` | Read-only inventory: web/mobile features, local storage, imports, UI/backend wiring | `review-ui` | `DONE` | Read only; findings returned to coordinator | `T-08` |
@@ -89,3 +89,41 @@ Outstanding: SMTP sender, physical-device acceptance, scheduled backup/retention
 C03 integration ownership extension: coordinator owns server/src/beta/reviewScheduler.ts and tests/beta-review-scheduler.test.ts.
 C-INTEGRATION and U01-U04: automated and browser checks recorded in handoff. Physical Android and iPhone acceptance remains open.
 | U05 | Native onboarding, currency/date selectors, statement and assistant fixes | coordinator | IN_PROGRESS | expo-mobile-app/src/**; expo-mobile-app/app.json; server/src/beta/analysis.ts; server/tests/beta-analysis.test.ts; docs/coordination/handoffs/U05.md; docs/coordination/BOARD.md | U01-U04 |
+| DB-DOC | SQLite and PI schema reference | coordinator | DONE | docs/DATABASE-SCHEMA.md; docs/coordination/BOARD.md; docs/coordination/handoffs/DB-DOC.md | D-013, D-014 |
+
+| CLI-REVIEW | Synthetic beta backend inspection | coordinator | IN_PROGRESS | server/src/scripts/inspect-review.ts; user-inputs/synthetic/backend-review/**; docs/coordination/synthetic-report.md; docs/coordination/evidence/CLI-REVIEW/**; docs/coordination/handoffs/CLI-REVIEW.md; docs/coordination/BOARD.md | D-013, D-014 |
+
+| AS-FIRST | Source-backed primary suggestions and catalog fallback | coordinator | DONE | server/config/prototype-policy.json (version only); expo-mobile-app/src/screens/TodayScreen.tsx; react-app/src/{components/dashboard/TodayView.tsx,context/PIContext.tsx,services/recommendationService.ts}; server/src/suggestion/**; server/src/checker/actionChecker.ts; server/src/orchestrator/reviewWorkflow.ts; server/src/beta/analysis.ts; server/src/scripts/inspect-review.ts; shared/contracts/index.ts; react-app/src/types/pi.ts; server/tests/source-advice.test.ts; docs/SPEC.md; docs/coordination/{BOARD.md,DECISIONS.md,synthetic-report.md,handoffs/AS-FIRST.md,evidence/CLI-REVIEW/**}; user-inputs/synthetic/backend-review/comparison.md | D-004, D-005, D-014, D-015 |
+
+| PDF-REVOLUT | Multi-currency Revolut PDF preview and confirmation | coordinator | DONE | server/src/beta/{revolutPdf,imports,app}.ts; shared/contracts/{beta,betaPdf}.ts; react-app/src/services/statementParser.ts; expo-mobile-app/src/BetaApp.tsx; server/tests/beta-imports.test.ts; docs/coordination/handoffs/PDF-REVOLUT.md; docs/coordination/BOARD.md | B11 |
+
+| LIVE-REVIEW | Isolated live Gemini results for Debt, Strong, and Nora | coordinator | DONE | server/src/scripts/live-review/**; server/src/analyzer/behaviorAgent.ts (optional lab input); server/src/suggestion/{suggestionGenerator,primarySuggestions}.ts (isolation and trace hooks); docs/testing/live-review/**; docs/coordination/BOARD.md; docs/coordination/synthetic-report.md; docs/coordination/handoffs/LIVE-REVIEW.md | CLI-REVIEW, AS-FIRST |
+
+## Seven-stage implementation — 2026-11-08
+
+| ID | Task | Owner | Status | Files | Dependencies |
+|---|---|---|---|---|---|
+| PIPELINE-V2 | Implement the approved seven-stage pipeline, prompts, evidence and English conventions | coordinator | DONE | AGENTS.md; .cursor/rules/**; docs/**; shared/**; server/src/**; server/tests/**; server/config/prototype-policy.json (version and operational batch configuration only); react-app/src/**; expo-mobile-app/src/**; README.md | LIVE-REVIEW, AS-FIRST |
+
+The coordinator owns integration changes for this task. Existing work is preserved in a separate baseline copy. No Git history rewrite or PostgreSQL migration.
+
+## PIPELINE-V2 finalization ownership
+
+- pipeline-docs owns translation of project-authored Markdown outside docs/testing/live-review and docs/coordination/handoffs/PIPELINE-V2.md. Preserve original quotations, evidence files and user inputs.
+- pipeline-math owns docs/testing/live-review/FORMULAS.md and read-only formula/integration audit.
+- pipeline-storage owns server/src/beta/engineRepository.ts and server/tests/pipeline-storage.test.ts for artifact retention and legacy migration validation.
+- coordinator owns runtime, prompts, runner, live reports, shared contracts, final acceptance and PIPELINE-V2 handoff.
+
+Ownership extension: pipeline-math owns server/tests/e2e/{finagent-14-scenarios,http-workflow-and-security,feedback-core-regressions}.test.ts to update fixtures for canonical liquid F002 coverage.
+
+Coordinator ownership extension includes .gitignore and server/.env.postgres.example for the requested Supabase preparation. No credentials are committed.
+
+| GEMMA-31B | Switch AI roles to Gemma 4 31B and capture three-profile results | coordinator | SUPERSEDED | server/src/ai/llmClient.ts; server/src/beta/analysis.ts; server/src/orchestrator/reviewWorkflow.ts; server/src/scripts/live-review/**; server/tests/gemma-model.test.ts; docs/testing/live-review/**; docs/coordination/**; user-inputs/secrets/.env (local model setting only) | PIPELINE-V2 |
+
+| FLASH-LITE-3 | Select Gemini 3.5 Flash Lite and require three proposal slots | coordinator | DONE | server/src/ai/**; server/src/beta/analysis.ts; server/src/suggestion/**; server/src/scripts/live-review/**; shared/contracts/index.ts; server/tests/**; docs/**; user-inputs/secrets/.env (model setting only) | PIPELINE-V2 |
+
+| GEMMA-CAPTURE | Capture all synthetic profiles on Gemma with fallback and compare model-specific primary drafts | coordinator | DONE | server/src/ai/llmClient.ts; server/src/scripts/live-review/**; server/tests/gemma-model.test.ts; docs/testing/live-review/**; docs/coordination/** | FLASH-LITE-3 |
+| PRIMARY-GROUNDING | Audit and improve primary drafts and benchmark pinned Gemini 3.5 Flash Lite | coordinator | DONE | server/src/suggestion/primary*.ts; server/src/ai/{llmClient,prompts}.ts; shared/contracts/index.ts; server/tests/source-advice.test.ts; server/src/scripts/live-review/**; docs/testing/live-review/primary-grounding/**; docs/testing/live-review/runs/**; docs/coordination/** | GEMMA-CAPTURE |
+| PRIMARY-CONTRADICTION | Check primary advice for contradictions and run catalog only after three rejections | coordinator | DONE | server/src/ai/prompts.ts; server/src/suggestion/primary*.ts; server/src/orchestrator/reviewWorkflow.ts; server/src/scripts/live-review/**; server/tests/source-advice.test.ts; server/tests/e2e/{catalogFallbackFixture,finagent-14-scenarios,feedback-regressions,feedback-core-regressions,http-workflow-and-security}*; shared/contracts/index.ts; docs/SPEC.md; docs/coordination/**; docs/testing/live-review/** | PRIMARY-GROUNDING |
+
+| TODAY-QUALITY | Ground, verify and prioritize useful recommendations | coordinator | DONE | server/src/{ai/{prompts.ts,assistantAgent.ts},suggestion/**,orchestrator/reviewWorkflow.ts,checker/actionChecker.ts,decision/decisionEngine.ts,beta/analysis.ts,fx/**,scripts/live-review/**}; shared/{contracts/index.ts,calculator/index.ts,pi/types.ts}; server/tests/**; react-app/src/**; expo-mobile-app/src/**; user-inputs/synthetic/**; docs/** | PRIMARY-CONTRADICTION |

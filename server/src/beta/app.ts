@@ -4,7 +4,7 @@ import { BetaAuth } from "./auth";
 import { BetaStore } from "./store";
 import { BetaFinancial, BetaError } from "./financial";
 import { BetaJobs } from "./jobs";
-import { BetaAnalysis } from "./analysis";
+import { BetaAnalysis, type BetaAnalysisOptions } from "./analysis";
 import { BetaImports } from "./imports";
 import { BetaReviewScheduler } from "./reviewScheduler";
 import { LLMClient } from "../ai/llmClient";
@@ -24,6 +24,7 @@ export function createBetaApp(
     resetBaseUrl?: string;
     llmClient?: LLMClient;
     autoReview?: boolean;
+    analysisOptions?: BetaAnalysisOptions;
   } = {},
 ) {
   const store =
@@ -43,7 +44,7 @@ export function createBetaApp(
     });
   const financial = new BetaFinancial(store);
   const jobs = new BetaJobs(store);
-  const analysis = new BetaAnalysis(store, financial, options.llmClient);
+  const analysis = new BetaAnalysis(store, financial, options.llmClient, options.analysisOptions);
   const imports = new BetaImports(store, financial);
   const scheduler = new BetaReviewScheduler(store, financial, analysis, jobs);
   const schedule = (user: { id: string; name: string; email: string }) =>
@@ -270,7 +271,7 @@ export function createBetaApp(
       (c) => c.subjectId !== q.params.id,
     );
     const result = { ...current, state, version: current.version + 1 };
-    store.put(q.user.id, "state", result);
+    financial.persist(q.user.id, result);
     store.remove(q.user.id, "analysis");
     jobs.cancelUser(q.user.id);
     schedule(q.user);
@@ -364,9 +365,16 @@ export function createBetaApp(
   route("get", "/chat", (q, r) =>
     r.json({ messages: store.get(q.user.id, "chat") || [] }),
   );
+  route("delete", "/chat", (q, r) => {
+    analysis.deleteChat(q.user);
+    schedule(q.user);
+    r.json({ messages: [] });
+  });
   route("post", "/chat", async (q, r) => {
     const v = BetaChatSchema.parse(q.body);
-    r.json(await analysis.chat(q.user, v.message, v.requestId));
+    const result = await analysis.chat(q.user, v.message, v.requestId);
+    schedule(q.user);
+    r.json(result);
   });
   route("post", "/goals/:id/allocate", () => {
     throw new BetaError(
@@ -414,7 +422,7 @@ export function createBetaApp(
     const records = rows
       .filter(
         (row) =>
-          ["state", "chat", "analysis", "engine"].includes(row.doc_key) ||
+          ["state", "chat", "chat-memory", "analysis", "engine"].includes(row.doc_key) || row.doc_key.startsWith("stage:") ||
           row.doc_key.startsWith("import:"),
       )
       .map((row) => ({

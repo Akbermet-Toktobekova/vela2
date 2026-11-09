@@ -1,0 +1,108 @@
+
+> vela-finagent-server@1.1.0 test
+> vitest run --exclude tests/e2e/live-ai-integration.test.ts
+
+
+ RUN  v3.2.7 C:/Users/sanat/OneDrive/Desktop/vela1/server
+
+(node:21704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13096) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-store.test.ts (7 tests) 3254ms
+   ✓ BetaStore encrypted persistent documents > protects the persistent key with real Windows DPAPI and restores a protected backup  2276ms
+   ✓ BetaStore encrypted persistent documents > does not reset existing data when its protected key is missing  883ms
+ ✓ tests/beta-auth.test.ts (9 tests) 4675ms
+   ✓ Beta persistent authentication > rejects forged IDs, invalid passwords, expired and revoked sessions  474ms
+   ✓ Beta persistent authentication > keeps two accounts separate  373ms
+   ✓ Beta persistent authentication > limits failed login attempts  1677ms
+   ✓ Beta persistent authentication > sends a single-use reset link, revokes sessions, and hides absent accounts  852ms
+   ✓ Beta persistent authentication > rejects expired reset links and cleans failed delivery tokens  463ms
+   ✓ Beta persistent authentication > changes passwords, invalidates sessions and deletes credentials  598ms
+(node:17192) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-http.test.ts (7 tests) 3475ms
+   ✓ Authenticated beta HTTP integration > confirms imported transaction classification with version checks and owner isolation  611ms
+   ✓ Authenticated beta HTTP integration > registers without a code, logs in, rejects user-id spoofing and revokes logout sessions  502ms
+   ✓ Authenticated beta HTTP integration > saves a blank-owned profile with CAS and does not expose another account through spoof headers  338ms
+   ✓ Authenticated beta HTTP integration > isolates import previews, confirmations and jobs, and does not make AI calls without consent  435ms
+   ✓ Authenticated beta HTTP integration > delivers only an injected reset link and rejects token reuse and old sessions  688ms
+   ✓ Authenticated beta HTTP integration > exports only the current profile and deletion revokes every session without affecting other accounts  665ms
+ ✓ tests/e2e/feedback-regressions.test.ts (12 tests) 2631ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects an unknown explicit ID without modifying latest recommendation  378ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > rejects a superseded recommendation when the PI version is unchanged  312ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > applies completion once, rebuilds allocations and produces fresh Today  315ms
+   ✓ Feedback lifecycle and snapshot consistency through HTTP > reports committed completion as success when the next review fails and retries safely  335ms
+(node:14056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:24084) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/source-advice.test.ts (19 tests) 3124ms
+   ✓ AS-first suggestion cycle > publishes one validated source-backed advice and skips the fallback, then records feedback without money movement  354ms
+ ✓ tests/beta-engine-repository.test.ts (5 tests) 1562ms
+   ✓ Persistent beta engine repository > reuses cached agents and decision after storage restart  749ms
+   ✓ Persistent beta engine repository > refreshes time-dependent freshness without mutating the original source snapshot  765ms
+(node:16616) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/e2e/feedback-core-regressions.test.ts (7 tests) 1309ms
+   ✓ Core feedback commitments and manual execution > cancels a superseded pending commitment without stale PI mutation and replays safely  310ms
+(node:22808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-imports.test.ts (11 tests) 1099ms
+   ✓ Beta real-file imports > extracts text PDF with page provenance and requires mapping rather than inventing records  821ms
+ ✓ tests/e2e/http-workflow-and-security.test.ts (3 tests) 1011ms
+   ✓ FinAgent HTTP Full-Stack Workflow, Persistence & Security Audit Suite > 2. Executes full HTTP workflow: PUT /api/pi -> GET /api/today -> GET /api/decisions/trace -> POST /api/feedback (accept, adjust, decline, complete) -> SQLite restart persistence  890ms
+ ✓ tests/beta-cycle.test.ts (1 test) 1027ms
+   ✓ Seven-block cycle through authenticated beta HTTP > publishes an opted-in checked action and preserves trace, feedback and session after restart  1024ms
+(node:17776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/e2e/finagent-14-scenarios.test.ts (14 tests) 817ms
+(node:21616) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/local-access.test.ts (12 tests) 823ms
+   ✓ D-011 local-only transport boundary > mounts the boundary on the actual API before any public diagnostics route  634ms
+ ✓ tests/beta-analysis.test.ts (13 tests) 747ms
+   ✓ Beta actual seven-block orchestration > persists a checked critical recommendation, reuses cached evaluation, and records idempotent acceptance  605ms
+(node:18812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/web-core-regressions.test.ts (14 tests) 498ms
+(node:12596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pipeline-v2.test.ts (10 tests) 279ms
+(node:696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/clock-regressions.test.ts (6 tests) 269ms
+ ✓ tests/phase1-foundation.test.ts (18 tests) 124ms
+ ✓ tests/gemma-model.test.ts (4 tests) 200ms
+ ✓ tests/financial-core-regressions.test.ts (13 tests) 124ms
+(node:14816) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-jobs.test.ts (8 tests) 124ms
+ ✓ tests/web-feedback-regressions.test.ts (13 tests) 84ms
+ ✓ tests/ai-reliability.test.ts (26 tests) 113ms
+(node:12792) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pipeline-storage.test.ts (7 tests) 125ms
+(node:16540) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/checker-core-regressions.test.ts (8 tests) 72ms
+ ✓ tests/beta-financial.test.ts (8 tests) 55ms
+ ✓ tests/statement-parser.test.ts (38 tests) 44ms
+ ✓ tests/ui-zero-fixtures.test.ts (7 tests) 37ms
+(node:24044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/beta-review-scheduler.test.ts (4 tests) 39ms
+
+ Test Files  28 passed (28)
+      Tests  304 passed (304)
+   Start at  21:08:45
+   Duration  22.63s (transform 2.90s, setup 0ms, collect 16.79s, tests 27.74s, environment 11ms, prepare 8.60s)
+

@@ -119,7 +119,7 @@ export class AssistantAgent {
       decision.stability !== null
         ? `, robustness stability=${(decision.stability * 100).toFixed(0)}% (F018)`
         : '';
-    const provenanceText = `[Policy: ${decision.policyVersion} (PROTOTYPE_ONLY); Rules: ${decision.ruleIds.join(', ') || 'R001'}; Sources: ${decision.sourceIds.join(', ') || 'S001'}]`;
+    const provenanceText = `[Policy: ${decision.policyVersion} (PROTOTYPE_ONLY); Rules: ${decision.ruleIds.join(', ') || 'None attached'}; Sources: ${decision.sourceIds.join(', ') || 'None attached'}]`;
 
     return {
       title: cand.title,

@@ -302,9 +302,9 @@ describe('Phase 1 Foundation: Policy Loader, AS Catalog (DB_FACT), SharedFinanci
       // Extra principal payment is €200, but interest avoided over 90 days is ~€11.84 (never €200 + €11.84!)
       expect(sim90d.interestAvoidedF008).toBeGreaterThan(10);
       expect(sim90d.interestAvoidedF008).toBeLessThan(20);
-      expect(sim12m.interestAvoidedF008).toBeGreaterThan(sim90d.interestAvoidedF008);
+      expect(sim12m.interestAvoidedF008).toBeGreaterThan(sim90d.interestAvoidedF008!);
       expect(sim12m.effectiveIncrementalCostAvoidedF010).toBeCloseTo(
-        sim12m.interestAvoidedF008 + 25,
+        sim12m.interestAvoidedF008! + 25,
         2
       );
     });

@@ -1,0 +1,2953 @@
+# 03 Nora · feedback
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | SQLite beta_documents.payload → engine.feedback and feedback-request:&lt;id&gt;; state.actionFeedback is an API projection when accepted. Draft PostgreSQL pi.action_feedback. | — |
+
+## Input
+
+~~~~json
+{
+  "recommendationId": "rec_A014_eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+  "action": "accept",
+  "expectedVersion": 4,
+  "requestId": "nora-accept"
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "status": "ACCEPTED",
+  "accepted": true,
+  "recommendation": {
+    "id": "rec_A014_eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+    "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+    "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+    "actionType": "review_recurring_subscription",
+    "title": "Review recurring subscription before cancellation",
+    "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+    "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:cash_flow, stale_account_balance, verified_debt_interest_terms, dated_essential_outflows, stale_pi:available_cash, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+    "suggestedAmount": 10.99,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": "txn_stmt_1794158892147_isrm_6",
+    "sourceAccountId": "main",
+    "priority": "clarification",
+    "status": "accepted",
+    "readinessState": "state_a_action_ready",
+    "createdAt": "2026-11-08T17:37:25.544Z",
+    "updatedAt": "2026-11-08T17:38:38.130Z"
+  },
+  "decision": {
+    "evaluationId": "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+    "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+    "snapshotVersion": "4.0",
+    "decisionStatus": "RECOMMENDATION_READY",
+    "priorityClass": "VERIFICATION_UNLOCK",
+    "selectedActionId": "A014",
+    "selectedActionType": "VERIFICATION_ACTION",
+    "candidate": {
+      "candidateId": "verify_A014_txn_stmt_1794158892147_isrm_6",
+      "actionId": "A014",
+      "actionType": "VERIFICATION_ACTION",
+      "title": "Review recurring subscription before cancellation",
+      "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+      "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "targetId": "txn_stmt_1794158892147_isrm_6",
+      "sourceAccountId": "main",
+      "destinationAccountId": null,
+      "amount": 10.99,
+      "currency": "EUR",
+      "proposedTiming": null,
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "requiredPiInputs": [
+        "transactions",
+        "merchant",
+        "frequency"
+      ],
+      "origin": "CATALOG_FALLBACK"
+    },
+    "title": "Review recurring subscription before cancellation",
+    "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+    "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:cash_flow, stale_account_balance, verified_debt_interest_terms, dated_essential_outflows, stale_pi:available_cash, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+    "expectedEffectSummary": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+    "weightProfileId": "goal_advancement",
+    "weights": {
+      "resilience": 0.2,
+      "financial_benefit": 0.2,
+      "goal_progress": 0.6
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [
+      "S001"
+    ],
+    "ruleIds": [
+      "R010"
+    ],
+    "claimIds": [
+      "C004"
+    ],
+    "dataQualityStatus": "PROTOTYPE_POLICY",
+    "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?",
+    "missingFields": [
+      "fresh_account_balance",
+      "stale_pi:cash_flow",
+      "stale_account_balance",
+      "verified_debt_interest_terms",
+      "dated_essential_outflows",
+      "stale_pi:available_cash",
+      "required_pi:monthly_fee",
+      "required_pi:exit_terms",
+      "subscription_usage_and_exit_terms_confirmation"
+    ],
+    "trace": {
+      "evaluationId": "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+      "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T17:37:25.502Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "VERIFICATION_UNLOCK",
+      "weightSelection": {
+        "profileId": "goal_advancement",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.2,
+          "F": 0.2,
+          "G": 0.6
+        },
+        "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "cand_A002_card",
+            "actionId": "A002",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Pay an extra EUR 850 toward Credit card",
+            "description": "Apply EUR 850 above the required minimum toward Credit card (21.9% APR).",
+            "rationale": "Targets Credit card principal reduction. Checker must confirm current debt terms and deterministic code must calculate interest effects; no interest-accrual assumption is made here (R006, F008).",
+            "targetId": "card",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 850,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R001",
+              "R002",
+              "R006"
+            ],
+            "supportingClaimIds": [
+              "C014",
+              "C015"
+            ],
+            "supportingSourceIds": [
+              "S002",
+              "S003"
+            ],
+            "requiredPiInputs": [
+              "extra_amount",
+              "apr",
+              "balance",
+              "cash_flow"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:cash_flow",
+            "stale_account_balance",
+            "verified_debt_interest_terms",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "extra_amount",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "apr",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "cash_flow",
+              "status": "STALE"
+            }
+          ],
+          "projectedMinCashAfterAction": 1555.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A012_reserve",
+            "actionId": "A012",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Contribute EUR 1200 toward \"Emergency reserve\"",
+            "description": "Allocate EUR 1200 from available cash toward your \"Emergency reserve\" goal (advancing progress from 20% to 60%).",
+            "rationale": "Advances verified savings goal \"Emergency reserve\" by 40.0 percentage points (F012, F015) while keeping cash above floor (R002, R012).",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 1200,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R012"
+            ],
+            "supportingClaimIds": [
+              "C006"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "goal_target",
+              "goal_balance",
+              "available_cash"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:available_cash",
+            "stale_account_balance",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "goal_target",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "goal_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "available_cash",
+              "status": "STALE"
+            }
+          ],
+          "projectedMinCashAfterAction": 1205.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "cand_A015_txn_stmt_1794158892147_isrm_6",
+            "actionId": "A015",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Cancel unused Sound Library subscription (observed charge EUR 10.99)",
+            "description": "Observed charge EUR 10.99 at Sound Library. Confirm usage, recurrence and cancellation terms before calculating any savings.",
+            "rationale": "Recurring charge detected at Sound Library; requires user usage and cancellation-term confirmation per R010.",
+            "targetId": "txn_stmt_1794158892147_isrm_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "merchant",
+              "monthly_fee",
+              "exit_terms"
+            ],
+            "origin": "AI_SUGGESTION"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "fresh_account_balance",
+            "required_pi:monthly_fee",
+            "required_pi:exit_terms",
+            "stale_account_balance",
+            "subscription_usage_and_exit_terms_confirmation"
+          ],
+          "inputEvidence": [
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "monthly_fee",
+              "status": "MISSING"
+            },
+            {
+              "field": "exit_terms",
+              "status": "MISSING"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": []
+        },
+        {
+          "candidate": {
+            "candidateId": "verify_A014_txn_stmt_1794158892147_isrm_6",
+            "actionId": "A014",
+            "actionType": "VERIFICATION_ACTION",
+            "title": "Review recurring subscription before cancellation",
+            "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+            "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+            "targetId": "txn_stmt_1794158892147_isrm_6",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 10.99,
+            "currency": "EUR",
+            "proposedTiming": null,
+            "supportingRuleIds": [
+              "R010"
+            ],
+            "supportingClaimIds": [
+              "C004"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "transactions",
+              "merchant",
+              "frequency"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "VALID",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [],
+          "inputEvidence": [
+            {
+              "field": "transactions",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "merchant",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "frequency",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 2405.01,
+          "unlocksActionIds": [
+            "A015"
+          ]
+        },
+        {
+          "candidate": {
+            "candidateId": "fallback_A007",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Start or add EUR 2840 to your emergency reserve",
+            "description": "Earmark EUR 2840 from uncommitted liquid cash into your accessible emergency reserve.",
+            "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+            "targetId": "reserve",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 2840,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "REJECTED",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [
+            {
+              "layer": "AFFORDABILITY",
+              "code": "INSUFFICIENT_AVAILABLE_CASH_OR_BILL_SHORTFALL",
+              "detail": "Proposed amount EUR 2840 exceeds safe available buffer (7111.01) or causes a mandatory payment shortfall (min cash -434.99).",
+              "ruleId": "R001"
+            }
+          ],
+          "missingFields": [
+            "fresh_account_balance",
+            "stale_pi:liquid_balance",
+            "stale_account_balance",
+            "dated_essential_outflows"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "STALE"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": -434.99,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": {
+        "candidateId": "verify_A014_txn_stmt_1794158892147_isrm_6",
+        "actionId": "A014",
+        "actionType": "VERIFICATION_ACTION",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "rationale": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+        "targetId": "txn_stmt_1794158892147_isrm_6",
+        "sourceAccountId": "main",
+        "destinationAccountId": null,
+        "amount": 10.99,
+        "currency": "EUR",
+        "proposedTiming": null,
+        "supportingRuleIds": [
+          "R010"
+        ],
+        "supportingClaimIds": [
+          "C004"
+        ],
+        "supportingSourceIds": [
+          "S001"
+        ],
+        "requiredPiInputs": [
+          "transactions",
+          "merchant",
+          "frequency"
+        ],
+        "origin": "CATALOG_FALLBACK"
+      },
+      "stageArtifactIds": [
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:pi",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:fx",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:classification",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:pattern-recognition",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:behavior-agent",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:financial-calculator",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:debt-calculator",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:debt-agent",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:suggestion-generator",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:catalog-selector",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:checker",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:critical-coverage",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:ai-evaluation",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:weights",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:decision-engine",
+        "eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review credit card interest details",
+            "description": "Verify if interest is currently accruing on the credit card balance to better understand the cost of the debt.",
+            "rationale": "The debt analysis indicates that the interest accruing status is missing, which is necessary for calculating payoff horizons and interest baselines.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "debt-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Whether interest is currently accruing on the credit card balance"
+            ],
+            "factIds": [
+              "debt-1"
+            ],
+            "claimIds": [],
+            "status": "REJECTED",
+            "reason": "Unverified or unknown AS reference.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Identify subscription renewal dates",
+            "description": "Confirm the exact recurring dates and amounts for the 'Sound Library' and 'Screen Library' subscriptions.",
+            "rationale": "Multiple subscription transactions for these merchants have been observed, but their exact recurrence pattern and future impact need confirmation.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "subscription-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Confirmation of recurring dates and amounts for Sound Library and Screen Library subscriptions"
+            ],
+            "factIds": [
+              "subscription-1",
+              "subscription-2",
+              "subscription-3",
+              "subscription-4",
+              "subscription-5",
+              "subscription-6"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Confirmation of recurring dates and amounts for Sound Library and Screen Library subscriptions",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Verify account staleness",
+            "description": "Confirm if the balances for account-1 and account-2 are up to date.",
+            "rationale": "Both account-1 and account-2 are flagged as 'isStale: true', meaning the reported balances of 3577.01 EUR and 600 EUR may not reflect current reality.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "account-1",
+            "prerequisites": [],
+            "missingInfo": [
+              "Current up-to-date balances for account-1 and account-2"
+            ],
+            "factIds": [
+              "account-1",
+              "account-2"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Current up-to-date balances for account-1 and account-2",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "Insufficient verified claims to support EXECUTE or REVIEW actions for the primary financial concerns (debt interest and account staleness); several key data points are flagged as missing or stale.",
+        "fallbackReason": "NO_VALID_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": "VERIFICATION_ACTION",
+      "decisionStatus": "RECOMMENDATION_READY",
+      "decisionReason": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015).",
+      "supportingSourceIds": [
+        "S001"
+      ],
+      "supportingRuleIds": [
+        "R010"
+      ],
+      "supportingClaimIds": [
+        "C004"
+      ],
+      "missingDataFields": [
+        "fresh_account_balance",
+        "stale_pi:cash_flow",
+        "stale_account_balance",
+        "verified_debt_interest_terms",
+        "dated_essential_outflows",
+        "stale_pi:available_cash",
+        "required_pi:monthly_fee",
+        "required_pi:exit_terms",
+        "subscription_usage_and_exit_terms_confirmation"
+      ],
+      "clarificationQuestion": "Could you confirm whether this recurring subscription is unused and whether your contract allows cancellation without exit penalties?"
+    }
+  },
+  "feedbackRecord": {
+    "id": "fb_1794159518505_accept",
+    "recommendationId": "rec_A014_eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+    "actionId": "A014",
+    "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+    "action": "accept",
+    "amount": 10.99,
+    "note": "User accepted recommendation (pending execution).",
+    "timestamp": "2026-11-08T17:38:38.130Z"
+  },
+  "version": 4,
+  "state": {
+    "user": {
+      "id": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "email": "nora@example.test",
+      "authStatus": "unverified",
+      "isDemoMode": false,
+      "createdAt": "2026-11-08T17:28:12.029Z"
+    },
+    "profile": {
+      "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "nickname": "03 Nora",
+      "locale": "en",
+      "baseCurrency": "EUR",
+      "country": "EU",
+      "updatedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "preferences": {
+      "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "primaryConcern": null,
+      "concernNotes": "",
+      "notificationsEnabled": true,
+      "reducedMotion": false,
+      "updatedAt": "2026-11-08T17:28:12.029Z"
+    },
+    "onboarding": {
+      "id": "5068c6ac-ca89-4dca-b402-35fab5c1d0c0",
+      "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "currentStep": 1,
+      "completedSteps": [],
+      "debtQuestionAnswer": "yes",
+      "status": "completed",
+      "startedAt": "2026-11-08T17:28:12.029Z",
+      "completedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "accounts": [
+      {
+        "id": "main",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Daily Account",
+        "institution": "Fictional Retail Bank",
+        "currency": "EUR",
+        "purposes": [
+          "daily_spending"
+        ],
+        "fundsOwnership": "personal",
+        "personalAvailableAmount": null,
+        "isPrimary": true,
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z",
+        "updatedAt": "2026-11-05T12:00:00.000Z"
+      },
+      {
+        "id": "savings",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Reserve Account",
+        "institution": "Fictional Savings Bank",
+        "currency": "EUR",
+        "purposes": [
+          "savings"
+        ],
+        "fundsOwnership": "personal",
+        "personalAvailableAmount": null,
+        "isPrimary": false,
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z",
+        "updatedAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "balances": [
+      {
+        "id": "0f7b1124-9f8d-4326-a2aa-bf91bb39b1ef",
+        "accountId": "main",
+        "amount": 3577.01,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1794158892147_isrm",
+        "createdAt": "2026-11-08T17:28:12.151Z"
+      },
+      {
+        "id": "3a4b37e6-a4f4-4c40-b9b0-c44930b9ad16",
+        "accountId": "savings",
+        "amount": 600,
+        "currency": "EUR",
+        "asOf": "2026-10-28",
+        "sourceType": "statement_closing",
+        "sourceId": "stmt_1794158892235_0gj1",
+        "createdAt": "2026-11-08T17:28:12.239Z"
+      }
+    ],
+    "incomes": [
+      {
+        "id": "salary",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Monthly salary",
+        "pattern": "regular",
+        "estimatedMonthlyAmount": 2350,
+        "currency": "EUR",
+        "frequency": "monthly",
+        "sourceType": "salary",
+        "nextExpectedDate": "2026-11-27",
+        "receivingAccountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "expenseCommitment": {
+      "id": "essentials",
+      "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+      "estimatedMonthlyAmount": 1450,
+      "currency": "EUR",
+      "notes": "Synthetic user estimate",
+      "updatedAt": "2026-11-05T12:00:00.000Z"
+    },
+    "obligations": [
+      {
+        "id": "rent",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Apartment rent",
+        "amount": 980,
+        "currency": "EUR",
+        "dueDate": "2026-11-06",
+        "recurrence": "monthly",
+        "category": "rent",
+        "status": "unpaid",
+        "accountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      },
+      {
+        "id": "energy",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Electricity",
+        "amount": 105,
+        "currency": "EUR",
+        "dueDate": "2026-11-10",
+        "recurrence": "monthly",
+        "category": "energy",
+        "status": "unpaid",
+        "accountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      },
+      {
+        "id": "internet",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Home internet",
+        "amount": 32,
+        "currency": "EUR",
+        "dueDate": "2026-11-12",
+        "recurrence": "monthly",
+        "category": "internet",
+        "status": "unpaid",
+        "accountId": "main",
+        "notes": "",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "debts": [
+      {
+        "id": "card",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Credit card",
+        "debtType": "credit_card",
+        "currency": "EUR",
+        "remainingBalance": 850,
+        "apr": 21.9,
+        "minimumPayment": 55,
+        "nextDueDate": "2026-11-15",
+        "paymentFrequency": "monthly",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "goals": [
+      {
+        "id": "reserve",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "name": "Emergency reserve",
+        "goalType": "emergency_cushion",
+        "targetAmount": 3000,
+        "currency": "EUR",
+        "targetDate": "2027-06-30",
+        "priority": "high",
+        "createdAt": "2026-11-05T12:00:00.000Z"
+      }
+    ],
+    "goalAllocations": [
+      {
+        "id": "reserved",
+        "goalId": "reserve",
+        "accountId": "savings",
+        "amount": 600,
+        "currency": "EUR",
+        "allocatedAt": "2026-11-05",
+        "note": "Existing reserve balance earmarked for this goal",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f"
+      }
+    ],
+    "statements": [
+      {
+        "id": "stmt_1794158892147_isrm",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "fileName": "daily.csv",
+        "fileFormat": "csv",
+        "fileHash": "hash_acb4f636_4002",
+        "periodStart": "2026-08-03",
+        "periodEnd": "2026-10-28",
+        "currency": "EUR",
+        "transactionCount": 45,
+        "duplicateCountSkipped": 0,
+        "status": "needs_review",
+        "closingBalance": 3577.01,
+        "importedAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "stmt_1794158892235_0gj1",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "savings",
+        "fileName": "reserve.csv",
+        "fileFormat": "csv",
+        "fileHash": "hash_bc62e127_326",
+        "periodStart": "2026-08-28",
+        "periodEnd": "2026-10-28",
+        "currency": "EUR",
+        "transactionCount": 3,
+        "duplicateCountSkipped": 0,
+        "status": "needs_review",
+        "closingBalance": 600,
+        "importedAt": "2026-11-08T17:28:12.235Z"
+      }
+    ],
+    "transactions": [
+      {
+        "id": "txn_stmt_1794158892147_isrm_1",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-03",
+        "amount": -980,
+        "currency": "EUR",
+        "description": "Apartment rent",
+        "counterparty": "Harbor Properties",
+        "reference": "RENT-08",
+        "rawRow": {
+          "date": "2026-08-03",
+          "description": "Apartment rent",
+          "counterparty": "Harbor Properties",
+          "amount": "-980.00",
+          "currency": "EUR",
+          "reference": "RENT-08",
+          "balance": "780.00",
+          "__source_row": "2",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_2",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-05",
+        "amount": -89.4,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD1-08",
+        "rawRow": {
+          "date": "2026-08-05",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-89.40",
+          "currency": "EUR",
+          "reference": "FOOD1-08",
+          "balance": "690.60",
+          "__source_row": "3",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_3",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-06",
+        "amount": -42,
+        "currency": "EUR",
+        "description": "Metro pass",
+        "counterparty": "City Transit",
+        "reference": "METRO-08",
+        "rawRow": {
+          "date": "2026-08-06",
+          "description": "Metro pass",
+          "counterparty": "City Transit",
+          "amount": "-42.00",
+          "currency": "EUR",
+          "reference": "METRO-08",
+          "balance": "648.60",
+          "__source_row": "4",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_4",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-08",
+        "amount": -105,
+        "currency": "EUR",
+        "description": "Electricity utility",
+        "counterparty": "Bright Energy",
+        "reference": "ENERGY-08",
+        "rawRow": {
+          "date": "2026-08-08",
+          "description": "Electricity utility",
+          "counterparty": "Bright Energy",
+          "amount": "-105.00",
+          "currency": "EUR",
+          "reference": "ENERGY-08",
+          "balance": "543.60",
+          "__source_row": "5",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_5",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-10",
+        "amount": -32,
+        "currency": "EUR",
+        "description": "Internet bill",
+        "counterparty": "Fiber Home",
+        "reference": "NET-08",
+        "rawRow": {
+          "date": "2026-08-10",
+          "description": "Internet bill",
+          "counterparty": "Fiber Home",
+          "amount": "-32.00",
+          "currency": "EUR",
+          "reference": "NET-08",
+          "balance": "511.60",
+          "__source_row": "6",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_6",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-12",
+        "amount": -10.99,
+        "currency": "EUR",
+        "description": "Music subscription",
+        "counterparty": "Sound Library",
+        "reference": "MUSIC-08",
+        "rawRow": {
+          "date": "2026-08-12",
+          "description": "Music subscription",
+          "counterparty": "Sound Library",
+          "amount": "-10.99",
+          "currency": "EUR",
+          "reference": "MUSIC-08",
+          "balance": "500.61",
+          "__source_row": "7",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_7",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-14",
+        "amount": -55,
+        "currency": "EUR",
+        "description": "Credit card payment",
+        "counterparty": "Fictional Card Services",
+        "reference": "CARD-08",
+        "rawRow": {
+          "date": "2026-08-14",
+          "description": "Credit card payment",
+          "counterparty": "Fictional Card Services",
+          "amount": "-55.00",
+          "currency": "EUR",
+          "reference": "CARD-08",
+          "balance": "445.61",
+          "__source_row": "8",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_8",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-16",
+        "amount": -94.8,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD2-08",
+        "rawRow": {
+          "date": "2026-08-16",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-94.80",
+          "currency": "EUR",
+          "reference": "FOOD2-08",
+          "balance": "350.81",
+          "__source_row": "9",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_9",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-18",
+        "amount": -14.7,
+        "currency": "EUR",
+        "description": "Coffee shop",
+        "counterparty": "Corner Coffee",
+        "reference": "CAFE-08",
+        "rawRow": {
+          "date": "2026-08-18",
+          "description": "Coffee shop",
+          "counterparty": "Corner Coffee",
+          "amount": "-14.70",
+          "currency": "EUR",
+          "reference": "CAFE-08",
+          "balance": "336.11",
+          "__source_row": "10",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_10",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-20",
+        "amount": -44.5,
+        "currency": "EUR",
+        "description": "Restaurant",
+        "counterparty": "Maple Kitchen",
+        "reference": "DINNER-08",
+        "rawRow": {
+          "date": "2026-08-20",
+          "description": "Restaurant",
+          "counterparty": "Maple Kitchen",
+          "amount": "-44.50",
+          "currency": "EUR",
+          "reference": "DINNER-08",
+          "balance": "291.61",
+          "__source_row": "11",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_11",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-21",
+        "amount": -15.99,
+        "currency": "EUR",
+        "description": "Video streaming subscription",
+        "counterparty": "Screen Library",
+        "reference": "VIDEO-08",
+        "rawRow": {
+          "date": "2026-08-21",
+          "description": "Video streaming subscription",
+          "counterparty": "Screen Library",
+          "amount": "-15.99",
+          "currency": "EUR",
+          "reference": "VIDEO-08",
+          "balance": "275.62",
+          "__source_row": "12",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_12",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-23",
+        "amount": -22.6,
+        "currency": "EUR",
+        "description": "Pharmacy purchase",
+        "counterparty": "Oak Pharmacy",
+        "reference": "PHARM-08",
+        "rawRow": {
+          "date": "2026-08-23",
+          "description": "Pharmacy purchase",
+          "counterparty": "Oak Pharmacy",
+          "amount": "-22.60",
+          "currency": "EUR",
+          "reference": "PHARM-08",
+          "balance": "253.02",
+          "__source_row": "13",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_13",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-25",
+        "amount": -87.35,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD3-08",
+        "rawRow": {
+          "date": "2026-08-25",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-87.35",
+          "currency": "EUR",
+          "reference": "FOOD3-08",
+          "balance": "165.67",
+          "__source_row": "14",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_14",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-27",
+        "amount": 2350,
+        "currency": "EUR",
+        "description": "Salary payroll",
+        "counterparty": "Danube Studio",
+        "reference": "SALARY-08",
+        "rawRow": {
+          "date": "2026-08-27",
+          "description": "Salary payroll",
+          "counterparty": "Danube Studio",
+          "amount": "2350.00",
+          "currency": "EUR",
+          "reference": "SALARY-08",
+          "balance": "2515.67",
+          "__source_row": "15",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_15",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-08-28",
+        "amount": -150,
+        "currency": "EUR",
+        "description": "Transfer to Reserve Account",
+        "counterparty": "Fictional Savings Bank",
+        "reference": "OWN-08",
+        "rawRow": {
+          "date": "2026-08-28",
+          "description": "Transfer to Reserve Account",
+          "counterparty": "Fictional Savings Bank",
+          "amount": "-150.00",
+          "currency": "EUR",
+          "reference": "OWN-08",
+          "balance": "2365.67",
+          "__source_row": "16",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_16",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-03",
+        "amount": -980,
+        "currency": "EUR",
+        "description": "Apartment rent",
+        "counterparty": "Harbor Properties",
+        "reference": "RENT-09",
+        "rawRow": {
+          "date": "2026-09-03",
+          "description": "Apartment rent",
+          "counterparty": "Harbor Properties",
+          "amount": "-980.00",
+          "currency": "EUR",
+          "reference": "RENT-09",
+          "balance": "1385.67",
+          "__source_row": "17",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_17",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-05",
+        "amount": -89.4,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD1-09",
+        "rawRow": {
+          "date": "2026-09-05",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-89.40",
+          "currency": "EUR",
+          "reference": "FOOD1-09",
+          "balance": "1296.27",
+          "__source_row": "18",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_18",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-06",
+        "amount": -42,
+        "currency": "EUR",
+        "description": "Metro pass",
+        "counterparty": "City Transit",
+        "reference": "METRO-09",
+        "rawRow": {
+          "date": "2026-09-06",
+          "description": "Metro pass",
+          "counterparty": "City Transit",
+          "amount": "-42.00",
+          "currency": "EUR",
+          "reference": "METRO-09",
+          "balance": "1254.27",
+          "__source_row": "19",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_19",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-08",
+        "amount": -105,
+        "currency": "EUR",
+        "description": "Electricity utility",
+        "counterparty": "Bright Energy",
+        "reference": "ENERGY-09",
+        "rawRow": {
+          "date": "2026-09-08",
+          "description": "Electricity utility",
+          "counterparty": "Bright Energy",
+          "amount": "-105.00",
+          "currency": "EUR",
+          "reference": "ENERGY-09",
+          "balance": "1149.27",
+          "__source_row": "20",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_20",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-10",
+        "amount": -32,
+        "currency": "EUR",
+        "description": "Internet bill",
+        "counterparty": "Fiber Home",
+        "reference": "NET-09",
+        "rawRow": {
+          "date": "2026-09-10",
+          "description": "Internet bill",
+          "counterparty": "Fiber Home",
+          "amount": "-32.00",
+          "currency": "EUR",
+          "reference": "NET-09",
+          "balance": "1117.27",
+          "__source_row": "21",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_21",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-12",
+        "amount": -10.99,
+        "currency": "EUR",
+        "description": "Music subscription",
+        "counterparty": "Sound Library",
+        "reference": "MUSIC-09",
+        "rawRow": {
+          "date": "2026-09-12",
+          "description": "Music subscription",
+          "counterparty": "Sound Library",
+          "amount": "-10.99",
+          "currency": "EUR",
+          "reference": "MUSIC-09",
+          "balance": "1106.28",
+          "__source_row": "22",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_22",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-14",
+        "amount": -55,
+        "currency": "EUR",
+        "description": "Credit card payment",
+        "counterparty": "Fictional Card Services",
+        "reference": "CARD-09",
+        "rawRow": {
+          "date": "2026-09-14",
+          "description": "Credit card payment",
+          "counterparty": "Fictional Card Services",
+          "amount": "-55.00",
+          "currency": "EUR",
+          "reference": "CARD-09",
+          "balance": "1051.28",
+          "__source_row": "23",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_23",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-16",
+        "amount": -94.8,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD2-09",
+        "rawRow": {
+          "date": "2026-09-16",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-94.80",
+          "currency": "EUR",
+          "reference": "FOOD2-09",
+          "balance": "956.48",
+          "__source_row": "24",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_24",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-18",
+        "amount": -14.7,
+        "currency": "EUR",
+        "description": "Coffee shop",
+        "counterparty": "Corner Coffee",
+        "reference": "CAFE-09",
+        "rawRow": {
+          "date": "2026-09-18",
+          "description": "Coffee shop",
+          "counterparty": "Corner Coffee",
+          "amount": "-14.70",
+          "currency": "EUR",
+          "reference": "CAFE-09",
+          "balance": "941.78",
+          "__source_row": "25",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_25",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-20",
+        "amount": -44.5,
+        "currency": "EUR",
+        "description": "Restaurant",
+        "counterparty": "Maple Kitchen",
+        "reference": "DINNER-09",
+        "rawRow": {
+          "date": "2026-09-20",
+          "description": "Restaurant",
+          "counterparty": "Maple Kitchen",
+          "amount": "-44.50",
+          "currency": "EUR",
+          "reference": "DINNER-09",
+          "balance": "897.28",
+          "__source_row": "26",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_26",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-21",
+        "amount": -15.99,
+        "currency": "EUR",
+        "description": "Video streaming subscription",
+        "counterparty": "Screen Library",
+        "reference": "VIDEO-09",
+        "rawRow": {
+          "date": "2026-09-21",
+          "description": "Video streaming subscription",
+          "counterparty": "Screen Library",
+          "amount": "-15.99",
+          "currency": "EUR",
+          "reference": "VIDEO-09",
+          "balance": "881.29",
+          "__source_row": "27",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_27",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-23",
+        "amount": -22.6,
+        "currency": "EUR",
+        "description": "Pharmacy purchase",
+        "counterparty": "Oak Pharmacy",
+        "reference": "PHARM-09",
+        "rawRow": {
+          "date": "2026-09-23",
+          "description": "Pharmacy purchase",
+          "counterparty": "Oak Pharmacy",
+          "amount": "-22.60",
+          "currency": "EUR",
+          "reference": "PHARM-09",
+          "balance": "858.69",
+          "__source_row": "28",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_28",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-25",
+        "amount": -87.35,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD3-09",
+        "rawRow": {
+          "date": "2026-09-25",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-87.35",
+          "currency": "EUR",
+          "reference": "FOOD3-09",
+          "balance": "771.34",
+          "__source_row": "29",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_29",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-27",
+        "amount": 2350,
+        "currency": "EUR",
+        "description": "Salary payroll",
+        "counterparty": "Danube Studio",
+        "reference": "SALARY-09",
+        "rawRow": {
+          "date": "2026-09-27",
+          "description": "Salary payroll",
+          "counterparty": "Danube Studio",
+          "amount": "2350.00",
+          "currency": "EUR",
+          "reference": "SALARY-09",
+          "balance": "3121.34",
+          "__source_row": "30",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_30",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-09-28",
+        "amount": -150,
+        "currency": "EUR",
+        "description": "Transfer to Reserve Account",
+        "counterparty": "Fictional Savings Bank",
+        "reference": "OWN-09",
+        "rawRow": {
+          "date": "2026-09-28",
+          "description": "Transfer to Reserve Account",
+          "counterparty": "Fictional Savings Bank",
+          "amount": "-150.00",
+          "currency": "EUR",
+          "reference": "OWN-09",
+          "balance": "2971.34",
+          "__source_row": "31",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_31",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-03",
+        "amount": -980,
+        "currency": "EUR",
+        "description": "Apartment rent",
+        "counterparty": "Harbor Properties",
+        "reference": "RENT-10",
+        "rawRow": {
+          "date": "2026-10-03",
+          "description": "Apartment rent",
+          "counterparty": "Harbor Properties",
+          "amount": "-980.00",
+          "currency": "EUR",
+          "reference": "RENT-10",
+          "balance": "1991.34",
+          "__source_row": "32",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_32",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-05",
+        "amount": -89.4,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD1-10",
+        "rawRow": {
+          "date": "2026-10-05",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-89.40",
+          "currency": "EUR",
+          "reference": "FOOD1-10",
+          "balance": "1901.94",
+          "__source_row": "33",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_33",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-06",
+        "amount": -42,
+        "currency": "EUR",
+        "description": "Metro pass",
+        "counterparty": "City Transit",
+        "reference": "METRO-10",
+        "rawRow": {
+          "date": "2026-10-06",
+          "description": "Metro pass",
+          "counterparty": "City Transit",
+          "amount": "-42.00",
+          "currency": "EUR",
+          "reference": "METRO-10",
+          "balance": "1859.94",
+          "__source_row": "34",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_34",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-08",
+        "amount": -105,
+        "currency": "EUR",
+        "description": "Electricity utility",
+        "counterparty": "Bright Energy",
+        "reference": "ENERGY-10",
+        "rawRow": {
+          "date": "2026-10-08",
+          "description": "Electricity utility",
+          "counterparty": "Bright Energy",
+          "amount": "-105.00",
+          "currency": "EUR",
+          "reference": "ENERGY-10",
+          "balance": "1754.94",
+          "__source_row": "35",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_35",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-10",
+        "amount": -32,
+        "currency": "EUR",
+        "description": "Internet bill",
+        "counterparty": "Fiber Home",
+        "reference": "NET-10",
+        "rawRow": {
+          "date": "2026-10-10",
+          "description": "Internet bill",
+          "counterparty": "Fiber Home",
+          "amount": "-32.00",
+          "currency": "EUR",
+          "reference": "NET-10",
+          "balance": "1722.94",
+          "__source_row": "36",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_36",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-12",
+        "amount": -10.99,
+        "currency": "EUR",
+        "description": "Music subscription",
+        "counterparty": "Sound Library",
+        "reference": "MUSIC-10",
+        "rawRow": {
+          "date": "2026-10-12",
+          "description": "Music subscription",
+          "counterparty": "Sound Library",
+          "amount": "-10.99",
+          "currency": "EUR",
+          "reference": "MUSIC-10",
+          "balance": "1711.95",
+          "__source_row": "37",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_37",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-14",
+        "amount": -55,
+        "currency": "EUR",
+        "description": "Credit card payment",
+        "counterparty": "Fictional Card Services",
+        "reference": "CARD-10",
+        "rawRow": {
+          "date": "2026-10-14",
+          "description": "Credit card payment",
+          "counterparty": "Fictional Card Services",
+          "amount": "-55.00",
+          "currency": "EUR",
+          "reference": "CARD-10",
+          "balance": "1656.95",
+          "__source_row": "38",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_38",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-16",
+        "amount": -94.8,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD2-10",
+        "rawRow": {
+          "date": "2026-10-16",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-94.80",
+          "currency": "EUR",
+          "reference": "FOOD2-10",
+          "balance": "1562.15",
+          "__source_row": "39",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_39",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-18",
+        "amount": -14.7,
+        "currency": "EUR",
+        "description": "Coffee shop",
+        "counterparty": "Corner Coffee",
+        "reference": "CAFE-10",
+        "rawRow": {
+          "date": "2026-10-18",
+          "description": "Coffee shop",
+          "counterparty": "Corner Coffee",
+          "amount": "-14.70",
+          "currency": "EUR",
+          "reference": "CAFE-10",
+          "balance": "1547.45",
+          "__source_row": "40",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_40",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-20",
+        "amount": -44.5,
+        "currency": "EUR",
+        "description": "Restaurant",
+        "counterparty": "Maple Kitchen",
+        "reference": "DINNER-10",
+        "rawRow": {
+          "date": "2026-10-20",
+          "description": "Restaurant",
+          "counterparty": "Maple Kitchen",
+          "amount": "-44.50",
+          "currency": "EUR",
+          "reference": "DINNER-10",
+          "balance": "1502.95",
+          "__source_row": "41",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_41",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-21",
+        "amount": -15.99,
+        "currency": "EUR",
+        "description": "Video streaming subscription",
+        "counterparty": "Screen Library",
+        "reference": "VIDEO-10",
+        "rawRow": {
+          "date": "2026-10-21",
+          "description": "Video streaming subscription",
+          "counterparty": "Screen Library",
+          "amount": "-15.99",
+          "currency": "EUR",
+          "reference": "VIDEO-10",
+          "balance": "1486.96",
+          "__source_row": "42",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_42",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-23",
+        "amount": -22.6,
+        "currency": "EUR",
+        "description": "Pharmacy purchase",
+        "counterparty": "Oak Pharmacy",
+        "reference": "PHARM-10",
+        "rawRow": {
+          "date": "2026-10-23",
+          "description": "Pharmacy purchase",
+          "counterparty": "Oak Pharmacy",
+          "amount": "-22.60",
+          "currency": "EUR",
+          "reference": "PHARM-10",
+          "balance": "1464.36",
+          "__source_row": "43",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_43",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-25",
+        "amount": -87.35,
+        "currency": "EUR",
+        "description": "Supermarket groceries",
+        "counterparty": "Green Basket",
+        "reference": "FOOD3-10",
+        "rawRow": {
+          "date": "2026-10-25",
+          "description": "Supermarket groceries",
+          "counterparty": "Green Basket",
+          "amount": "-87.35",
+          "currency": "EUR",
+          "reference": "FOOD3-10",
+          "balance": "1377.01",
+          "__source_row": "44",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_44",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-27",
+        "amount": 2350,
+        "currency": "EUR",
+        "description": "Salary payroll",
+        "counterparty": "Danube Studio",
+        "reference": "SALARY-10",
+        "rawRow": {
+          "date": "2026-10-27",
+          "description": "Salary payroll",
+          "counterparty": "Danube Studio",
+          "amount": "2350.00",
+          "currency": "EUR",
+          "reference": "SALARY-10",
+          "balance": "3727.01",
+          "__source_row": "45",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892147_isrm_45",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "main",
+        "statementId": "stmt_1794158892147_isrm",
+        "date": "2026-10-28",
+        "amount": -150,
+        "currency": "EUR",
+        "description": "Transfer to Reserve Account",
+        "counterparty": "Fictional Savings Bank",
+        "reference": "OWN-10",
+        "rawRow": {
+          "date": "2026-10-28",
+          "description": "Transfer to Reserve Account",
+          "counterparty": "Fictional Savings Bank",
+          "amount": "-150.00",
+          "currency": "EUR",
+          "reference": "OWN-10",
+          "balance": "3577.01",
+          "__source_row": "46",
+          "__source_file": "daily.csv",
+          "__source_hash": "f3946ef6c2e4a5a9e49466c258ae10221f1d2bd17b9b1dcd4e51900afebe1eda",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.147Z"
+      },
+      {
+        "id": "txn_stmt_1794158892235_0gj1_1",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "savings",
+        "statementId": "stmt_1794158892235_0gj1",
+        "date": "2026-08-28",
+        "amount": 150,
+        "currency": "EUR",
+        "description": "Transfer from Daily Account",
+        "counterparty": "Fictional Retail Bank",
+        "reference": "OWN-08",
+        "rawRow": {
+          "date": "2026-08-28",
+          "description": "Transfer from Daily Account",
+          "counterparty": "Fictional Retail Bank",
+          "amount": "150.00",
+          "currency": "EUR",
+          "reference": "OWN-08",
+          "balance": "300.00",
+          "__source_row": "2",
+          "__source_file": "reserve.csv",
+          "__source_hash": "65eced9888e127f71311f2d317a0ce53ecb7d38f5caaecaa4a69ed92ca788df4",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.235Z"
+      },
+      {
+        "id": "txn_stmt_1794158892235_0gj1_2",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "savings",
+        "statementId": "stmt_1794158892235_0gj1",
+        "date": "2026-09-28",
+        "amount": 150,
+        "currency": "EUR",
+        "description": "Transfer from Daily Account",
+        "counterparty": "Fictional Retail Bank",
+        "reference": "OWN-09",
+        "rawRow": {
+          "date": "2026-09-28",
+          "description": "Transfer from Daily Account",
+          "counterparty": "Fictional Retail Bank",
+          "amount": "150.00",
+          "currency": "EUR",
+          "reference": "OWN-09",
+          "balance": "450.00",
+          "__source_row": "3",
+          "__source_file": "reserve.csv",
+          "__source_hash": "65eced9888e127f71311f2d317a0ce53ecb7d38f5caaecaa4a69ed92ca788df4",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.235Z"
+      },
+      {
+        "id": "txn_stmt_1794158892235_0gj1_3",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "accountId": "savings",
+        "statementId": "stmt_1794158892235_0gj1",
+        "date": "2026-10-28",
+        "amount": 150,
+        "currency": "EUR",
+        "description": "Transfer from Daily Account",
+        "counterparty": "Fictional Retail Bank",
+        "reference": "OWN-10",
+        "rawRow": {
+          "date": "2026-10-28",
+          "description": "Transfer from Daily Account",
+          "counterparty": "Fictional Retail Bank",
+          "amount": "150.00",
+          "currency": "EUR",
+          "reference": "OWN-10",
+          "balance": "600.00",
+          "__source_row": "4",
+          "__source_file": "reserve.csv",
+          "__source_hash": "65eced9888e127f71311f2d317a0ce53ecb7d38f5caaecaa4a69ed92ca788df4",
+          "__source_sheet": ""
+        },
+        "createdAt": "2026-11-08T17:28:12.235Z"
+      }
+    ],
+    "classifications": [
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_1",
+        "transactionId": "txn_stmt_1794158892147_isrm_1",
+        "economicType": "expense",
+        "category": "rent_housing",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_2",
+        "transactionId": "txn_stmt_1794158892147_isrm_2",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_3",
+        "transactionId": "txn_stmt_1794158892147_isrm_3",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_4",
+        "transactionId": "txn_stmt_1794158892147_isrm_4",
+        "economicType": "expense",
+        "category": "utilities_energy",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: utility keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_5",
+        "transactionId": "txn_stmt_1794158892147_isrm_5",
+        "economicType": "expense",
+        "category": "internet_telecom",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_6",
+        "transactionId": "txn_stmt_1794158892147_isrm_6",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_7",
+        "transactionId": "txn_stmt_1794158892147_isrm_7",
+        "economicType": "debt_payment",
+        "category": "other",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: debt repayment match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_8",
+        "transactionId": "txn_stmt_1794158892147_isrm_8",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_9",
+        "transactionId": "txn_stmt_1794158892147_isrm_9",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_10",
+        "transactionId": "txn_stmt_1794158892147_isrm_10",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_11",
+        "transactionId": "txn_stmt_1794158892147_isrm_11",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_12",
+        "transactionId": "txn_stmt_1794158892147_isrm_12",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_13",
+        "transactionId": "txn_stmt_1794158892147_isrm_13",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_14",
+        "transactionId": "txn_stmt_1794158892147_isrm_14",
+        "economicType": "income",
+        "category": "income",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_15",
+        "transactionId": "txn_stmt_1794158892147_isrm_15",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_16",
+        "transactionId": "txn_stmt_1794158892147_isrm_16",
+        "economicType": "expense",
+        "category": "rent_housing",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_17",
+        "transactionId": "txn_stmt_1794158892147_isrm_17",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_18",
+        "transactionId": "txn_stmt_1794158892147_isrm_18",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_19",
+        "transactionId": "txn_stmt_1794158892147_isrm_19",
+        "economicType": "expense",
+        "category": "utilities_energy",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: utility keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_20",
+        "transactionId": "txn_stmt_1794158892147_isrm_20",
+        "economicType": "expense",
+        "category": "internet_telecom",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_21",
+        "transactionId": "txn_stmt_1794158892147_isrm_21",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_22",
+        "transactionId": "txn_stmt_1794158892147_isrm_22",
+        "economicType": "debt_payment",
+        "category": "other",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: debt repayment match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_23",
+        "transactionId": "txn_stmt_1794158892147_isrm_23",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_24",
+        "transactionId": "txn_stmt_1794158892147_isrm_24",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_25",
+        "transactionId": "txn_stmt_1794158892147_isrm_25",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_26",
+        "transactionId": "txn_stmt_1794158892147_isrm_26",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_27",
+        "transactionId": "txn_stmt_1794158892147_isrm_27",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_28",
+        "transactionId": "txn_stmt_1794158892147_isrm_28",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_29",
+        "transactionId": "txn_stmt_1794158892147_isrm_29",
+        "economicType": "income",
+        "category": "income",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_30",
+        "transactionId": "txn_stmt_1794158892147_isrm_30",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_31",
+        "transactionId": "txn_stmt_1794158892147_isrm_31",
+        "economicType": "expense",
+        "category": "rent_housing",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: housing/rent keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_32",
+        "transactionId": "txn_stmt_1794158892147_isrm_32",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_33",
+        "transactionId": "txn_stmt_1794158892147_isrm_33",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_34",
+        "transactionId": "txn_stmt_1794158892147_isrm_34",
+        "economicType": "expense",
+        "category": "utilities_energy",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: utility keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_35",
+        "transactionId": "txn_stmt_1794158892147_isrm_35",
+        "economicType": "expense",
+        "category": "internet_telecom",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: telecom/internet keyword match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_36",
+        "transactionId": "txn_stmt_1794158892147_isrm_36",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_37",
+        "transactionId": "txn_stmt_1794158892147_isrm_37",
+        "economicType": "debt_payment",
+        "category": "other",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: debt repayment match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_38",
+        "transactionId": "txn_stmt_1794158892147_isrm_38",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_39",
+        "transactionId": "txn_stmt_1794158892147_isrm_39",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_40",
+        "transactionId": "txn_stmt_1794158892147_isrm_40",
+        "economicType": "expense",
+        "category": "dining_coffee",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: dining/coffee match",
+        "updatedAt": "2026-11-08T17:31:15.713Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_41",
+        "transactionId": "txn_stmt_1794158892147_isrm_41",
+        "economicType": "expense",
+        "category": "subscriptions",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: recurring subscription merchant match (R010)",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_42",
+        "transactionId": "txn_stmt_1794158892147_isrm_42",
+        "economicType": "expense",
+        "category": "other",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: general outflow (low confidence)",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_43",
+        "transactionId": "txn_stmt_1794158892147_isrm_43",
+        "economicType": "expense",
+        "category": "groceries_food",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: grocery merchant match",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_44",
+        "transactionId": "txn_stmt_1794158892147_isrm_44",
+        "economicType": "income",
+        "category": "income",
+        "confidence": "high",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": true,
+        "provenanceNote": "Deterministic pre-pass: payroll/stipend inflow keyword match",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892147_isrm_45",
+        "transactionId": "txn_stmt_1794158892147_isrm_45",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "low",
+        "status": "needs_review",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: transfer candidate requiring verification",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892235_0gj1_1",
+        "transactionId": "txn_stmt_1794158892235_0gj1_1",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892235_0gj1_2",
+        "transactionId": "txn_stmt_1794158892235_0gj1_2",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      },
+      {
+        "id": "cls_txn_stmt_1794158892235_0gj1_3",
+        "transactionId": "txn_stmt_1794158892235_0gj1_3",
+        "economicType": "internal_transfer",
+        "category": "transfer",
+        "confidence": "medium",
+        "status": "auto_classified",
+        "classifierVersion": "classification.v2:deterministic_fallback_after_error",
+        "isRecurringCandidate": false,
+        "provenanceNote": "Deterministic pre-pass: incoming transfer keyword match",
+        "updatedAt": "2026-11-08T17:32:47.426Z"
+      }
+    ],
+    "transferMatches": [
+      {
+        "id": "match_single_txn_stmt_1794158892147_isrm_15",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_15",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1794158892147_isrm_30",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_30",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_single_txn_stmt_1794158892147_isrm_45",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_45",
+        "incomingTransactionId": null,
+        "outgoingAccountId": "main",
+        "incomingAccountId": null,
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account",
+        "status": "probable"
+      },
+      {
+        "id": "match_txn_stmt_1794158892147_isrm_15_txn_stmt_1794158892235_0gj1_1",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_15",
+        "incomingTransactionId": "txn_stmt_1794158892235_0gj1_1",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-08-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1794158892147_isrm_30_txn_stmt_1794158892235_0gj1_2",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_30",
+        "incomingTransactionId": "txn_stmt_1794158892235_0gj1_2",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-09-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      },
+      {
+        "id": "match_txn_stmt_1794158892147_isrm_45_txn_stmt_1794158892235_0gj1_3",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "outgoingTransactionId": "txn_stmt_1794158892147_isrm_45",
+        "incomingTransactionId": "txn_stmt_1794158892235_0gj1_3",
+        "outgoingAccountId": "main",
+        "incomingAccountId": "savings",
+        "amount": 150,
+        "currency": "EUR",
+        "date": "2026-10-28",
+        "description": "Transfer to Reserve Account ↔ Transfer from Daily Account",
+        "status": "matched"
+      }
+    ],
+    "confirmations": [
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_6",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_6",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-08-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_11",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_11",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-08-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892147_isrm_15",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892147_isrm_15",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_21",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_21",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-09-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_26",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_26",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-09-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892147_isrm_30",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892147_isrm_30",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_36",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_36",
+        "questionText": "Is the recurring \"Music subscription\" (EUR 10.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 132/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 10.99/mo · 2026-10-12",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_sub_txn_stmt_1794158892147_isrm_41",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "subscription",
+        "subjectId": "txn_stmt_1794158892147_isrm_41",
+        "questionText": "Is the recurring \"Video streaming subscription\" (EUR 15.99) still a service you actively use?",
+        "impactReason": "Confirms whether EUR 192/yr is an essential subscription or a cancellation candidate.",
+        "amountLabel": "EUR 15.99/mo · 2026-10-21",
+        "field": "subscriptionActive",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892147_isrm_45",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892147_isrm_45",
+        "questionText": "Is \"Transfer to Reserve Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as personal spending.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892235_0gj1_1",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892235_0gj1_1",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-08-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892235_0gj1_2",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892235_0gj1_2",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-09-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      },
+      {
+        "id": "conf_trf_txn_stmt_1794158892235_0gj1_3",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "subjectType": "transfer",
+        "subjectId": "txn_stmt_1794158892235_0gj1_3",
+        "questionText": "Is \"Transfer from Daily Account\" (EUR 150.00) an internal transfer between your own accounts?",
+        "impactReason": "Prevents double-counting EUR 150.00 as new income.",
+        "amountLabel": "EUR 150.00 · 2026-10-28",
+        "field": "economicType",
+        "userResponse": null,
+        "confirmedValue": null,
+        "confirmedAt": null
+      }
+    ],
+    "recommendations": [
+      {
+        "id": "rec_A014_eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+        "userId": "a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f",
+        "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+        "actionType": "review_recurring_subscription",
+        "title": "Review recurring subscription before cancellation",
+        "description": "Confirm whether this recurring charge is still needed and check for any exit fees before cancelling.",
+        "reasoning": "Rule R010 requires assessing user need and cancellation cost before proposing subscription cancellation (A015). Missing or unconfirmed data: fresh_account_balance, stale_pi:cash_flow, stale_account_balance, verified_debt_interest_terms, dated_essential_outflows, stale_pi:available_cash, required_pi:monthly_fee, required_pi:exit_terms, subscription_usage_and_exit_terms_confirmation. Safety rules: R010. Sources: S001.",
+        "suggestedAmount": 10.99,
+        "adjustedAmount": null,
+        "currency": "EUR",
+        "targetGoalId": "txn_stmt_1794158892147_isrm_6",
+        "sourceAccountId": "main",
+        "priority": "clarification",
+        "status": "accepted",
+        "readinessState": "state_a_action_ready",
+        "createdAt": "2026-11-08T17:37:25.544Z",
+        "updatedAt": "2026-11-08T17:38:38.130Z"
+      }
+    ],
+    "assistantMessages": [],
+    "actionFeedback": [
+      {
+        "id": "fb_1794159518505_accept",
+        "recommendationId": "rec_A014_eval_5c9ef743-2fae-47a5-a8bd-0e57cd6f36f9",
+        "actionId": "A014",
+        "snapshotId": "snap_beta_a0dc25a6-a995-4f36-8bf8-d38c5ce7fe5f_v4_8cc7966a40bb7753",
+        "action": "accept",
+        "amount": 10.99,
+        "note": "User accepted recommendation (pending execution).",
+        "timestamp": "2026-11-08T17:38:38.130Z"
+      }
+    ]
+  },
+  "aiConsent": true,
+  "experimentalRecommendations": true,
+  "requestHash": "6effea7d6f2b9c76eefebc58981fc629386417a6913a423b3b59dc1873c7d67b"
+}
+~~~~

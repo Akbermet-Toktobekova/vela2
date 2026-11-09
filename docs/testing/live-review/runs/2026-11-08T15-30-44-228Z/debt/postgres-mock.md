@@ -1,0 +1,157 @@
+# 01 Debt · postgres mock
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | In-memory projection exported to this report. | — |
+
+## Input
+
+~~~~json
+{
+  "betaEvaluationId": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2",
+  "draft": "See ../../../PI-STORAGE.md."
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "simulated": true,
+  "pi.debts": [
+    {
+      "id": "card",
+      "userId": "ae23b762-b6cc-4033-88c7-8964e935b78d",
+      "name": "Credit card",
+      "debtType": "credit_card",
+      "currency": "EUR",
+      "remainingBalance": 900,
+      "apr": 24,
+      "minimumPayment": 65,
+      "nextDueDate": "2026-11-08",
+      "paymentFrequency": "monthly",
+      "createdAt": "2026-11-05T12:00:00.000Z"
+    }
+  ],
+  "analysis.stage_artifacts": [
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:fx",
+      "stage": "fx",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:classification",
+      "stage": "classification",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "Analyzed 0 transactions (0 classified; user_confirmed preserved). No unconfirmed optional subscriptions detected."
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:pattern-recognition",
+      "stage": "pattern-recognition",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "An obligation (utility) occurred on 2026-11-18, prior to the income (salary) received on 2026-11-25, within the EUR currency and account scope."
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:behavior-agent",
+      "stage": "behavior-agent",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "An obligation (utility) occurred on 2026-11-18, prior to the income (salary) received on 2026-11-25, within the EUR currency and account scope."
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:financial-calculator",
+      "stage": "financial-calculator",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:debt-calculator",
+      "stage": "debt-calculator",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:debt-agent",
+      "stage": "debt-agent",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "Debt 1: APR 24%, next due 2026-11-08, baseline interest EUR 46.99 over the analysis horizon, estimated payoff 16.37 months."
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:suggestion-generator",
+      "stage": "suggestion-generator",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "No applicable verified claim supports a specific action."
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:catalog-selector",
+      "stage": "catalog-selector",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:checker",
+      "stage": "checker",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:critical-coverage",
+      "stage": "critical-coverage",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:ai-evaluation",
+      "stage": "ai-evaluation",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:weights",
+      "stage": "weights",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:decision-engine",
+      "stage": "decision-engine",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a"
+    },
+    {
+      "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2:explanation",
+      "stage": "explanation",
+      "input_snapshot_id": "snap_beta_ae23b762-b6cc-4033-88c7-8964e935b78d_v2_b11df4eaa0bd0e1a",
+      "summary_text": "CFPB guidance (S004, R008) recommends contacting the card issuer immediately when required minimum payments cannot be met. Selected under weight profile \"liquidity_protection\". [Policy: prototype_policy_bundle_v1.4 (PROTOTYPE_ONLY); Rules: R008; Sources: S004]"
+    }
+  ],
+  "analysis.conversation_memory": {
+    "inputHash": "8c3f67aaf909fbe95b96794f285f2529d3d3e692969cbae530bd406e85aebdae",
+    "promptVersion": "chat-memory.v1",
+    "status": "CURRENT",
+    "updatedAt": "2026-11-08T15:32:03.816Z",
+    "entries": [
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "STATEMENT",
+        "text": "The user wants to understand their saved financial information."
+      },
+      {
+        "messageIds": [
+          "debt-context"
+        ],
+        "kind": "TENTATIVE_PLAN",
+        "text": "The user may review their budget later."
+      }
+    ],
+    "summaryText": "The user wants to understand their saved financial information. The user may review their budget later.",
+    "model": {
+      "provider": "gemini",
+      "modelUsed": "gemini-3.5-flash-lite",
+      "liveCallUsed": true
+    }
+  },
+  "analysis.decisions": {
+    "id": "eval_a9ce3e2c-f9de-4d53-a8fd-ab3fbd958cf2",
+    "status": "RECOMMENDATION_READY",
+    "selected_action_id": "A005"
+  }
+}
+~~~~

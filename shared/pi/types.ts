@@ -60,4 +60,5 @@ export interface CashflowProjectionSummary {
     shortfallAmountF019: number; // F019
   }>;
   dailyTrajectory: DailyCashProjectionPoint[];
+  paymentCoverage?: CashflowProjectionSummary['shortfallsByObligation'];
 }

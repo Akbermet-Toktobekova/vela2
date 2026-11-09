@@ -1,0 +1,17 @@
+(node:24020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Primary comparison run 2026-11-08T17-31-07-957Z using inputs from 2026-11-08T16-41-15-473Z
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: failed or invalid response
+debt/gemma-4-31b-it-suggestion-generator
+debt/gemma-4-31b-it-checker
+Model attempt gemma-4-31b-it: live response
+strong/gemma-4-31b-it-suggestion-generator
+strong/gemma-4-31b-it-checker
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: live response
+nora/gemma-4-31b-it-suggestion-generator
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: failed or invalid response
+nora/gemma-4-31b-it-checker
+Saved primary comparison C:\Users\sanat\OneDrive\Desktop\vela1\docs\testing\live-review\runs\2026-11-08T17-31-07-957Z

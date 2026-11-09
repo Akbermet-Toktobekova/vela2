@@ -120,7 +120,7 @@ export const AddIncomeModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
                 <option value="USD">USD ($)</option>
                 <option value="GBP">GBP (£)</option>
                 <option value="HUF">HUF (Ft)</option>
-                <option value="KGS">KGS (сом)</option>
+                <option value="KGS">KGS (som)</option>
               </select>
             </div>
           </div>
@@ -652,7 +652,7 @@ export const ObligationModal: React.FC<{
                 <option value="USD">USD ($)</option>
                 <option value="GBP">GBP (£)</option>
                 <option value="HUF">HUF (Ft)</option>
-                <option value="KGS">KGS (сом)</option>
+                <option value="KGS">KGS (som)</option>
               </select>
             </div>
             <div>

@@ -1,0 +1,9 @@
+{
+  "stage": "gemma-4-31b-it-catalog-selector",
+  "status": "COMPLETED",
+  "input": {
+    "trigger": "GENERATION_UNAVAILABLE"
+  },
+  "output": [],
+  "calls": []
+}

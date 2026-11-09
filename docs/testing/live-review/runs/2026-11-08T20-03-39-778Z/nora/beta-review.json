@@ -1,0 +1,664 @@
+{
+  "stage": "beta-review",
+  "status": "COMPLETED",
+  "input": {
+    "request": "POST /api/beta/review",
+    "body": {
+      "forceRefresh": true
+    },
+    "version": 4
+  },
+  "output": {
+    "jobId": "1bcb0b9f-d93b-43f9-b24a-77279dbfe956",
+    "decision": {
+      "evaluationId": "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+      "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+      "snapshotVersion": "4.0",
+      "decisionStatus": "NO_RECOMMENDATION",
+      "priorityClass": "NONE",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "title": "No proactive action needed today",
+      "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "expectedEffectSummary": "Current obligations and liquidity buffers do not support a safe change today.",
+      "weightProfileId": "goal_advancement",
+      "weights": {
+        "resilience": 0.2,
+        "financial_benefit": 0.2,
+        "goal_progress": 0.6
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "PROTOTYPE_POLICY",
+      "clarificationQuestion": null,
+      "missingFields": [],
+      "trace": {
+        "evaluationId": "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+        "userId": "76041125-72b3-4fb5-837e-ac3337c4d5d9",
+        "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+        "snapshotVersion": "4.0",
+        "createdAt": "2026-11-08T20:04:38.764Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "stageArtifactIds": [
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pi",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:fx",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:classification",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pattern-recognition",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:behavior-agent",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:financial-calculator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-calculator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-agent",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:suggestion-generator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:catalog-selector",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:checker",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:critical-coverage",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:ai-evaluation",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:weights",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:decision-engine",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Current dated account balances",
+              "description": "What is the current available balance and balance date for each cited account?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "account-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Current dated account balances"
+              ],
+              "factIds": [
+                "account-1",
+                "account-2"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Current dated account balances",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Confirmed funding arrangement for obligation-1",
+              "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "obligation-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Confirmed funding arrangement for obligation-1"
+              ],
+              "factIds": [
+                "obligation-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Confirmed funding arrangement for obligation-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Confirmed funding arrangement for obligation-2",
+              "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "obligation-2",
+              "prerequisites": [],
+              "missingInfo": [
+                "Confirmed funding arrangement for obligation-2"
+              ],
+              "factIds": [
+                "obligation-2"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Confirmed funding arrangement for obligation-2",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "The model did not return a valid three-proposal response.",
+          "fallbackReason": null,
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "NO_RECOMMENDATION",
+        "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      }
+    },
+    "todayCard": {
+      "id": "rec_NONE_eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+      "userId": "76041125-72b3-4fb5-837e-ac3337c4d5d9",
+      "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+      "actionType": "allocate_safety_cushion",
+      "title": "No proactive action needed today",
+      "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+      "suggestedAmount": null,
+      "adjustedAmount": null,
+      "currency": "EUR",
+      "targetGoalId": null,
+      "sourceAccountId": null,
+      "priority": "suggested",
+      "status": "proposed",
+      "readinessState": "state_c_limited_data",
+      "createdAt": "2026-11-08T20:04:38.799Z",
+      "updatedAt": "2026-11-08T20:04:38.799Z"
+    },
+    "trace": {
+      "trace": {
+        "stageArtifactIds": [
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pi",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:fx",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:classification",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pattern-recognition",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:behavior-agent",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:financial-calculator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-calculator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-agent",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:suggestion-generator",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:catalog-selector",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:checker",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:critical-coverage",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:ai-evaluation",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:weights",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:decision-engine",
+          "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:explanation"
+        ],
+        "evaluationId": "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+        "userId": "76041125-72b3-4fb5-837e-ac3337c4d5d9",
+        "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+        "snapshotVersion": "4.0",
+        "createdAt": "2026-11-08T20:04:38.764Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "goal_advancement",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.2,
+            "F": 0.2,
+            "G": 0.6
+          },
+          "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Current dated account balances",
+              "description": "What is the current available balance and balance date for each cited account?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "account-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Current dated account balances"
+              ],
+              "factIds": [
+                "account-1",
+                "account-2"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Current dated account balances",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Confirmed funding arrangement for obligation-1",
+              "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "obligation-1",
+              "prerequisites": [],
+              "missingInfo": [
+                "Confirmed funding arrangement for obligation-1"
+              ],
+              "factIds": [
+                "obligation-1"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Confirmed funding arrangement for obligation-1",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Confirmed funding arrangement for obligation-2",
+              "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+              "rationale": "This information is missing from the supplied records.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "SYSTEM_CLARIFICATION",
+              "targetFactId": "obligation-2",
+              "prerequisites": [],
+              "missingInfo": [
+                "Confirmed funding arrangement for obligation-2"
+              ],
+              "factIds": [
+                "obligation-2"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Confirmed funding arrangement for obligation-2",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "The model did not return a valid three-proposal response.",
+          "fallbackReason": null,
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "NO_RECOMMENDATION",
+        "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [],
+        "clarificationQuestion": null
+      },
+      "decision": {
+        "evaluationId": "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+        "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+        "snapshotVersion": "4.0",
+        "decisionStatus": "NO_RECOMMENDATION",
+        "priorityClass": "NONE",
+        "selectedActionId": null,
+        "selectedActionType": null,
+        "candidate": null,
+        "title": "No proactive action needed today",
+        "description": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+        "reasoning": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+        "expectedEffectSummary": "Current obligations and liquidity buffers do not support a safe change today.",
+        "weightProfileId": "goal_advancement",
+        "weights": {
+          "resilience": 0.2,
+          "financial_benefit": 0.2,
+          "goal_progress": 0.6
+        },
+        "values": null,
+        "rawImpacts": null,
+        "complexity": null,
+        "score": null,
+        "stability": null,
+        "policyVersion": "prototype_policy_bundle_v1.4",
+        "sourceIds": [],
+        "ruleIds": [],
+        "claimIds": [],
+        "dataQualityStatus": "PROTOTYPE_POLICY",
+        "clarificationQuestion": null,
+        "missingFields": [],
+        "trace": {
+          "evaluationId": "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0",
+          "userId": "76041125-72b3-4fb5-837e-ac3337c4d5d9",
+          "snapshotId": "snap_beta_76041125-72b3-4fb5-837e-ac3337c4d5d9_v4_72e50b35fd7670e1",
+          "snapshotVersion": "4.0",
+          "createdAt": "2026-11-08T20:04:38.764Z",
+          "runtimeMode": "PROTOTYPE_MODE",
+          "policyBundleVersion": "prototype_policy_bundle_v1.4",
+          "priorityClass": "NONE",
+          "weightSelection": {
+            "profileId": "goal_advancement",
+            "previousProfileId": null,
+            "hysteresisApplied": false,
+            "weights": {
+              "R": 0.2,
+              "F": 0.2,
+              "G": 0.6
+            },
+            "triggerReason": "Coverage M = 2.88 months is sufficient, no high-APR debt is accruing, and goal 'Emergency reserve' is active and unfulfilled.",
+            "policyVersion": "weight_policy_v1_prototype"
+          },
+          "validatedCandidates": [],
+          "scoredCandidates": [],
+          "robustness": null,
+          "selectedCandidate": null,
+          "stageArtifactIds": [
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pi",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:fx",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:classification",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pattern-recognition",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:behavior-agent",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:financial-calculator",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-calculator",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-agent",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:suggestion-generator",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:catalog-selector",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:checker",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:critical-coverage",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:ai-evaluation",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:weights",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:decision-engine",
+            "eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:explanation"
+          ],
+          "primarySuggestions": {
+            "proposals": [
+              {
+                "id": "primary-1",
+                "title": "Current dated account balances",
+                "description": "What is the current available balance and balance date for each cited account?",
+                "rationale": "This information is missing from the supplied records.",
+                "actionId": null,
+                "intent": "CLARIFY",
+                "origin": "SYSTEM_CLARIFICATION",
+                "targetFactId": "account-1",
+                "prerequisites": [],
+                "missingInfo": [
+                  "Current dated account balances"
+                ],
+                "factIds": [
+                  "account-1",
+                  "account-2"
+                ],
+                "claimIds": [],
+                "status": "NEEDS_DATA",
+                "reason": "Missing: Current dated account balances",
+                "evidence": []
+              },
+              {
+                "id": "primary-2",
+                "title": "Confirmed funding arrangement for obligation-1",
+                "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+                "rationale": "This information is missing from the supplied records.",
+                "actionId": null,
+                "intent": "CLARIFY",
+                "origin": "SYSTEM_CLARIFICATION",
+                "targetFactId": "obligation-1",
+                "prerequisites": [],
+                "missingInfo": [
+                  "Confirmed funding arrangement for obligation-1"
+                ],
+                "factIds": [
+                  "obligation-1"
+                ],
+                "claimIds": [],
+                "status": "NEEDS_DATA",
+                "reason": "Missing: Confirmed funding arrangement for obligation-1",
+                "evidence": []
+              },
+              {
+                "id": "primary-3",
+                "title": "Confirmed funding arrangement for obligation-2",
+                "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+                "rationale": "This information is missing from the supplied records.",
+                "actionId": null,
+                "intent": "CLARIFY",
+                "origin": "SYSTEM_CLARIFICATION",
+                "targetFactId": "obligation-2",
+                "prerequisites": [],
+                "missingInfo": [
+                  "Confirmed funding arrangement for obligation-2"
+                ],
+                "factIds": [
+                  "obligation-2"
+                ],
+                "claimIds": [],
+                "status": "NEEDS_DATA",
+                "reason": "Missing: Confirmed funding arrangement for obligation-2",
+                "evidence": []
+              }
+            ],
+            "shortfallReason": "The model did not return a valid three-proposal response.",
+            "fallbackReason": null,
+            "criticalCoverageAddedIds": []
+          },
+          "selectedActionType": null,
+          "decisionStatus": "NO_RECOMMENDATION",
+          "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+          "supportingSourceIds": [],
+          "supportingRuleIds": [],
+          "supportingClaimIds": [],
+          "missingDataFields": [],
+          "clarificationQuestion": null
+        }
+      }
+    },
+    "primaryProposals": [
+      {
+        "id": "primary-1",
+        "title": "Current dated account balances",
+        "description": "What is the current available balance and balance date for each cited account?",
+        "rationale": "This information is missing from the supplied records.",
+        "actionId": null,
+        "intent": "CLARIFY",
+        "origin": "SYSTEM_CLARIFICATION",
+        "targetFactId": "account-1",
+        "prerequisites": [],
+        "missingInfo": [
+          "Current dated account balances"
+        ],
+        "factIds": [
+          "account-1",
+          "account-2"
+        ],
+        "claimIds": [],
+        "status": "NEEDS_DATA",
+        "reason": "Missing: Current dated account balances",
+        "evidence": [],
+        "score": null,
+        "selected": false
+      },
+      {
+        "id": "primary-2",
+        "title": "Confirmed funding arrangement for obligation-1",
+        "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+        "rationale": "This information is missing from the supplied records.",
+        "actionId": null,
+        "intent": "CLARIFY",
+        "origin": "SYSTEM_CLARIFICATION",
+        "targetFactId": "obligation-1",
+        "prerequisites": [],
+        "missingInfo": [
+          "Confirmed funding arrangement for obligation-1"
+        ],
+        "factIds": [
+          "obligation-1"
+        ],
+        "claimIds": [],
+        "status": "NEEDS_DATA",
+        "reason": "Missing: Confirmed funding arrangement for obligation-1",
+        "evidence": [],
+        "score": null,
+        "selected": false
+      },
+      {
+        "id": "primary-3",
+        "title": "Confirmed funding arrangement for obligation-2",
+        "description": "Is this payment already scheduled, and which currently funded account will cover it by the due date?",
+        "rationale": "This information is missing from the supplied records.",
+        "actionId": null,
+        "intent": "CLARIFY",
+        "origin": "SYSTEM_CLARIFICATION",
+        "targetFactId": "obligation-2",
+        "prerequisites": [],
+        "missingInfo": [
+          "Confirmed funding arrangement for obligation-2"
+        ],
+        "factIds": [
+          "obligation-2"
+        ],
+        "claimIds": [],
+        "status": "NEEDS_DATA",
+        "reason": "Missing: Confirmed funding arrangement for obligation-2",
+        "evidence": [],
+        "score": null,
+        "selected": false
+      }
+    ],
+    "storageRows": [
+      {
+        "doc_key": "analysis",
+        "stored_bytes": 116312
+      },
+      {
+        "doc_key": "chat",
+        "stored_bytes": 552
+      },
+      {
+        "doc_key": "chat-memory",
+        "stored_bytes": 2324
+      },
+      {
+        "doc_key": "chat-request:nora-context",
+        "stored_bytes": 1252
+      },
+      {
+        "doc_key": "engine",
+        "stored_bytes": 455224
+      },
+      {
+        "doc_key": "import:1d1381ce-3faf-4e0c-8e08-6b00bd2ce4f9",
+        "stored_bytes": 55096
+      },
+      {
+        "doc_key": "import:edb86d4c-3ac5-4567-9dc1-b20bbac0e842",
+        "stored_bytes": 4864
+      },
+      {
+        "doc_key": "job-request:70c04fefc1302d54628047136682d79203f87cd812dc6d18f3a4282dc0322e3c",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job-request:815cd81f8290b149fc0f853229ad7c53734afb3e8002df33c2e4d2edda8e89bb",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job-request:c467589c7d3d098ee16954ddde5b4c4fba9d9842a5893142737000159a68a309",
+        "stored_bytes": 96
+      },
+      {
+        "doc_key": "job:1bcb0b9f-d93b-43f9-b24a-77279dbfe956",
+        "stored_bytes": 116752
+      },
+      {
+        "doc_key": "job:2182b9a0-a15c-4c50-bd30-69ee3a71688b",
+        "stored_bytes": 5652
+      },
+      {
+        "doc_key": "job:ba048fdf-b9a4-4ffb-9218-e410294b3b85",
+        "stored_bytes": 62416
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:ai-evaluation",
+        "stored_bytes": 1596
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:behavior-agent",
+        "stored_bytes": 6820
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:catalog-selector",
+        "stored_bytes": 1656
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:checker",
+        "stored_bytes": 4424
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:classification",
+        "stored_bytes": 51488
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:critical-coverage",
+        "stored_bytes": 1404
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-agent",
+        "stored_bytes": 6252
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:debt-calculator",
+        "stored_bytes": 1780
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:decision-engine",
+        "stored_bytes": 4572
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:explanation",
+        "stored_bytes": 2036
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:financial-calculator",
+        "stored_bytes": 15888
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:fx",
+        "stored_bytes": 1300
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pattern-recognition",
+        "stored_bytes": 29020
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:pi",
+        "stored_bytes": 1640
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:suggestion-generator",
+        "stored_bytes": 6164
+      },
+      {
+        "doc_key": "stage:eval_e4da6495-b4e2-4700-a3e5-dd205aef9dd0:weights",
+        "stored_bytes": 1784
+      },
+      {
+        "doc_key": "state",
+        "stored_bytes": 86776
+      }
+    ]
+  },
+  "summary": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+  "calls": []
+}

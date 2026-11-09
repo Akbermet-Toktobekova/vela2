@@ -1,10 +1,10 @@
 # Vela / FinAgent
 
-Локальный прототип: сервер, веб-приложение и детерминированные финансовые расчёты.
+Vela combines a local server, web and mobile clients, and deterministic financial calculations.
 
-## Запуск
+## Run locally
 
-В двух отдельных терминалах из корня проекта:
+Run these commands in two terminals from the project root.
 
 ```powershell
 cd server
@@ -18,9 +18,9 @@ npm ci
 npm run dev
 ```
 
-Откройте локальный адрес, который выведет Vite. Сервер по умолчанию использует порт 3001. Настройки и ключи провайдера: [user-inputs/README.md](user-inputs/README.md). Секреты не добавляйте в Git.
+Open the local address printed by Vite. The original server defaults to port 3001. See [provider configuration](user-inputs/README.md) and keep credentials outside Git.
 
-## Проверка
+## Verification
 
 ```powershell
 cd server
@@ -34,21 +34,21 @@ npx tsc --noEmit
 npm run build
 ```
 
-Веб-регрессии находятся в `server/tests/web-*.test.ts` и выполняются вместе с серверными тестами.
+The server test suite includes `server/tests/web-*.test.ts`.
 
-## Структура
+## Repository layout
 
-- `react-app/` — текущее веб-приложение; рабочие иконки находятся в `react-app/public/assets/`.
-- `server/` — API, SQLite, пайплайн рекомендаций и тесты.
-- `shared/` — общие контракты, типы и финансовый калькулятор.
-- `expo-mobile-app/` — отдельный мобильный прототип.
-- `user-inputs/` — исходные материалы, локальные настройки и синтетические профили.
-- `docs/SPEC.md`, `docs/coordination/DECISIONS.md` — спецификация и принятые решения.
-- `archive/` — сохранённые материалы раннего прототипа и дизайна; текущая сборка их не использует.
+- `react-app/` — Web application with icons in `react-app/public/assets/`.
+- `server/` — API, SQLite, recommendation pipeline and tests.
+- `shared/` — Shared contracts, types and financial calculator.
+- `expo-mobile-app/` — Mobile application.
+- `user-inputs/` — Source materials, local configuration and synthetic profiles.
+- `docs/SPEC.md`, `docs/coordination/DECISIONS.md` — Specification and accepted decisions.
+- `archive/` — Historical prototype and design evidence.
 
-Канонические записи AS и предварительные параметры политики имеют разные статусы. Правила работы с ними описаны в [AGENTS.md](AGENTS.md).
+See [AGENTS.md](AGENTS.md) for the treatment of canonical AS evidence and preliminary policy parameters.
 
-## Мобильный прототип — Expo SDK 58
+## Mobile app — Expo SDK 58
 
 ```powershell
 cd expo-mobile-app
@@ -56,9 +56,9 @@ npm ci
 npm start -- --localhost
 ```
 
-Для просмотра на этом компьютере: `npm run web -- --localhost` (обычно http://localhost:8081).
-Проверки: `npm run typecheck`, `npx expo install --check`, `npx expo-doctor`, `npx expo export --platform all`.
-Мобильное приложение пока является отдельным интерфейсным демо с демонстрационными данными, без подключения к серверу. Работа на физическом устройстве требует отдельной проверки и совместимого клиента Expo SDK 58. Сервер остаётся доступен только на этом компьютере.
+For browser preview on this computer, run `npm run web -- --localhost` (usually http://localhost:8081).
+Validation commands are `npm run typecheck`, `npx expo install --check`, `npx expo-doctor`, `npx expo export --platform all`.
+Physical device verification requires an Expo SDK 58 compatible client. The legacy server is local. The authenticated beta uses its separate API configuration below.
 
 
 ## Authenticated mobile beta (work in progress)
@@ -69,6 +69,8 @@ Copy `server/.env.beta.example` to `server/.env.beta.local` to configure passwor
 
 Expose only port 3002 through an HTTPS tunnel; legacy port 3001 must stay local. In the mobile app, enter the HTTPS address ending in `/api/beta`, or set `EXPO_PUBLIC_API_URL` before starting Expo. Run `npm run friends` from `expo-mobile-app` for Expo Go access. The API and Expo tunnels have different addresses and both must remain running. Never enter your computer's localhost address on a phone.
 
-Accounts use name, email and a 12–128 character password, with no email verification code. Sessions persist in native secure storage. Real-data financial recommendations remain gated pending policy approval; read-only records, import and analysis are available. Generic PDF tables may require manual CSV mapping; scanned PDFs are not OCR-supported.
+Accounts use name, email and a 12–128 character password, with no email verification code. Sessions persist in native secure storage. Experimental real-data recommendations require explicit opt-in in addition to AI consent. Read-only records and imports are available. Generic PDF tables may require manual CSV mapping; scanned PDFs are not OCR-supported.
 
-Source documents remain until deletion. No scheduled backup rotation is enabled yet; any manually created backups remain until the operator removes them. Account/file deletion removes active data, not separately created offline backups. Physical Android/iPhone acceptance and SMTP delivery must still be verified before calling the full beta complete.
+Original statement bytes are retained during import review. Confirmed imports retain normalized transactions and provenance. No scheduled backup rotation is enabled yet; any manually created backups remain until the operator removes them. Account/file deletion removes active data, not separately created offline backups. Physical Android/iPhone acceptance and SMTP delivery must still be verified before calling the full beta complete.
+
+## Seven-stage evidence\n\nSee the [specification](docs/SPEC.md), [storage map](docs/testing/live-review/PI-STORAGE.md) and [live recap](docs/testing/live-review/RECAP.md).\n

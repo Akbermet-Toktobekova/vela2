@@ -1,0 +1,15 @@
+(node:2320) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Primary comparison run 2026-11-08T18-53-34-226Z using inputs from 2026-11-08T16-41-15-473Z
+Model attempt gemma-4-31b-it: failed or invalid response
+Model attempt gemma-4-31b-it: live response
+debt/gemma-4-31b-it-suggestion-generator
+debt/gemma-4-31b-it-checker
+debt/gemma-4-31b-it-catalog-selector
+debt/gemma-4-31b-it-decision
+Model attempt gemma-4-31b-it: live response
+strong/gemma-4-31b-it-suggestion-generator
+strong/gemma-4-31b-it-checker
+Model attempt gemma-4-31b-it: live response
+strong/gemma-4-31b-it-catalog-selector
+strong/gemma-4-31b-it-decision

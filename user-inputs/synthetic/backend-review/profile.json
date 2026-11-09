@@ -1,0 +1,32 @@
+{
+  "fixtureOnly": true,
+  "asOf": "2026-11-05T12:00:00.000Z",
+  "name": "Nora Kovacs",
+  "email": "nora@example.test",
+  "accounts": [
+    {"id":"main","name":"Daily Account","institution":"Fictional Retail Bank","currency":"EUR","purposes":["daily_spending"],"fundsOwnership":"personal","personalAvailableAmount":null,"isPrimary":true,"notes":""},
+    {"id":"savings","name":"Reserve Account","institution":"Fictional Savings Bank","currency":"EUR","purposes":["savings"],"fundsOwnership":"personal","personalAvailableAmount":null,"isPrimary":false,"notes":""}
+  ],
+  "incomes": [
+    {"id":"salary","name":"Monthly salary","pattern":"regular","estimatedMonthlyAmount":2350,"currency":"EUR","frequency":"monthly","sourceType":"salary","nextExpectedDate":"2026-11-27","receivingAccountId":"main","notes":""}
+  ],
+  "expenseCommitment": {"id":"essentials","estimatedMonthlyAmount":1450,"currency":"EUR","notes":"Synthetic user estimate"},
+  "obligations": [
+    {"id":"rent","name":"Apartment rent","amount":980,"currency":"EUR","dueDate":"2026-11-06","recurrence":"monthly","category":"rent","status":"unpaid","accountId":"main","notes":""},
+    {"id":"energy","name":"Electricity","amount":105,"currency":"EUR","dueDate":"2026-11-10","recurrence":"monthly","category":"energy","status":"unpaid","accountId":"main","notes":""},
+    {"id":"internet","name":"Home internet","amount":32,"currency":"EUR","dueDate":"2026-11-12","recurrence":"monthly","category":"internet","status":"unpaid","accountId":"main","notes":""}
+  ],
+  "debts": [
+    {"id":"card","name":"Credit card","debtType":"credit_card","currency":"EUR","remainingBalance":850,"apr":21.9,"minimumPayment":55,"nextDueDate":"2026-11-15","paymentFrequency":"monthly"}
+  ],
+  "goals": [
+    {"id":"reserve","name":"Emergency reserve","goalType":"emergency_cushion","targetAmount":3000,"currency":"EUR","targetDate":"2027-06-30","priority":"high"}
+  ],
+  "goalAllocations": [
+    {"id":"reserved","goalId":"reserve","accountId":"savings","amount":600,"currency":"EUR","allocatedAt":"2026-11-05","note":"Existing reserve balance earmarked for this goal"}
+  ],
+  "statements": [
+    {"accountId":"main","fileName":"daily.csv"},
+    {"accountId":"savings","fileName":"reserve.csv"}
+  ]
+}

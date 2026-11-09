@@ -1,0 +1,107 @@
+# 02 Strong · gemini 3.5 flash lite decision
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | — | Isolated decision replay with frozen complexity inputs. Runtime database unchanged. | — |
+
+## Input
+
+~~~~json
+{
+  "sourceRun": "2026-11-08T16-41-15-473Z",
+  "checkerOutput": {
+    "allResults": [],
+    "validFinancialCandidates": [],
+    "validCriticalCandidates": [],
+    "validVerificationCandidates": [],
+    "rejectedCandidates": [],
+    "needsDataCandidates": [],
+    "missingFieldsUnion": [],
+    "criticalCoverageAddedIds": [],
+    "fallbackTriggered": false
+  },
+  "fallbackReason": null
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "evaluationId": "eval_0831432d-3016-446f-97ea-098e07af7927",
+  "snapshotId": "snap_beta_84c7c8d7-71c9-4cd1-a61a-f04173df500e_v3_b67a03346e34b856",
+  "snapshotVersion": "3.0",
+  "decisionStatus": "RECOMMENDATION_READY",
+  "priorityClass": "NORMAL",
+  "selectedActionId": null,
+  "selectedActionType": null,
+  "candidate": null,
+  "title": "Review upcoming energy obligation payment",
+  "description": "Review the unpaid energy obligation due on 2026-11-15.",
+  "reasoning": "Verifying the upcoming energy obligation helps ensure timely payment before its due date.",
+  "expectedEffectSummary": "Review the relevant information in your profile before deciding on your next step.",
+  "weightProfileId": "goal_advancement",
+  "weights": {
+    "resilience": 0.2,
+    "financial_benefit": 0.2,
+    "goal_progress": 0.6
+  },
+  "values": null,
+  "rawImpacts": null,
+  "complexity": null,
+  "score": null,
+  "stability": null,
+  "policyVersion": "prototype_policy_bundle_v1.4",
+  "sourceIds": [],
+  "ruleIds": [],
+  "claimIds": [],
+  "dataQualityStatus": "PROTOTYPE_POLICY",
+  "clarificationQuestion": null,
+  "missingFields": [],
+  "trace": {
+    "evaluationId": "eval_0831432d-3016-446f-97ea-098e07af7927",
+    "userId": "84c7c8d7-71c9-4cd1-a61a-f04173df500e",
+    "snapshotId": "snap_beta_84c7c8d7-71c9-4cd1-a61a-f04173df500e_v3_b67a03346e34b856",
+    "snapshotVersion": "3.0",
+    "createdAt": "2026-11-08T20:10:20.278Z",
+    "runtimeMode": "PROTOTYPE_MODE",
+    "policyBundleVersion": "prototype_policy_bundle_v1.4",
+    "priorityClass": "NONE",
+    "weightSelection": {
+      "profileId": "goal_advancement",
+      "previousProfileId": null,
+      "hysteresisApplied": false,
+      "weights": {
+        "R": 0.2,
+        "F": 0.2,
+        "G": 0.6
+      },
+      "triggerReason": "Coverage M = 6.34 months is sufficient, no high-APR debt is accruing, and goal 'Education' is active and unfulfilled.",
+      "policyVersion": "weight_policy_v1_prototype"
+    },
+    "validatedCandidates": [],
+    "scoredCandidates": [],
+    "robustness": null,
+    "selectedCandidate": null,
+    "selectedActionType": null,
+    "decisionStatus": "NO_RECOMMENDATION",
+    "decisionReason": "No candidate action passed safety, eligibility, and cash-flow affordability gates for this snapshot.",
+    "supportingSourceIds": [],
+    "supportingRuleIds": [],
+    "supportingClaimIds": [],
+    "missingDataFields": [],
+    "clarificationQuestion": null
+  },
+  "sourceAdvice": {
+    "id": "primary-1",
+    "title": "Review upcoming energy obligation payment",
+    "description": "Review the unpaid energy obligation due on 2026-11-15.",
+    "rationale": "Verifying the upcoming energy obligation helps ensure timely payment before its due date.",
+    "sources": []
+  }
+}
+~~~~

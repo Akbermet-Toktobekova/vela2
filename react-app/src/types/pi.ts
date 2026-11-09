@@ -349,7 +349,15 @@ export interface RecommendationRecord {
     | 'confirm_upcoming_bill'
     | 'update_stale_balance'
     | 'clarify_internal_transfer'
-    | 'set_essential_expenses';
+    | 'set_essential_expenses'
+    | 'source_backed_advice';
+  sourceAdvice?: {
+    id: string;
+    title: string;
+    description: string;
+    rationale: string;
+    sources: { claimId: string; sourceId: string; title: string; url: string }[];
+  };
   title: string;
   description: string;
   reasoning: string;
@@ -363,6 +371,7 @@ export interface RecommendationRecord {
   readinessState: ReadinessState;
   isDemoSeeded?: boolean;
   finAgentMeta?: FinAgentDecisionMeta;
+  clarification?: { question: string; route?: 'accounts' };
   createdAt: string;
   updatedAt: string;
 }

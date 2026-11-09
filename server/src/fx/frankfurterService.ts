@@ -95,6 +95,9 @@ export class FrankfurterFXService {
       ? new Date(this.referenceNowIso).getTime()
       : Date.now();
 
+    const quoteMs = Date.parse(entry.rateDate + 'T00:00:00Z');
+    if (!Number.isFinite(quoteMs) || !Number.isFinite(nowMs) ||
+        entry.rateDate > new Date(nowMs).toISOString().slice(0, 10)) return 'UNAVAILABLE';
     const fetchedMs = new Date(entry.fetchedAt).getTime();
     if (Number.isNaN(fetchedMs)) {
       return 'STALE';
@@ -183,7 +186,7 @@ export class FrankfurterFXService {
           target,
           rate: 1,
           rateDate: nowIso.slice(0, 10),
-          fetchedAt: nowIso,
+          fetchedAt: new Date().toISOString(),
           status: 'OK',
           source: 'identity',
         };
@@ -200,7 +203,7 @@ export class FrankfurterFXService {
           target,
           rate: 0,
           rateDate: nowIso.slice(0, 10),
-          fetchedAt: nowIso,
+          fetchedAt: new Date().toISOString(),
           status: 'UNAVAILABLE',
           source: 'frankfurter_unsupported_currency',
         };
@@ -245,7 +248,7 @@ export class FrankfurterFXService {
             target,
             rate: rateVal,
             rateDate: apiData.date || nowIso.slice(0, 10),
-            fetchedAt: nowIso,
+            fetchedAt: new Date().toISOString(),
             status: 'OK',
             source: usedSource,
           };
@@ -267,7 +270,7 @@ export class FrankfurterFXService {
               target,
               rate: 0,
               rateDate: nowIso.slice(0, 10),
-              fetchedAt: nowIso,
+              fetchedAt: new Date().toISOString(),
               status: 'UNAVAILABLE',
               source: 'frankfurter_unavailable',
             };
@@ -285,6 +288,13 @@ export class FrankfurterFXService {
    * Fetches historical FX rates for a specific ISO date (YYYY-MM-DD):
    * https://api.frankfurter.dev/v1/${dateIso}?base=${encodeURIComponent(base)}
    */
+  public evaluateHistoricalQuote(entry: FXRateEntry, valuationTime: string): FXRateEntry['status'] {
+    const status = this.evaluateFreshnessStatus(entry, valuationTime);
+    if (status !== 'OK') return status;
+    const ageHours = (Date.parse(valuationTime.slice(0, 10)) - Date.parse(entry.rateDate)) / 3600000;
+    return ageHours > this.policy.horizonAndFreshness.fxRateStaleThresholdHours ? 'STALE' : 'OK';
+  }
+
   public async getHistoricalRates(
     dateIso: string,
     base: string,
@@ -293,7 +303,7 @@ export class FrankfurterFXService {
   ): Promise<Record<string, FXRateEntry>> {
     const cleanDate = dateIso.slice(0, 10);
     const baseUpper = (base || 'EUR').trim().toUpperCase();
-    const nowIso = options?.referenceNowIso || this.referenceNowIso || new Date().toISOString();
+    const valuationTime = options?.referenceNowIso || cleanDate + "T00:00:00Z";
     const uniqueTargets = Array.from(
       new Set(symbols.map((s) => (s || '').trim().toUpperCase()).filter(Boolean))
     );
@@ -308,7 +318,7 @@ export class FrankfurterFXService {
           target,
           rate: 1,
           rateDate: cleanDate,
-          fetchedAt: nowIso,
+          fetchedAt: new Date().toISOString(),
           status: 'OK',
           source: 'identity',
         };
@@ -323,7 +333,7 @@ export class FrankfurterFXService {
           target,
           rate: 0,
           rateDate: cleanDate,
-          fetchedAt: nowIso,
+          fetchedAt: new Date().toISOString(),
           status: 'UNAVAILABLE',
           source: 'frankfurter_unsupported_currency',
         };
@@ -332,8 +342,8 @@ export class FrankfurterFXService {
         continue;
       }
       const cached = this.getFromCache(baseUpper, target, cleanDate);
-      if (cached && cached.rate > 0 && cached.rateDate === cleanDate) {
-        results[target] = cached;
+      if (cached && cached.rate > 0 && cached.rateDate <= cleanDate) {
+        results[target] = { ...cached, status: this.evaluateHistoricalQuote(cached, valuationTime) };
         continue;
       }
       symbolsToFetch.push(target);
@@ -361,16 +371,17 @@ export class FrankfurterFXService {
 
       for (const target of targetsToPopulate) {
         const rateVal = apiData?.rates?.[target];
-        if (apiData && typeof rateVal === 'number' && rateVal > 0) {
+        if (apiData && /^\d{4}-\d{2}-\d{2}$/.test(apiData.date) && apiData.date <= cleanDate && typeof rateVal === 'number' && rateVal > 0) {
           const entry: FXRateEntry = {
             base: baseUpper,
             target,
             rate: rateVal,
-            rateDate: apiData.date || cleanDate,
-            fetchedAt: nowIso,
+            rateDate: apiData.date,
+            fetchedAt: new Date().toISOString(),
             status: 'OK',
             source: usedSource,
           };
+          entry.status = this.evaluateHistoricalQuote(entry, valuationTime);
           this.saveToCache(entry, cleanDate);
           results[target] = entry;
         } else {
@@ -379,7 +390,7 @@ export class FrankfurterFXService {
             target,
             rate: 0,
             rateDate: cleanDate,
-            fetchedAt: nowIso,
+            fetchedAt: new Date().toISOString(),
             status: 'UNAVAILABLE',
             source: 'frankfurter_unavailable',
           };

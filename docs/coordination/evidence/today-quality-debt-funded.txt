@@ -1,0 +1,54 @@
+(node:1964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+debt/import
+debt/pi
+debt/as
+Model attempt gemini-3.5-flash-lite: live response
+debt/assistant-context
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated pi
+debt evaluated fx
+debt evaluated classification
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated pattern-recognition
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated behavior-agent
+debt evaluated financial-calculator
+debt evaluated debt-calculator
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated debt-agent
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated suggestion-generator
+debt evaluated catalog-selector
+debt evaluated checker
+debt evaluated critical-coverage
+Model attempt gemini-3.5-flash-lite: live response
+debt evaluated ai-evaluation
+debt evaluated weights
+debt evaluated decision-engine
+debt evaluated explanation
+debt/conversation-memory
+debt/fx
+debt/classification
+debt/pattern-recognition
+debt/behavior-agent
+debt/financial-calculator
+debt/debt-calculator
+debt/debt-agent
+debt/suggestion-generator
+debt/catalog-selector
+debt/checker
+debt/critical-coverage
+debt/ai-evaluation
+debt/weights
+debt/decision-engine
+debt/explanation
+debt/scoring
+debt/robustness
+debt/impact
+debt/beta-review
+Model attempt gemini-3.5-flash-lite: live response
+debt/assistant
+debt/feedback
+debt/postgres-mock
+Saved C:\Users\sanat\OneDrive\Desktop\vela1\docs\testing\live-review\runs\2026-11-08T20-31-17-860Z\RECAP.md

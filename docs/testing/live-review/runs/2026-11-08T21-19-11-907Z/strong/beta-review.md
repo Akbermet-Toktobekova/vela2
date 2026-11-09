@@ -1,0 +1,889 @@
+# 02 Strong · beta review
+
+Snapshot date 2026-11-05T12:00:00.000Z. Policy `prototype_policy_bundle_v1.4`.
+
+This stage made no Gemini calls.
+
+| Input | Output | Summary | Saved in | Details |
+| --- | --- | --- | --- | --- | --- |
+| [Exact input](#input) | [Actual output](#output) | [Exact text](#summary) | SQLite beta_documents.payload / analysis, engine.traces and engine.recommendations. | — |
+
+Actual Today output: **Confirm financial information**.
+
+## Input
+
+~~~~json
+{
+  "request": "POST /api/beta/review",
+  "body": {
+    "forceRefresh": true
+  },
+  "version": 4
+}
+~~~~
+
+## Output
+
+~~~~json
+{
+  "jobId": "962f3188-814a-4466-93c4-fd50262e78c1",
+  "decision": {
+    "evaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+    "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+    "snapshotVersion": "4.0",
+    "decisionStatus": "NEEDS_DATA",
+    "priorityClass": "NONE",
+    "selectedActionId": null,
+    "selectedActionType": null,
+    "candidate": null,
+    "title": "Confirm financial information",
+    "description": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+    "reasoning": "This information is needed before choosing a useful next action.",
+    "expectedEffectSummary": "No balance movement proposed; continue monitoring upcoming obligations.",
+    "weightProfileId": "liquidity_protection",
+    "weights": {
+      "resilience": 0.5,
+      "financial_benefit": 0.35,
+      "goal_progress": 0.15
+    },
+    "values": null,
+    "rawImpacts": null,
+    "complexity": null,
+    "score": null,
+    "stability": null,
+    "policyVersion": "prototype_policy_bundle_v1.4",
+    "sourceIds": [],
+    "ruleIds": [],
+    "claimIds": [],
+    "dataQualityStatus": "NEEDS_DATA",
+    "clarificationQuestion": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+    "missingFields": [
+      "verified_fx_rate_HUF"
+    ],
+    "trace": {
+      "evaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+      "userId": "74446208-e84e-496a-b3db-6a2d4ef199bb",
+      "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T21:20:40.115Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "fallback_A007",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Start or add EUR 6840 to your emergency reserve",
+            "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+            "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+            "targetId": "goal_cushion",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 6840,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1760,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "stageArtifactIds": [
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pi",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:fx",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:classification",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pattern-recognition",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:behavior-agent",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:financial-calculator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-calculator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-agent",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:suggestion-generator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:catalog-selector",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:checker",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:critical-coverage",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:ai-evaluation",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:weights",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:decision-engine",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:explanation"
+      ],
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review the unpaid energy obligation",
+            "description": "Check the unpaid energy obligation of 150 EUR due on 2026-11-15.",
+            "rationale": "The obligation is currently unpaid and reviewable against available liquidity.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "obligation-2",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "obligation-2"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The step proposes a read-only review of the unpaid energy obligation due on 2026-11-15 for 150 EUR, which is fully supported by the facts data and remains non-executing.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Review the general savings goal contribution",
+            "description": "Examine the confirmed contribution of 500 EUR targeted toward the general savings goal.",
+            "rationale": "The goal has a confirmed contribution amount and funding account reference.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "goal-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The step proposes a read-only review of the general savings goal contribution of 500 EUR, which is consistent with the supplied goal fact and remains non-executing.",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "Clarifying the emergency reserve target helps assess overall liquidity needs.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "financial-metrics",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NEEDS_DATA",
+      "decisionReason": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [
+        "verified_fx_rate_HUF"
+      ],
+      "clarificationQuestion": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action."
+    }
+  },
+  "todayCard": {
+    "id": "rec_NONE_eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+    "userId": "74446208-e84e-496a-b3db-6a2d4ef199bb",
+    "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+    "actionType": "allocate_safety_cushion",
+    "clarification": {
+      "question": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action."
+    },
+    "title": "Confirm financial information",
+    "description": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+    "reasoning": "This information is needed before choosing a useful next action.",
+    "suggestedAmount": null,
+    "adjustedAmount": null,
+    "currency": "EUR",
+    "targetGoalId": null,
+    "sourceAccountId": null,
+    "priority": "clarification",
+    "status": "proposed",
+    "readinessState": "state_b_clarification_needed",
+    "createdAt": "2026-11-08T21:20:40.181Z",
+    "updatedAt": "2026-11-08T21:20:40.181Z"
+  },
+  "trace": {
+    "trace": {
+      "stageArtifactIds": [
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pi",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:fx",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:classification",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pattern-recognition",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:behavior-agent",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:financial-calculator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-calculator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-agent",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:suggestion-generator",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:catalog-selector",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:checker",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:critical-coverage",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:ai-evaluation",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:weights",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:decision-engine",
+        "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:explanation"
+      ],
+      "evaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+      "userId": "74446208-e84e-496a-b3db-6a2d4ef199bb",
+      "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+      "snapshotVersion": "4.0",
+      "createdAt": "2026-11-08T21:20:40.115Z",
+      "runtimeMode": "PROTOTYPE_MODE",
+      "policyBundleVersion": "prototype_policy_bundle_v1.4",
+      "priorityClass": "NONE",
+      "weightSelection": {
+        "profileId": "liquidity_protection",
+        "previousProfileId": null,
+        "hysteresisApplied": false,
+        "weights": {
+          "R": 0.5,
+          "F": 0.35,
+          "G": 0.15
+        },
+        "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+        "policyVersion": "weight_policy_v1_prototype"
+      },
+      "validatedCandidates": [
+        {
+          "candidate": {
+            "candidateId": "fallback_A007",
+            "actionId": "A007",
+            "actionType": "FINANCIAL_ACTION",
+            "title": "Start or add EUR 6840 to your emergency reserve",
+            "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+            "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+            "targetId": "goal_cushion",
+            "sourceAccountId": "main",
+            "destinationAccountId": null,
+            "amount": 6840,
+            "currency": "EUR",
+            "proposedTiming": "2026-11-05",
+            "supportingRuleIds": [
+              "R002",
+              "R003",
+              "R011"
+            ],
+            "supportingClaimIds": [
+              "C001",
+              "C002"
+            ],
+            "supportingSourceIds": [
+              "S001"
+            ],
+            "requiredPiInputs": [
+              "liquid_balance",
+              "mandatory_outflows",
+              "amount"
+            ],
+            "origin": "CATALOG_FALLBACK"
+          },
+          "status": "NEEDS_DATA",
+          "isCritical": false,
+          "criticalPriorityRank": null,
+          "resolvesCriticalProblemDirectly": false,
+          "failedChecks": [],
+          "missingFields": [
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF",
+            "verified_fx_rate_HUF"
+          ],
+          "inputEvidence": [
+            {
+              "field": "liquid_balance",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "mandatory_outflows",
+              "status": "VERIFIED"
+            },
+            {
+              "field": "amount",
+              "status": "VERIFIED"
+            }
+          ],
+          "projectedMinCashAfterAction": 1760,
+          "unlocksActionIds": []
+        }
+      ],
+      "scoredCandidates": [],
+      "robustness": null,
+      "selectedCandidate": null,
+      "primarySuggestions": {
+        "proposals": [
+          {
+            "id": "primary-1",
+            "title": "Review the unpaid energy obligation",
+            "description": "Check the unpaid energy obligation of 150 EUR due on 2026-11-15.",
+            "rationale": "The obligation is currently unpaid and reviewable against available liquidity.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "obligation-2",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "obligation-2"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The step proposes a read-only review of the unpaid energy obligation due on 2026-11-15 for 150 EUR, which is fully supported by the facts data and remains non-executing.",
+            "evidence": []
+          },
+          {
+            "id": "primary-2",
+            "title": "Review the general savings goal contribution",
+            "description": "Examine the confirmed contribution of 500 EUR targeted toward the general savings goal.",
+            "rationale": "The goal has a confirmed contribution amount and funding account reference.",
+            "actionId": null,
+            "intent": "REVIEW",
+            "origin": "MODEL",
+            "targetFactId": "goal-1",
+            "usefulness": "WEAK",
+            "usefulnessReason": "No matching open decision or information gap.",
+            "prerequisites": [],
+            "missingInfo": [],
+            "factIds": [
+              "goal-1"
+            ],
+            "claimIds": [],
+            "status": "VALID",
+            "reason": "The step proposes a read-only review of the general savings goal contribution of 500 EUR, which is consistent with the supplied goal fact and remains non-executing.",
+            "evidence": []
+          },
+          {
+            "id": "primary-3",
+            "title": "Desired dedicated emergency reserve target",
+            "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+            "rationale": "Clarifying the emergency reserve target helps assess overall liquidity needs.",
+            "actionId": null,
+            "intent": "CLARIFY",
+            "origin": "MODEL",
+            "targetFactId": "financial-metrics",
+            "usefulness": "NOT_ELIGIBLE",
+            "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+            "prerequisites": [],
+            "missingInfo": [
+              "Desired dedicated emergency reserve target"
+            ],
+            "factIds": [
+              "financial-metrics",
+              "data-quality"
+            ],
+            "claimIds": [],
+            "status": "NEEDS_DATA",
+            "reason": "Missing: Desired dedicated emergency reserve target",
+            "evidence": []
+          }
+        ],
+        "shortfallReason": "",
+        "fallbackReason": "NO_USEFUL_PRIMARY",
+        "criticalCoverageAddedIds": []
+      },
+      "selectedActionType": null,
+      "decisionStatus": "NEEDS_DATA",
+      "decisionReason": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+      "supportingSourceIds": [],
+      "supportingRuleIds": [],
+      "supportingClaimIds": [],
+      "missingDataFields": [
+        "verified_fx_rate_HUF"
+      ],
+      "clarificationQuestion": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action."
+    },
+    "decision": {
+      "evaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+      "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+      "snapshotVersion": "4.0",
+      "decisionStatus": "NEEDS_DATA",
+      "priorityClass": "NONE",
+      "selectedActionId": null,
+      "selectedActionType": null,
+      "candidate": null,
+      "title": "Confirm financial information",
+      "description": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+      "reasoning": "This information is needed before choosing a useful next action.",
+      "expectedEffectSummary": "No balance movement proposed; continue monitoring upcoming obligations.",
+      "weightProfileId": "liquidity_protection",
+      "weights": {
+        "resilience": 0.5,
+        "financial_benefit": 0.35,
+        "goal_progress": 0.15
+      },
+      "values": null,
+      "rawImpacts": null,
+      "complexity": null,
+      "score": null,
+      "stability": null,
+      "policyVersion": "prototype_policy_bundle_v1.4",
+      "sourceIds": [],
+      "ruleIds": [],
+      "claimIds": [],
+      "dataQualityStatus": "NEEDS_DATA",
+      "clarificationQuestion": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+      "missingFields": [
+        "verified_fx_rate_HUF"
+      ],
+      "trace": {
+        "evaluationId": "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd",
+        "userId": "74446208-e84e-496a-b3db-6a2d4ef199bb",
+        "snapshotId": "snap_beta_74446208-e84e-496a-b3db-6a2d4ef199bb_v4_6796ea1f10a7bf8f",
+        "snapshotVersion": "4.0",
+        "createdAt": "2026-11-08T21:20:40.115Z",
+        "runtimeMode": "PROTOTYPE_MODE",
+        "policyBundleVersion": "prototype_policy_bundle_v1.4",
+        "priorityClass": "NONE",
+        "weightSelection": {
+          "profileId": "liquidity_protection",
+          "previousProfileId": null,
+          "hysteresisApplied": false,
+          "weights": {
+            "R": 0.5,
+            "F": 0.35,
+            "G": 0.15
+          },
+          "triggerReason": "Essential monthly expense is unconfirmed; defaulting to liquidity_protection until coverage M (F002) is verified.",
+          "policyVersion": "weight_policy_v1_prototype"
+        },
+        "validatedCandidates": [
+          {
+            "candidate": {
+              "candidateId": "fallback_A007",
+              "actionId": "A007",
+              "actionType": "FINANCIAL_ACTION",
+              "title": "Start or add EUR 6840 to your emergency reserve",
+              "description": "Earmark EUR 6840 from uncommitted liquid cash into your accessible emergency reserve.",
+              "rationale": "Fallback catalog evaluation (R002, R003, S001): builds liquid emergency buffer while preserving all upcoming obligations.",
+              "targetId": "goal_cushion",
+              "sourceAccountId": "main",
+              "destinationAccountId": null,
+              "amount": 6840,
+              "currency": "EUR",
+              "proposedTiming": "2026-11-05",
+              "supportingRuleIds": [
+                "R002",
+                "R003",
+                "R011"
+              ],
+              "supportingClaimIds": [
+                "C001",
+                "C002"
+              ],
+              "supportingSourceIds": [
+                "S001"
+              ],
+              "requiredPiInputs": [
+                "liquid_balance",
+                "mandatory_outflows",
+                "amount"
+              ],
+              "origin": "CATALOG_FALLBACK"
+            },
+            "status": "NEEDS_DATA",
+            "isCritical": false,
+            "criticalPriorityRank": null,
+            "resolvesCriticalProblemDirectly": false,
+            "failedChecks": [],
+            "missingFields": [
+              "verified_fx_rate_HUF",
+              "verified_fx_rate_HUF",
+              "verified_fx_rate_HUF"
+            ],
+            "inputEvidence": [
+              {
+                "field": "liquid_balance",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "mandatory_outflows",
+                "status": "VERIFIED"
+              },
+              {
+                "field": "amount",
+                "status": "VERIFIED"
+              }
+            ],
+            "projectedMinCashAfterAction": 1760,
+            "unlocksActionIds": []
+          }
+        ],
+        "scoredCandidates": [],
+        "robustness": null,
+        "selectedCandidate": null,
+        "stageArtifactIds": [
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pi",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:fx",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:classification",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pattern-recognition",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:behavior-agent",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:financial-calculator",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-calculator",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-agent",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:suggestion-generator",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:catalog-selector",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:checker",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:critical-coverage",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:ai-evaluation",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:weights",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:decision-engine",
+          "eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:explanation"
+        ],
+        "primarySuggestions": {
+          "proposals": [
+            {
+              "id": "primary-1",
+              "title": "Review the unpaid energy obligation",
+              "description": "Check the unpaid energy obligation of 150 EUR due on 2026-11-15.",
+              "rationale": "The obligation is currently unpaid and reviewable against available liquidity.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "obligation-2",
+              "usefulness": "WEAK",
+              "usefulnessReason": "No matching open decision or information gap.",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "obligation-2"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes a read-only review of the unpaid energy obligation due on 2026-11-15 for 150 EUR, which is fully supported by the facts data and remains non-executing.",
+              "evidence": []
+            },
+            {
+              "id": "primary-2",
+              "title": "Review the general savings goal contribution",
+              "description": "Examine the confirmed contribution of 500 EUR targeted toward the general savings goal.",
+              "rationale": "The goal has a confirmed contribution amount and funding account reference.",
+              "actionId": null,
+              "intent": "REVIEW",
+              "origin": "MODEL",
+              "targetFactId": "goal-1",
+              "usefulness": "WEAK",
+              "usefulnessReason": "No matching open decision or information gap.",
+              "prerequisites": [],
+              "missingInfo": [],
+              "factIds": [
+                "goal-1"
+              ],
+              "claimIds": [],
+              "status": "VALID",
+              "reason": "The step proposes a read-only review of the general savings goal contribution of 500 EUR, which is consistent with the supplied goal fact and remains non-executing.",
+              "evidence": []
+            },
+            {
+              "id": "primary-3",
+              "title": "Desired dedicated emergency reserve target",
+              "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+              "rationale": "Clarifying the emergency reserve target helps assess overall liquidity needs.",
+              "actionId": null,
+              "intent": "CLARIFY",
+              "origin": "MODEL",
+              "targetFactId": "financial-metrics",
+              "usefulness": "NOT_ELIGIBLE",
+              "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+              "prerequisites": [],
+              "missingInfo": [
+                "Desired dedicated emergency reserve target"
+              ],
+              "factIds": [
+                "financial-metrics",
+                "data-quality"
+              ],
+              "claimIds": [],
+              "status": "NEEDS_DATA",
+              "reason": "Missing: Desired dedicated emergency reserve target",
+              "evidence": []
+            }
+          ],
+          "shortfallReason": "",
+          "fallbackReason": "NO_USEFUL_PRIMARY",
+          "criticalCoverageAddedIds": []
+        },
+        "selectedActionType": null,
+        "decisionStatus": "NEEDS_DATA",
+        "decisionReason": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action.",
+        "supportingSourceIds": [],
+        "supportingRuleIds": [],
+        "supportingClaimIds": [],
+        "missingDataFields": [
+          "verified_fx_rate_HUF"
+        ],
+        "clarificationQuestion": "Verified FX rates for HUF are unavailable or stale. Refresh rates before calculating a monetary action."
+      }
+    }
+  },
+  "primaryProposals": [
+    {
+      "id": "primary-1",
+      "title": "Review the unpaid energy obligation",
+      "description": "Check the unpaid energy obligation of 150 EUR due on 2026-11-15.",
+      "rationale": "The obligation is currently unpaid and reviewable against available liquidity.",
+      "actionId": null,
+      "intent": "REVIEW",
+      "origin": "MODEL",
+      "targetFactId": "obligation-2",
+      "usefulness": "WEAK",
+      "usefulnessReason": "No matching open decision or information gap.",
+      "prerequisites": [],
+      "missingInfo": [],
+      "factIds": [
+        "obligation-2"
+      ],
+      "claimIds": [],
+      "status": "VALID",
+      "reason": "The step proposes a read-only review of the unpaid energy obligation due on 2026-11-15 for 150 EUR, which is fully supported by the facts data and remains non-executing.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-2",
+      "title": "Review the general savings goal contribution",
+      "description": "Examine the confirmed contribution of 500 EUR targeted toward the general savings goal.",
+      "rationale": "The goal has a confirmed contribution amount and funding account reference.",
+      "actionId": null,
+      "intent": "REVIEW",
+      "origin": "MODEL",
+      "targetFactId": "goal-1",
+      "usefulness": "WEAK",
+      "usefulnessReason": "No matching open decision or information gap.",
+      "prerequisites": [],
+      "missingInfo": [],
+      "factIds": [
+        "goal-1"
+      ],
+      "claimIds": [],
+      "status": "VALID",
+      "reason": "The step proposes a read-only review of the general savings goal contribution of 500 EUR, which is consistent with the supplied goal fact and remains non-executing.",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    },
+    {
+      "id": "primary-3",
+      "title": "Desired dedicated emergency reserve target",
+      "description": "What dedicated emergency reserve target would you like to protect before funding other goals?",
+      "rationale": "Clarifying the emergency reserve target helps assess overall liquidity needs.",
+      "actionId": null,
+      "intent": "CLARIFY",
+      "origin": "MODEL",
+      "targetFactId": "financial-metrics",
+      "usefulness": "NOT_ELIGIBLE",
+      "usefulnessReason": "The proposal has not passed the safety and evidence checks.",
+      "prerequisites": [],
+      "missingInfo": [
+        "Desired dedicated emergency reserve target"
+      ],
+      "factIds": [
+        "financial-metrics",
+        "data-quality"
+      ],
+      "claimIds": [],
+      "status": "NEEDS_DATA",
+      "reason": "Missing: Desired dedicated emergency reserve target",
+      "evidence": [],
+      "score": null,
+      "selected": false
+    }
+  ],
+  "storageRows": [
+    {
+      "doc_key": "analysis",
+      "stored_bytes": 351712
+    },
+    {
+      "doc_key": "chat",
+      "stored_bytes": 996
+    },
+    {
+      "doc_key": "chat-memory",
+      "stored_bytes": 888
+    },
+    {
+      "doc_key": "chat-request:strong-context",
+      "stored_bytes": 2080
+    },
+    {
+      "doc_key": "engine",
+      "stored_bytes": 1459292
+    },
+    {
+      "doc_key": "import:87cad605-5bbd-4c96-923c-51f47f5715ec",
+      "stored_bytes": 197072
+    },
+    {
+      "doc_key": "import:bcfbebed-4b17-4f5a-aebe-702f40dad341",
+      "stored_bytes": 88516
+    },
+    {
+      "doc_key": "job-request:44f08ea88b80c1061c001f4f98f0c8c0f91dc215759b3bd3af7adac4973cabdf",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:4d22da025131ab66ffc9facdc248facf71a23325249cbf525b169820645c3f27",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job-request:8ca5f837375ff98c1f1c35fde9388c1af8cf7540683b8342ea9d12f32de9fbbf",
+      "stored_bytes": 96
+    },
+    {
+      "doc_key": "job:811f4726-2046-45f9-95c9-111460b0aa1c",
+      "stored_bytes": 233820
+    },
+    {
+      "doc_key": "job:962f3188-814a-4466-93c4-fd50262e78c1",
+      "stored_bytes": 352160
+    },
+    {
+      "doc_key": "job:cd514f01-6eeb-4e52-9f58-ef10b43cea21",
+      "stored_bytes": 104624
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:ai-evaluation",
+      "stored_bytes": 1600
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:behavior-agent",
+      "stored_bytes": 4528
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:catalog-selector",
+      "stored_bytes": 1660
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:checker",
+      "stored_bytes": 8360
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:classification",
+      "stored_bytes": 108088
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:critical-coverage",
+      "stored_bytes": 1404
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-agent",
+      "stored_bytes": 1636
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:debt-calculator",
+      "stored_bytes": 1336
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:decision-engine",
+      "stored_bytes": 6280
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:explanation",
+      "stored_bytes": 1932
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:financial-calculator",
+      "stored_bytes": 17616
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:fx",
+      "stored_bytes": 1524
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pattern-recognition",
+      "stored_bytes": 70372
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:pi",
+      "stored_bytes": 1624
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:suggestion-generator",
+      "stored_bytes": 4156
+    },
+    {
+      "doc_key": "stage:eval_69601558-5f7c-45cb-ae5f-e5895fa532bd:weights",
+      "stored_bytes": 1780
+    },
+    {
+      "doc_key": "state",
+      "stored_bytes": 320920
+    }
+  ]
+}
+~~~~
+
+## Summary
+
+~~~~text
+This information is needed before choosing a useful next action.
+~~~~

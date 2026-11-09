@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { memoryFingerprint, type ConversationMessage } from '../ai/conversationMemory';
+import { AnalysisArtifactSchema, ChatMemorySchema, type AnalysisArtifact } from '@shared/contracts/pipeline';
 import type { CalculatorContextExtras } from '../../../shared/calculator';
 import type { DecisionTrace, RecommendationDecision, WeightProfileId } from '../../../shared/contracts';
 import type { ActionFeedback, AssistantMessage, FinancialSnapshot, FXRateEntry, RecommendationRecord } from '../../../shared/pi/types';
@@ -22,6 +25,30 @@ interface EngineData {
   messages: AssistantMessage[];
   fx: FXRateEntry[];
 }
+
+const feedbackSchema = z.object({
+  id: z.string(), recommendationId: z.string(),
+  action: z.enum(['accept', 'adjust', 'decline', 'complete']),
+  amount: z.number().nullable(), note: z.string(), timestamp: z.string(),
+  actionId: z.string().nullable().optional(), snapshotId: z.string().optional(),
+}).passthrough();
+
+const objectRecord = z.record(z.object({}).passthrough());
+const engineDocumentSchema = z.object({
+  snapshots: objectRecord.default({}),
+  derivedSnapshots: objectRecord.optional(),
+  agents: z.record(z.object({ userId: z.string(), agentName: z.string(), inputHash: z.string(),
+    policyVersion: z.string(), output: z.unknown(), createdAt: z.string() }).passthrough()).default({}),
+  evaluations: z.array(z.object({ evaluationId: z.string(), userId: z.string(), status: z.string() }).passthrough()).default([]),
+  traces: z.record(z.object({ trace: z.object({ stageArtifactIds: z.array(z.string()).optional() }).passthrough(),
+    decision: z.object({}).passthrough() }).passthrough()).default({}),
+  recommendations: z.array(z.object({ recommendation: z.object({}).passthrough(), decision: z.object({}).passthrough(),
+    trace: z.object({ stageArtifactIds: z.array(z.string()).optional() }).passthrough() }).passthrough()).default([]),
+  feedback: z.array(feedbackSchema).default([]),
+  messages: z.array(z.object({ id: z.string(), userId: z.string(), role: z.string(), content: z.string(), createdAt: z.string() }).passthrough()).default([]),
+  fx: z.array(z.object({ base: z.string(), target: z.string(), rate: z.number(), rateDate: z.string(),
+    fetchedAt: z.string(), status: z.enum(['OK', 'STALE', 'UNAVAILABLE']), source: z.string() }).passthrough()).default([]),
+}).passthrough();
 
 /** Existing engine semantics backed by beta's encrypted, user-bound documents. */
 export class BetaEngineRepository implements EngineRepository {
@@ -53,9 +80,27 @@ export class BetaEngineRepository implements EngineRepository {
   }
 
   private data(): EngineData {
-    return this.store.get(this.user.id, 'engine') as EngineData | null || {
-      snapshots: {}, agents: {}, evaluations: [], traces: {}, recommendations: [], feedback: [], messages: [], fx: [],
-    };
+    const existing = this.store.get(this.user.id, 'engine');
+    const parsed = engineDocumentSchema.safeParse(existing ?? {});
+    const legacy = z.array(feedbackSchema).safeParse(this.current().state.actionFeedback ?? []);
+    if (!parsed.success || !legacy.success) {
+      throw new BetaError('INVALID_ENGINE_DOCUMENT', 'Stored engine data requires repair.', 409);
+    }
+    const data = parsed.data;
+    const feedback = new Map(data.feedback.map(row => [row.id, row]));
+    for (const row of legacy.data) if (!feedback.has(row.id)) feedback.set(row.id, row);
+    data.feedback = [...feedback.values()].map(row => ({ ...row, actionId: row.actionId ?? null, snapshotId: row.snapshotId ?? '' }));
+    const normalized = data as unknown as EngineData;
+    // Upgrade only writable existing documents. Defaults describe absent legacy collections.
+    if (existing !== null && JSON.stringify(existing) !== JSON.stringify(data) &&
+        !this.aborted && this.current().version === this.expectedVersion) {
+      this.runInTransaction(() => {
+        this.write(normalized);
+        const current = this.current();
+        this.store.put(this.user.id, 'state', { ...current, state: { ...current.state, actionFeedback: [] } });
+      });
+    }
+    return normalized;
   }
 
   private write(data: EngineData): void {
@@ -157,7 +202,7 @@ export class BetaEngineRepository implements EngineRepository {
       if (!update.seed && update.snapshot) seed = this.seedFromSnapshot(seed, update.snapshot);
       const history = this.data();
       seed.recommendations = history.recommendations.map(row => row.recommendation);
-      seed.actionFeedback = history.feedback;
+      seed.actionFeedback = [];
       seed.user = current.state.user;
       seed.profile.userId = target;
       const next = { ...current, version: current.version + 1, state: seed };
@@ -203,6 +248,92 @@ export class BetaEngineRepository implements EngineRepository {
     return result;
   }
 
+  getConversationContextVersion(auth: string, target: string): string {
+    this.authorize(auth, target);
+    return memoryFingerprint((this.store.get(target, 'chat') as ConversationMessage[] | null) ?? []);
+  }
+
+  getConversationMemory(auth: string, target: string) {
+    this.authorize(auth, target);
+    const memory = this.store.get(target, 'chat-memory');
+    if (memory === null) return null;
+    const parsed = ChatMemorySchema.parse(memory);
+    if (parsed.status === 'CURRENT' && parsed.inputHash !== this.getConversationContextVersion(auth, target)) {
+      return { ...parsed, status: 'STALE' as const };
+    }
+    return parsed;
+  }
+
+  saveStageArtifacts(auth: string, target: string, artifacts: AnalysisArtifact[]): void {
+    this.authorize(auth, target);
+    const validated = artifacts.map(item => AnalysisArtifactSchema.parse(item));
+    if (validated.some(artifact => artifact.userId !== target)) {
+      throw new BetaError('FORBIDDEN', 'Artifact belongs to another user.', 403);
+    }
+    this.runInTransaction(() => {
+      for (const artifact of validated) this.store.put(target, 'stage:' + artifact.id, artifact);
+    });
+  }
+
+  pruneStageArtifacts(auth: string, target: string): string[] {
+    this.authorize(auth, target);
+    return this.runInTransaction(() => {
+      const data = this.data();
+      const rows = this.store.database.prepare(
+        "SELECT doc_key FROM beta_documents WHERE user_id=? AND doc_key LIKE 'stage:%' ORDER BY rowid",
+      ).all(target) as { doc_key: string }[];
+      const artifacts = rows.map(row => {
+        const artifact = AnalysisArtifactSchema.parse(this.store.get(target, row.doc_key));
+        if (artifact.userId !== target || row.doc_key !== 'stage:' + artifact.id) {
+          throw new BetaError('INVALID_STAGE_ARTIFACT', 'Artifact identity does not match its storage key.', 409);
+        }
+        return artifact;
+      });
+      const byId = new Map(artifacts.map(artifact => [artifact.id, artifact]));
+      const retained = new Set<string>();
+      const latest = new Map<string, AnalysisArtifact>();
+      const reusable = new Map<string, AnalysisArtifact>();
+      for (const artifact of artifacts) {
+        const previous = latest.get(artifact.stage);
+        if (!previous || artifact.executedAt >= previous.executedAt) latest.set(artifact.stage, artifact);
+        const previousReusable = reusable.get(artifact.stage);
+        if ((artifact.status === 'COMPLETED' || artifact.status === 'CACHED') &&
+            (!previousReusable || artifact.executedAt >= previousReusable.executedAt)) {
+          reusable.set(artifact.stage, artifact);
+        }
+      }
+      for (const artifact of [...latest.values(), ...reusable.values()]) retained.add(artifact.id);
+      for (const bundle of [...Object.values(data.traces), ...data.recommendations]) {
+        for (const id of bundle.trace.stageArtifactIds ?? []) retained.add(id);
+      }
+      for (const artifact of artifacts) {
+        if (data.evaluations.some(run => run.evaluationId === artifact.runId && run.status === 'IN_PROGRESS')) {
+          retained.add(artifact.id);
+        }
+      }
+      const pending = [...retained];
+      for (let index = 0; index < pending.length; index++) {
+        for (const upstream of byId.get(pending[index])?.upstreamIds ?? []) {
+          if (!retained.has(upstream)) { retained.add(upstream); pending.push(upstream); }
+        }
+      }
+      const removed = artifacts.filter(artifact => !retained.has(artifact.id)).map(artifact => artifact.id);
+      for (const id of removed) this.store.remove(target, 'stage:' + id);
+      return removed;
+    });
+  }
+
+  getStageArtifact(auth: string, target: string, id: string): AnalysisArtifact | null {
+    this.authorize(auth, target);
+    const stored = this.store.get(target, 'stage:' + id);
+    if (stored === null) return null;
+    const artifact = AnalysisArtifactSchema.parse(stored);
+    if (artifact.userId !== target || artifact.id !== id) {
+      throw new BetaError('INVALID_STAGE_ARTIFACT', 'Artifact identity does not match its storage key.', 409);
+    }
+    return artifact;
+  }
+
   getAgentResult<T = unknown>(auth: string, target: string, agentName: string): AgentResultRow<T> | null {
     this.authorize(auth, target); return this.data().agents[agentName] as AgentResultRow<T> || null;
   }
@@ -237,6 +368,7 @@ export class BetaEngineRepository implements EngineRepository {
       this.write(data);
       const current = this.current();
       this.store.put(target, 'state', { ...current, state: { ...current.state, recommendations: data.recommendations.map(row => row.recommendation) } });
+      this.pruneStageArtifacts(auth, target);
     });
   }
   getRecommendationById(auth: string, target: string, id: string) { this.authorize(auth, target); return this.data().recommendations.find(r => r.recommendation.id === id) || null; }
@@ -255,7 +387,9 @@ export class BetaEngineRepository implements EngineRepository {
       data.feedback.push({ ...feedback, actionId: feedback.actionId || null });
       this.write(data);
       const current = this.current();
-      this.store.put(target, 'state', { ...current, state: { ...current.state, actionFeedback: data.feedback } });
+      if (current.state.actionFeedback?.length) {
+        this.store.put(target, 'state', { ...current, state: { ...current.state, actionFeedback: [] } });
+      }
       return feedback;
     });
   }

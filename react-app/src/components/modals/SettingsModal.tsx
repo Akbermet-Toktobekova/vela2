@@ -197,7 +197,7 @@ export const SettingsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
                   <option value="USD">USD ($)</option>
                   <option value="GBP">GBP (£)</option>
                   <option value="HUF">HUF (Ft)</option>
-                  <option value="KGS">KGS (сом)</option>
+                  <option value="KGS">KGS (som)</option>
                 </select>
               </div>
               <button
@@ -354,7 +354,7 @@ export const SettingsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
                 Restore Alex's 4-Account Multi-Currency Profile
               </p>
               <p className="text-[11px] text-[#74766d]">
-                Includes Revolut EUR (€820), Wise EUR (€180), OTP Bank HUF (185,000 Ft mixed funds), MBANK KGS (42,500 сом), 11 October CSV transactions, and the €40 Safety Cushion recommendation.
+                Includes Revolut EUR (€820), Wise EUR (€180), OTP Bank HUF (185,000 Ft mixed funds), MBANK KGS (42,500 som), 11 October CSV transactions, and the €40 Safety Cushion recommendation.
               </p>
               <button
                 type="button"
